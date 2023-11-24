@@ -1,0 +1,699 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		077A89B52B10EA7B00970FF6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 077A89B42B10EA7B00970FF6 /* GoogleService-Info.plist */; };
+		07FC88832B0D3E8500143419 /* cursoIosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88822B0D3E8500143419 /* cursoIosApp.swift */; };
+		07FC88852B0D3E8500143419 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88842B0D3E8500143419 /* ContentView.swift */; };
+		07FC88872B0D3E8700143419 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07FC88862B0D3E8700143419 /* Assets.xcassets */; };
+		07FC888A2B0D3E8700143419 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07FC88892B0D3E8700143419 /* Preview Assets.xcassets */; };
+		07FC88922B0D415400143419 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 07FC88912B0D415400143419 /* Realm */; };
+		07FC88942B0D415400143419 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 07FC88932B0D415400143419 /* RealmSwift */; };
+		07FC88A52B10D44D00143419 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 07FC88A42B10D44D00143419 /* FirebaseMessaging */; };
+		07FC88A92B10D44D00143419 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 07FC88A82B10D44D00143419 /* FirebaseStorage */; };
+		07FC88E42B10D50D00143419 /* AppModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88AD2B10D50C00143419 /* AppModule.swift */; };
+		07FC88E52B10D50D00143419 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88AE2B10D50C00143419 /* Project.swift */; };
+		07FC88E62B10D50D00143419 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88AF2B10D50C00143419 /* AppDelegate.swift */; };
+		07FC88E72B10D50D00143419 /* Realm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88B22B10D50C00143419 /* Realm.swift */; };
+		07FC88E82B10D50D00143419 /* Web.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88B32B10D50C00143419 /* Web.swift */; };
+		07FC88E92B10D50D00143419 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88B42B10D50C00143419 /* Utils.swift */; };
+		07FC88EA2B10D50D00143419 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88B62B10D50C00143419 /* Const.swift */; };
+		07FC88EB2B10D50D00143419 /* CourseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88BA2B10D50D00143419 /* CourseData.swift */; };
+		07FC88EC2B10D50D00143419 /* CourseRepoImp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88BB2B10D50D00143419 /* CourseRepoImp.swift */; };
+		07FC88ED2B10D50D00143419 /* CourseRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88BC2B10D50D00143419 /* CourseRepo.swift */; };
+		07FC88EE2B10D50D00143419 /* ChatRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88BE2B10D50D00143419 /* ChatRepo.swift */; };
+		07FC88EF2B10D50D00143419 /* ChatData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88BF2B10D50D00143419 /* ChatData.swift */; };
+		07FC88F02B10D50D00143419 /* ChatRepoImp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88C02B10D50D00143419 /* ChatRepoImp.swift */; };
+		07FC88F12B10D50D00143419 /* StudentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88C22B10D50D00143419 /* StudentData.swift */; };
+		07FC88F22B10D50D00143419 /* StudentRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88C32B10D50D00143419 /* StudentRepo.swift */; };
+		07FC88F32B10D50D00143419 /* StudentRepoImp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88C42B10D50D00143419 /* StudentRepoImp.swift */; };
+		07FC88F42B10D50D00143419 /* PrefRepoImp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88C62B10D50D00143419 /* PrefRepoImp.swift */; };
+		07FC88F52B10D50D00143419 /* PreferenceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88C72B10D50D00143419 /* PreferenceData.swift */; };
+		07FC88F62B10D50D00143419 /* PrefRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88C82B10D50D00143419 /* PrefRepo.swift */; };
+		07FC88F72B10D50D00143419 /* ArticleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88CA2B10D50D00143419 /* ArticleData.swift */; };
+		07FC88F82B10D50D00143419 /* ArticleRepoImp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88CB2B10D50D00143419 /* ArticleRepoImp.swift */; };
+		07FC88F92B10D50D00143419 /* ArticleRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88CC2B10D50D00143419 /* ArticleRepo.swift */; };
+		07FC88FA2B10D50D00143419 /* LecturerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88CE2B10D50D00143419 /* LecturerData.swift */; };
+		07FC88FB2B10D50D00143419 /* LecturerRepoImp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88CF2B10D50D00143419 /* LecturerRepoImp.swift */; };
+		07FC88FC2B10D50D00143419 /* LecturerRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88D02B10D50D00143419 /* LecturerRepo.swift */; };
+		07FC88FD2B10D50D00143419 /* Realm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88D22B10D50D00143419 /* Realm.swift */; };
+		07FC88FE2B10D50D00143419 /* BaseRepoImp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88D32B10D50D00143419 /* BaseRepoImp.swift */; };
+		07FC88FF2B10D50D00143419 /* RealmSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88D42B10D50D00143419 /* RealmSync.swift */; };
+		07FC89002B10D50D00143419 /* Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88D52B10D50D00143419 /* Converter.swift */; };
+		07FC89012B10D50D00143419 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88D72B10D50D00143419 /* Storage.swift */; };
+		07FC89022B10D50D00143419 /* NotificationRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88D82B10D50D00143419 /* NotificationRepo.swift */; };
+		07FC89032B10D50E00143419 /* FCMService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88D92B10D50D00143419 /* FCMService.swift */; };
+		07FC89042B10D50E00143419 /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88DA2B10D50D00143419 /* PushNotification.swift */; };
+		07FC89052B10D50E00143419 /* Messaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88DB2B10D50D00143419 /* Messaging.swift */; };
+		07FC89062B10D50E00143419 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88DD2B10D50D00143419 /* Conversation.swift */; };
+		07FC89072B10D50E00143419 /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88DE2B10D50D00143419 /* Course.swift */; };
+		07FC89082B10D50E00143419 /* Lecturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88DF2B10D50D00143419 /* Lecturer.swift */; };
+		07FC89092B10D50E00143419 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88E02B10D50D00143419 /* Article.swift */; };
+		07FC890A2B10D50E00143419 /* Preference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88E12B10D50D00143419 /* Preference.swift */; };
+		07FC890B2B10D50E00143419 /* Student.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88E22B10D50D00143419 /* Student.swift */; };
+		07FC890C2B10D50E00143419 /* ResultRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88E32B10D50D00143419 /* ResultRealm.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		077A89B42B10EA7B00970FF6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		07FC887F2B0D3E8500143419 /* cursoIos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cursoIos.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		07FC88822B0D3E8500143419 /* cursoIosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cursoIosApp.swift; sourceTree = "<group>"; };
+		07FC88842B0D3E8500143419 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		07FC88862B0D3E8700143419 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		07FC88892B0D3E8700143419 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		07FC88AD2B10D50C00143419 /* AppModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppModule.swift; sourceTree = "<group>"; };
+		07FC88AE2B10D50C00143419 /* Project.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
+		07FC88AF2B10D50C00143419 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		07FC88B22B10D50C00143419 /* Realm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Realm.swift; sourceTree = "<group>"; };
+		07FC88B32B10D50C00143419 /* Web.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Web.swift; sourceTree = "<group>"; };
+		07FC88B42B10D50C00143419 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		07FC88B62B10D50C00143419 /* Const.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
+		07FC88BA2B10D50D00143419 /* CourseData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseData.swift; sourceTree = "<group>"; };
+		07FC88BB2B10D50D00143419 /* CourseRepoImp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseRepoImp.swift; sourceTree = "<group>"; };
+		07FC88BC2B10D50D00143419 /* CourseRepo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseRepo.swift; sourceTree = "<group>"; };
+		07FC88BE2B10D50D00143419 /* ChatRepo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatRepo.swift; sourceTree = "<group>"; };
+		07FC88BF2B10D50D00143419 /* ChatData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatData.swift; sourceTree = "<group>"; };
+		07FC88C02B10D50D00143419 /* ChatRepoImp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatRepoImp.swift; sourceTree = "<group>"; };
+		07FC88C22B10D50D00143419 /* StudentData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentData.swift; sourceTree = "<group>"; };
+		07FC88C32B10D50D00143419 /* StudentRepo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentRepo.swift; sourceTree = "<group>"; };
+		07FC88C42B10D50D00143419 /* StudentRepoImp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentRepoImp.swift; sourceTree = "<group>"; };
+		07FC88C62B10D50D00143419 /* PrefRepoImp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefRepoImp.swift; sourceTree = "<group>"; };
+		07FC88C72B10D50D00143419 /* PreferenceData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceData.swift; sourceTree = "<group>"; };
+		07FC88C82B10D50D00143419 /* PrefRepo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrefRepo.swift; sourceTree = "<group>"; };
+		07FC88CA2B10D50D00143419 /* ArticleData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleData.swift; sourceTree = "<group>"; };
+		07FC88CB2B10D50D00143419 /* ArticleRepoImp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleRepoImp.swift; sourceTree = "<group>"; };
+		07FC88CC2B10D50D00143419 /* ArticleRepo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleRepo.swift; sourceTree = "<group>"; };
+		07FC88CE2B10D50D00143419 /* LecturerData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LecturerData.swift; sourceTree = "<group>"; };
+		07FC88CF2B10D50D00143419 /* LecturerRepoImp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LecturerRepoImp.swift; sourceTree = "<group>"; };
+		07FC88D02B10D50D00143419 /* LecturerRepo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LecturerRepo.swift; sourceTree = "<group>"; };
+		07FC88D22B10D50D00143419 /* Realm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Realm.swift; sourceTree = "<group>"; };
+		07FC88D32B10D50D00143419 /* BaseRepoImp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRepoImp.swift; sourceTree = "<group>"; };
+		07FC88D42B10D50D00143419 /* RealmSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmSync.swift; sourceTree = "<group>"; };
+		07FC88D52B10D50D00143419 /* Converter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Converter.swift; sourceTree = "<group>"; };
+		07FC88D72B10D50D00143419 /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		07FC88D82B10D50D00143419 /* NotificationRepo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationRepo.swift; sourceTree = "<group>"; };
+		07FC88D92B10D50D00143419 /* FCMService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FCMService.swift; sourceTree = "<group>"; };
+		07FC88DA2B10D50D00143419 /* PushNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushNotification.swift; sourceTree = "<group>"; };
+		07FC88DB2B10D50D00143419 /* Messaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Messaging.swift; sourceTree = "<group>"; };
+		07FC88DD2B10D50D00143419 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		07FC88DE2B10D50D00143419 /* Course.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
+		07FC88DF2B10D50D00143419 /* Lecturer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lecturer.swift; sourceTree = "<group>"; };
+		07FC88E02B10D50D00143419 /* Article.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
+		07FC88E12B10D50D00143419 /* Preference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preference.swift; sourceTree = "<group>"; };
+		07FC88E22B10D50D00143419 /* Student.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Student.swift; sourceTree = "<group>"; };
+		07FC88E32B10D50D00143419 /* ResultRealm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultRealm.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		07FC887C2B0D3E8500143419 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				07FC88942B0D415400143419 /* RealmSwift in Frameworks */,
+				07FC88922B0D415400143419 /* Realm in Frameworks */,
+				07FC88A52B10D44D00143419 /* FirebaseMessaging in Frameworks */,
+				07FC88A92B10D44D00143419 /* FirebaseStorage in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		07FC88762B0D3E8500143419 = {
+			isa = PBXGroup;
+			children = (
+				07FC88812B0D3E8500143419 /* cursoIos */,
+				07FC88802B0D3E8500143419 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		07FC88802B0D3E8500143419 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				07FC887F2B0D3E8500143419 /* cursoIos.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		07FC88812B0D3E8500143419 /* cursoIos */ = {
+			isa = PBXGroup;
+			children = (
+				077A89B42B10EA7B00970FF6 /* GoogleService-Info.plist */,
+				07FC88B72B10D50D00143419 /* data */,
+				07FC88AC2B10D50C00143419 /* di */,
+				07FC88B02B10D50C00143419 /* global */,
+				07FC88822B0D3E8500143419 /* cursoIosApp.swift */,
+				07FC88842B0D3E8500143419 /* ContentView.swift */,
+				07FC88862B0D3E8700143419 /* Assets.xcassets */,
+				07FC88882B0D3E8700143419 /* Preview Content */,
+			);
+			path = cursoIos;
+			sourceTree = "<group>";
+		};
+		07FC88882B0D3E8700143419 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88892B0D3E8700143419 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		07FC88AC2B10D50C00143419 /* di */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88AD2B10D50C00143419 /* AppModule.swift */,
+				07FC88AE2B10D50C00143419 /* Project.swift */,
+				07FC88AF2B10D50C00143419 /* AppDelegate.swift */,
+			);
+			path = di;
+			sourceTree = "<group>";
+		};
+		07FC88B02B10D50C00143419 /* global */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88B12B10D50C00143419 /* util */,
+				07FC88B52B10D50C00143419 /* base */,
+			);
+			path = global;
+			sourceTree = "<group>";
+		};
+		07FC88B12B10D50C00143419 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88B22B10D50C00143419 /* Realm.swift */,
+				07FC88B32B10D50C00143419 /* Web.swift */,
+				07FC88B42B10D50C00143419 /* Utils.swift */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		07FC88B52B10D50C00143419 /* base */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88B62B10D50C00143419 /* Const.swift */,
+			);
+			path = base;
+			sourceTree = "<group>";
+		};
+		07FC88B72B10D50D00143419 /* data */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88B82B10D50D00143419 /* dataSources */,
+				07FC88D12B10D50D00143419 /* util */,
+				07FC88D62B10D50D00143419 /* firebase */,
+				07FC88DC2B10D50D00143419 /* model */,
+			);
+			path = data;
+			sourceTree = "<group>";
+		};
+		07FC88B82B10D50D00143419 /* dataSources */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88B92B10D50D00143419 /* course */,
+				07FC88BD2B10D50D00143419 /* chat */,
+				07FC88C12B10D50D00143419 /* student */,
+				07FC88C52B10D50D00143419 /* pref */,
+				07FC88C92B10D50D00143419 /* article */,
+				07FC88CD2B10D50D00143419 /* lecturer */,
+			);
+			path = dataSources;
+			sourceTree = "<group>";
+		};
+		07FC88B92B10D50D00143419 /* course */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88BA2B10D50D00143419 /* CourseData.swift */,
+				07FC88BB2B10D50D00143419 /* CourseRepoImp.swift */,
+				07FC88BC2B10D50D00143419 /* CourseRepo.swift */,
+			);
+			path = course;
+			sourceTree = "<group>";
+		};
+		07FC88BD2B10D50D00143419 /* chat */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88BE2B10D50D00143419 /* ChatRepo.swift */,
+				07FC88BF2B10D50D00143419 /* ChatData.swift */,
+				07FC88C02B10D50D00143419 /* ChatRepoImp.swift */,
+			);
+			path = chat;
+			sourceTree = "<group>";
+		};
+		07FC88C12B10D50D00143419 /* student */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88C22B10D50D00143419 /* StudentData.swift */,
+				07FC88C32B10D50D00143419 /* StudentRepo.swift */,
+				07FC88C42B10D50D00143419 /* StudentRepoImp.swift */,
+			);
+			path = student;
+			sourceTree = "<group>";
+		};
+		07FC88C52B10D50D00143419 /* pref */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88C62B10D50D00143419 /* PrefRepoImp.swift */,
+				07FC88C72B10D50D00143419 /* PreferenceData.swift */,
+				07FC88C82B10D50D00143419 /* PrefRepo.swift */,
+			);
+			path = pref;
+			sourceTree = "<group>";
+		};
+		07FC88C92B10D50D00143419 /* article */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88CA2B10D50D00143419 /* ArticleData.swift */,
+				07FC88CB2B10D50D00143419 /* ArticleRepoImp.swift */,
+				07FC88CC2B10D50D00143419 /* ArticleRepo.swift */,
+			);
+			path = article;
+			sourceTree = "<group>";
+		};
+		07FC88CD2B10D50D00143419 /* lecturer */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88CE2B10D50D00143419 /* LecturerData.swift */,
+				07FC88CF2B10D50D00143419 /* LecturerRepoImp.swift */,
+				07FC88D02B10D50D00143419 /* LecturerRepo.swift */,
+			);
+			path = lecturer;
+			sourceTree = "<group>";
+		};
+		07FC88D12B10D50D00143419 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88D22B10D50D00143419 /* Realm.swift */,
+				07FC88D32B10D50D00143419 /* BaseRepoImp.swift */,
+				07FC88D42B10D50D00143419 /* RealmSync.swift */,
+				07FC88D52B10D50D00143419 /* Converter.swift */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		07FC88D62B10D50D00143419 /* firebase */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88D72B10D50D00143419 /* Storage.swift */,
+				07FC88D82B10D50D00143419 /* NotificationRepo.swift */,
+				07FC88D92B10D50D00143419 /* FCMService.swift */,
+				07FC88DA2B10D50D00143419 /* PushNotification.swift */,
+				07FC88DB2B10D50D00143419 /* Messaging.swift */,
+			);
+			path = firebase;
+			sourceTree = "<group>";
+		};
+		07FC88DC2B10D50D00143419 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				07FC88DD2B10D50D00143419 /* Conversation.swift */,
+				07FC88DE2B10D50D00143419 /* Course.swift */,
+				07FC88DF2B10D50D00143419 /* Lecturer.swift */,
+				07FC88E02B10D50D00143419 /* Article.swift */,
+				07FC88E12B10D50D00143419 /* Preference.swift */,
+				07FC88E22B10D50D00143419 /* Student.swift */,
+				07FC88E32B10D50D00143419 /* ResultRealm.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		07FC887E2B0D3E8500143419 /* cursoIos */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 07FC888D2B0D3E8700143419 /* Build configuration list for PBXNativeTarget "cursoIos" */;
+			buildPhases = (
+				07FC887B2B0D3E8500143419 /* Sources */,
+				07FC887C2B0D3E8500143419 /* Frameworks */,
+				07FC887D2B0D3E8500143419 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = cursoIos;
+			packageProductDependencies = (
+				07FC88912B0D415400143419 /* Realm */,
+				07FC88932B0D415400143419 /* RealmSwift */,
+				07FC88A42B10D44D00143419 /* FirebaseMessaging */,
+				07FC88A82B10D44D00143419 /* FirebaseStorage */,
+			);
+			productName = cursoIos;
+			productReference = 07FC887F2B0D3E8500143419 /* cursoIos.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		07FC88772B0D3E8500143419 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					07FC887E2B0D3E8500143419 = {
+						CreatedOnToolsVersion = 15.0.1;
+					};
+				};
+			};
+			buildConfigurationList = 07FC887A2B0D3E8500143419 /* Build configuration list for PBXProject "cursoIos" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 07FC88762B0D3E8500143419;
+			packageReferences = (
+				07FC88902B0D415400143419 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				07FC88952B10D44D00143419 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
+			productRefGroup = 07FC88802B0D3E8500143419 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				07FC887E2B0D3E8500143419 /* cursoIos */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		07FC887D2B0D3E8500143419 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				07FC888A2B0D3E8700143419 /* Preview Assets.xcassets in Resources */,
+				07FC88872B0D3E8700143419 /* Assets.xcassets in Resources */,
+				077A89B52B10EA7B00970FF6 /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		07FC887B2B0D3E8500143419 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				07FC88FB2B10D50D00143419 /* LecturerRepoImp.swift in Sources */,
+				07FC88F82B10D50D00143419 /* ArticleRepoImp.swift in Sources */,
+				07FC88F52B10D50D00143419 /* PreferenceData.swift in Sources */,
+				07FC88FD2B10D50D00143419 /* Realm.swift in Sources */,
+				07FC89092B10D50E00143419 /* Article.swift in Sources */,
+				07FC88EB2B10D50D00143419 /* CourseData.swift in Sources */,
+				07FC88852B0D3E8500143419 /* ContentView.swift in Sources */,
+				07FC88ED2B10D50D00143419 /* CourseRepo.swift in Sources */,
+				07FC89042B10D50E00143419 /* PushNotification.swift in Sources */,
+				07FC89052B10D50E00143419 /* Messaging.swift in Sources */,
+				07FC890C2B10D50E00143419 /* ResultRealm.swift in Sources */,
+				07FC88F42B10D50D00143419 /* PrefRepoImp.swift in Sources */,
+				07FC89022B10D50D00143419 /* NotificationRepo.swift in Sources */,
+				07FC89002B10D50D00143419 /* Converter.swift in Sources */,
+				07FC88F92B10D50D00143419 /* ArticleRepo.swift in Sources */,
+				07FC88EE2B10D50D00143419 /* ChatRepo.swift in Sources */,
+				07FC88FF2B10D50D00143419 /* RealmSync.swift in Sources */,
+				07FC88832B0D3E8500143419 /* cursoIosApp.swift in Sources */,
+				07FC88E42B10D50D00143419 /* AppModule.swift in Sources */,
+				07FC88EC2B10D50D00143419 /* CourseRepoImp.swift in Sources */,
+				07FC890B2B10D50E00143419 /* Student.swift in Sources */,
+				07FC89062B10D50E00143419 /* Conversation.swift in Sources */,
+				07FC88F62B10D50D00143419 /* PrefRepo.swift in Sources */,
+				07FC88F72B10D50D00143419 /* ArticleData.swift in Sources */,
+				07FC88FC2B10D50D00143419 /* LecturerRepo.swift in Sources */,
+				07FC88EF2B10D50D00143419 /* ChatData.swift in Sources */,
+				07FC89032B10D50E00143419 /* FCMService.swift in Sources */,
+				07FC88E62B10D50D00143419 /* AppDelegate.swift in Sources */,
+				07FC88E52B10D50D00143419 /* Project.swift in Sources */,
+				07FC89072B10D50E00143419 /* Course.swift in Sources */,
+				07FC88E72B10D50D00143419 /* Realm.swift in Sources */,
+				07FC88E82B10D50D00143419 /* Web.swift in Sources */,
+				07FC89082B10D50E00143419 /* Lecturer.swift in Sources */,
+				07FC88FE2B10D50D00143419 /* BaseRepoImp.swift in Sources */,
+				07FC88F32B10D50D00143419 /* StudentRepoImp.swift in Sources */,
+				07FC890A2B10D50E00143419 /* Preference.swift in Sources */,
+				07FC88E92B10D50D00143419 /* Utils.swift in Sources */,
+				07FC88F12B10D50D00143419 /* StudentData.swift in Sources */,
+				07FC88F22B10D50D00143419 /* StudentRepo.swift in Sources */,
+				07FC88F02B10D50D00143419 /* ChatRepoImp.swift in Sources */,
+				07FC89012B10D50D00143419 /* Storage.swift in Sources */,
+				07FC88FA2B10D50D00143419 /* LecturerData.swift in Sources */,
+				07FC88EA2B10D50D00143419 /* Const.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		07FC888B2B0D3E8700143419 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		07FC888C2B0D3E8700143419 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		07FC888E2B0D3E8700143419 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"cursoIos/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Curso;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.curso.free;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		07FC888F2B0D3E8700143419 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"cursoIos/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Curso;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.curso.free;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		07FC887A2B0D3E8500143419 /* Build configuration list for PBXProject "cursoIos" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				07FC888B2B0D3E8700143419 /* Debug */,
+				07FC888C2B0D3E8700143419 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		07FC888D2B0D3E8700143419 /* Build configuration list for PBXNativeTarget "cursoIos" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				07FC888E2B0D3E8700143419 /* Debug */,
+				07FC888F2B0D3E8700143419 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		07FC88902B0D415400143419 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		07FC88952B10D44D00143419 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.18.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		07FC88912B0D415400143419 /* Realm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 07FC88902B0D415400143419 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = Realm;
+		};
+		07FC88932B0D415400143419 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 07FC88902B0D415400143419 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+		07FC88A42B10D44D00143419 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 07FC88952B10D44D00143419 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		07FC88A82B10D44D00143419 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 07FC88952B10D44D00143419 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 07FC88772B0D3E8500143419 /* Project object */;
+}
