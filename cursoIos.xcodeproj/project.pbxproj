@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		077A89B52B10EA7B00970FF6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 077A89B42B10EA7B00970FF6 /* GoogleService-Info.plist */; };
+		076996D92B1129A2009D727F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 076996D82B1129A1009D727F /* GoogleService-Info.plist */; };
 		07FC88832B0D3E8500143419 /* cursoIosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88822B0D3E8500143419 /* cursoIosApp.swift */; };
 		07FC88852B0D3E8500143419 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88842B0D3E8500143419 /* ContentView.swift */; };
 		07FC88872B0D3E8700143419 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07FC88862B0D3E8700143419 /* Assets.xcassets */; };
@@ -60,7 +60,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		077A89B42B10EA7B00970FF6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		076996D82B1129A1009D727F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		076996DA2B112CD6009D727F /* cursoIos.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = cursoIos.entitlements; sourceTree = "<group>"; };
+		076996DB2B112CE2009D727F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		07FC887F2B0D3E8500143419 /* cursoIos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cursoIos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		07FC88822B0D3E8500143419 /* cursoIosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cursoIosApp.swift; sourceTree = "<group>"; };
 		07FC88842B0D3E8500143419 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -143,7 +145,9 @@
 		07FC88812B0D3E8500143419 /* cursoIos */ = {
 			isa = PBXGroup;
 			children = (
-				077A89B42B10EA7B00970FF6 /* GoogleService-Info.plist */,
+				076996DB2B112CE2009D727F /* Info.plist */,
+				076996DA2B112CD6009D727F /* cursoIos.entitlements */,
+				076996D82B1129A1009D727F /* GoogleService-Info.plist */,
 				07FC88B72B10D50D00143419 /* data */,
 				07FC88AC2B10D50C00143419 /* di */,
 				07FC88B02B10D50C00143419 /* global */,
@@ -390,8 +394,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				07FC888A2B0D3E8700143419 /* Preview Assets.xcassets in Resources */,
+				076996D92B1129A2009D727F /* GoogleService-Info.plist in Resources */,
 				07FC88872B0D3E8700143419 /* Assets.xcassets in Resources */,
-				077A89B52B10EA7B00970FF6 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -575,11 +579,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = cursoIos/cursoIos.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"cursoIos/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = cursoIos/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Curso;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -605,11 +611,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = cursoIos/cursoIos.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"cursoIos/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = cursoIos/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Curso;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
