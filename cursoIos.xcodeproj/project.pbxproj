@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		076996D92B1129A2009D727F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 076996D82B1129A1009D727F /* GoogleService-Info.plist */; };
+		076996DD2B11307C009D727F /* SecureConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076996DC2B11307C009D727F /* SecureConst.swift */; };
 		07FC88832B0D3E8500143419 /* cursoIosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88822B0D3E8500143419 /* cursoIosApp.swift */; };
 		07FC88852B0D3E8500143419 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88842B0D3E8500143419 /* ContentView.swift */; };
 		07FC88872B0D3E8700143419 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07FC88862B0D3E8700143419 /* Assets.xcassets */; };
@@ -63,6 +64,7 @@
 		076996D82B1129A1009D727F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		076996DA2B112CD6009D727F /* cursoIos.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = cursoIos.entitlements; sourceTree = "<group>"; };
 		076996DB2B112CE2009D727F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		076996DC2B11307C009D727F /* SecureConst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureConst.swift; sourceTree = "<group>"; };
 		07FC887F2B0D3E8500143419 /* cursoIos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cursoIos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		07FC88822B0D3E8500143419 /* cursoIosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cursoIosApp.swift; sourceTree = "<group>"; };
 		07FC88842B0D3E8500143419 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 			isa = PBXGroup;
 			children = (
 				07FC88B62B10D50C00143419 /* Const.swift */,
+				076996DC2B11307C009D727F /* SecureConst.swift */,
 			);
 			path = base;
 			sourceTree = "<group>";
@@ -420,6 +423,7 @@
 				07FC88F42B10D50D00143419 /* PrefRepoImp.swift in Sources */,
 				07FC89022B10D50D00143419 /* NotificationRepo.swift in Sources */,
 				07FC89002B10D50D00143419 /* Converter.swift in Sources */,
+				076996DD2B11307C009D727F /* SecureConst.swift in Sources */,
 				07FC88F92B10D50D00143419 /* ArticleRepo.swift in Sources */,
 				07FC88EE2B10D50D00143419 /* ChatRepo.swift in Sources */,
 				07FC88FF2B10D50D00143419 /* RealmSync.swift in Sources */,
