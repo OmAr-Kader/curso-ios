@@ -1,3 +1,5 @@
+
+
 let SPLASH_SCREEN_ROUTE: String = "splash_screen"
 let HOME_LECTURER_SCREEN_ROUTE: String = "home_lecturer_screen"
 let LOG_IN_LECTURER_SCREEN_ROUTE: String = "logIn_lecturer_screen"
