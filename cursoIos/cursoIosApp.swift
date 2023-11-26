@@ -10,13 +10,19 @@ import SwiftUI
 @main
 struct cursoIosApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @StateObject var dependency = AppModule()
+    @StateObject var app = AppModule()
+    @Environment(\.colorScheme) var colorScheme
+
+    init() {
+        app.initTheme(
+            isDarkMode: colorScheme == .dark
+        )
+    }
     
     var body: some Scene {
         WindowGroup {
-            ContentView().environmentObject(dependency)
+            ContentView().environmentObject(app)
         }
     }
 }
-	
-	
+

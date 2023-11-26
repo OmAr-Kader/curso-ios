@@ -5,10 +5,10 @@ import FirebaseCore
 extension FirebaseApp {
  
     func upload(
-        uri: URL,
-        nameFile: String,
-        invoke: @escaping (String) -> Unit,
-        failed: @escaping () -> Unit
+        _ uri: URL,
+        _ nameFile: String,
+        _ invoke: @escaping (String) -> Unit,
+        _ failed: @escaping () -> Unit
     ) {
         let storage = Storage.storage(app: self).reference().child(nameFile)
         storage.putFile(from: uri) { it, e in

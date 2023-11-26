@@ -1,12 +1,27 @@
 import Foundation
 import RealmSwift
-
+import FirebaseCore
 //https://github.com/realm/realm-swift
 //https://github.com/firebase/firebase-ios-sdk
 
 class AppModule: ObservableObject {
     
+    var theme: Theme = Theme(isDarkMode: true)
+    
     var pro: Project? = nil
+
+    @MainActor
+    init() {
+        Task(priority: .high) {
+            pro = await provideProjcet()
+        }
+    }
+    
+    func initTheme(isDarkMode: Bool) {
+        self.theme = Theme(
+            isDarkMode: isDarkMode
+        )
+    }
     
     func project() async -> Project {
         if(pro != nil) {
@@ -16,12 +31,10 @@ class AppModule: ObservableObject {
             return pro!
         }
     }
-
+    
     @MainActor
-    init() {
-        Task(priority: .high){
-            pro = await provideProjcet()
-        }
+    func provideFirebaseApp() -> FirebaseApp? {
+        return FirebaseApp.app()
     }
     
     @MainActor
@@ -114,7 +127,8 @@ class AppModule: ObservableObject {
             lecturer: LecturerData(repository: lecturerRepo),
             chat: ChatData(repository: chatRepo),
             student: StudentData(repository: studentRepo),
-            preference: PreferenceData(repository: preferenceRepo)
+            preference: PreferenceData(repository: preferenceRepo),
+            fireApp: provideFirebaseApp()
         )
     }
 }

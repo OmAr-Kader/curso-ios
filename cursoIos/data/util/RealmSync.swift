@@ -10,7 +10,7 @@ class RealmSync {
         realmApp = app
         realmCloud = realm
     }
-    
+
     func cloud() async -> Realm? {
         if (realmCloud != nil) {
             return realmCloud

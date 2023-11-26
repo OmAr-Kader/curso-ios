@@ -8,13 +8,20 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var app: AppModule
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+           VStack {
+               NavigationLink {
+                   LoginScreen().environmentObject(app)
+               } label: {
+                   Image(systemName: "globe")
+                       .imageScale(.large)
+                       .foregroundStyle(.tint)
+                   Text("Hello, world!")
+               }
+           }.padding()
         }
-        .padding()
     }
 }

@@ -10,4 +10,5 @@ struct Project {
     let chat: ChatData
     let student: StudentData
     let preference: PreferenceData
+    let fireApp: FirebaseApp?
 }
