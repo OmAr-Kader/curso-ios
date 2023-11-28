@@ -16,11 +16,12 @@ class AppModule: ObservableObject {
             pro = await provideProjcet()
         }
     }
-    
-    func initTheme(isDarkMode: Bool) {
+
+    func initTheme(isDarkMode: Bool) -> Self {
         self.theme = Theme(
             isDarkMode: isDarkMode
         )
+        return self
     }
     
     func project() async -> Project {
@@ -52,10 +53,12 @@ class AppModule: ObservableObject {
             return nil
         }
         do {
+            return nil
+            /*
             return try await Realm(
                 configuration: user!.initialSubscriptionBlock,
                 downloadBeforeOpen: .always
-            )
+            )*/
         } catch {
             return nil
         }

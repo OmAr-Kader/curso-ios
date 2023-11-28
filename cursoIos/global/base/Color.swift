@@ -1,5 +1,6 @@
 import SwiftUI
 
+
 extension Color {
     var darker: Color {
         return Color(
@@ -43,111 +44,56 @@ func rateColor(rate: Double) -> Color {
     return Color(UIColor(.yellow) * 0.5 + .darkGray * 0.5)
 }
 
-/*
-var textForPrimaryColor: Color
-    get() = if (this) Color.Black else Color.White
-
-
-@androidx.compose.runtime.Composable
-fun Bool.outlinedTextFieldStyle(): androidx.compose.material3.TextFieldColors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
-    focusedBorderColor = MaterialTheme.colorScheme.secondary,
-    errorBorderColor = error,
-    unfocusedBorderColor = textColor,
-    focusedPlaceholderColor = Color.Gray,
-    focusedTextColor = textColor,
-    unfocusedTextColor = textColor,
-)
-
-@androidx.compose.runtime.Composable
-fun Bool.outlinedDisabledStyle(isError: Bool): androidx.compose.material3.TextFieldColors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
-    focusedBorderColor = MaterialTheme.colorScheme.secondary,
-    disabledBorderColor = if (isError) error else  textColor,
-    disabledLabelColor = textColor,
-    disabledPlaceholderColor = textColor,
-    disabledContainerColor = Color.Transparent,
-    disabledTextColor = textColor,
-    errorBorderColor = error,
-    unfocusedBorderColor = textColor,
-    focusedPlaceholderColor = Color.Gray,
-    focusedTextColor = textColor,
-    unfocusedTextColor = textColor,
-)*/
-/*
-let Bool.backDark: Color
-    get() = if (this) Color(0x1F1F1F) else Color.White
-
-let Bool.backDarkSec: Color
-    get() = if (this) Color(0x3D3D3D) else Color(0xC9C9C9)
-
-let Bool.backDarkThr: Color
-    get() = if (this) Color(0x646464) else Color(0xACACAC)
-
-let Bool.backGreyTrans: Color
-    get() = if (this) Color(0x59555555) else Color(0x59AAAAAA)
-
-let Bool.textColor: Color
-    get() = if (this) Color.White else Color.Black
-
-let Bool.textGrayColor: Color
-    get() = if (this) Color.LightGray else Color.DarkGray
-
-let Bool.error: Color
-    get() = if (this) Color(0xFF1515) else Color(0x9B0000)
-
-let Bool.textHintColor: Color
-    get() = if (this) Color(0xAFAFAF) else Color(0x505050)
-*/
-
 var shadowColor: Color {
     return Color(red: 0, green: 0, blue: 0, opacity: 50)
 }
 
 var Purple80: Color {
-    return Color(red: 208, green: 188, blue: 255)
+    return Color(red: 208 / 255, green: 188 / 255, blue: 255 / 255)
 }
 var PurpleGrey80: Color {
-    return Color(red: 204,green: 194, blue: 220)
+    return Color(red: 204  / 255, green: 194 / 255, blue: 220 / 255)
 }
 var Pink80: Color {
-    return Color(red: 239,green: 184, blue: 200)
+    return Color(red: 239 / 255,green: 184 / 255, blue: 200 / 255)
 }
 
 var Purple40: Color {
-    return Color(red: 102, green: 80, blue: 164)
+    return Color(red: 102 / 255, green: 80 / 255, blue: 164 / 255)
 }
 
 var PurpleGrey40: Color {
-    return Color(red: 98, green: 91, blue: 113)
+    return Color(red: 98 / 255, green: 91 / 255, blue: 113 / 255)
 }
 
 var Pink40: Color {
-    return Color(red: 125, green: 82, blue: 96)
+    return Color(red: 125 / 255, green: 82 / 255, blue: 96 / 255)
 }
 
 var Green: Color {
-    return Color(red: 1, green: 189, blue: 1)
+    return Color(red: 1 / 255, green: 189 / 255, blue: 1 / 255)
 }
 
 var Blue: Color {
-    return Color(red: 13, green: 23, blue: 213)
+    return Color(red: 13 / 255, green: 23 / 255, blue: 213 / 255)
 }
 
 var DarkGray: Color {
-    return Color(red: 32, green: 32, blue: 32)
+    return Color(red: 32 / 255, green: 32 / 255, blue: 32 / 255)
 }
 
 var LightViolet: Color {
-    return Color(red: 229, green: 215, blue: 232)
+    return Color(red: 229 / 255, green: 215 / 255, blue: 232 / 255)
 }
 
 var Yellow: Color {
-    return Color(red: 224, green: 224, blue: 12)
+    return Color(red: 224 / 255, green: 224 / 255, blue: 12 / 255)
 }
 
 var BackSec: Color {
-    return Color(red: 61, green: 61, blue: 61)
+    return Color(red: 61 / 255, green: 61 / 255, blue: 61 / 255)
 }
 
 var BackSecDark: Color {
-    return Color(red: 201, green: 201, blue: 201)
+    return Color(red: 201 / 255, green: 201 / 255, blue: 201 / 255)
 }

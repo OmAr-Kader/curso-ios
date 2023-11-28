@@ -12,16 +12,14 @@ struct cursoIosApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var app = AppModule()
     @Environment(\.colorScheme) var colorScheme
-
-    init() {
-        app.initTheme(
-            isDarkMode: colorScheme == .dark
-        )
-    }
     
     var body: some Scene {
         WindowGroup {
-            ContentView().environmentObject(app)
+            LoginScreen().environmentObject(
+                app.initTheme(
+                    isDarkMode: colorScheme == .dark
+                )
+            )
         }
     }
 }

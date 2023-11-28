@@ -19,15 +19,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
            _ application: UIApplication,
            didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
        ) -> Bool {
-           let options = FirebaseOptions.init(
+           /*let options = FirebaseOptions.init(
                googleAppID: FIREBASE_APP_ID,
                gcmSenderID: FIREBASE_SENDER_ID
            )
            //options.apiKey = FIREBASE_API_KEY
            options.storageBucket = FIREBASE_STORAGE_BUCKET
            options.projectID = FIREBASE_PROJECT_ID
-           FirebaseApp.configure(options: options)
-
+           FirebaseApp.configure(options: options)*/
+           
+           FirebaseApp.configure()
            // [START set_messaging_delegate]
            Messaging.messaging().delegate = self
            // [END set_messaging_delegate]
@@ -50,7 +51,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
            }
 
            application.registerForRemoteNotifications()
-
+/*
            // [END register_for_notifications]
            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
 
@@ -62,7 +63,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                viewController = storyBoard.instantiateViewController(withIdentifier: "storyboardIdentifier") // User not tap notificaiton
            }
            self.window?.rootViewController = viewController
-           self.window?.makeKeyAndVisible()
+           self.window?.makeKeyAndVisible()*/
            return true
          }
 

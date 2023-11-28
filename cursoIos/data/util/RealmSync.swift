@@ -12,6 +12,8 @@ class RealmSync {
     }
 
     func cloud() async -> Realm? {
+        return nil
+        /*
         if (realmCloud != nil) {
             return realmCloud
         } else {
@@ -29,7 +31,7 @@ class RealmSync {
                     return nil
                 }
             }
-        }
+        }*/
     }
 
 }

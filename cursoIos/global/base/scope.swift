@@ -3,25 +3,25 @@ import RealmSwift
 
 struct Scope {
     var previousTask: Task<Void, Error>?
-
-     mutating func launch(block: @Sendable @escaping () async -> Void) {
+    var main = OperationQueue.main
+    
+    mutating func launch(block: @Sendable @escaping () async -> Void) {
         previousTask = Task(priority: .background) { [previousTask] in
             let _ = await previousTask?.result
             return await block()
         }
     }
     
-    mutating func launchNew(block: @Sendable @escaping () async throws -> Void) {
+    mutating func launchNew(block: @escaping @Sendable () async -> Void) {
         previousTask?.cancel()
         previousTask = Task(priority: .background) {
-            return try await block()
+            return await block()
         }
     }
     
-    mutating func launchMain(block: @Sendable @escaping () async throws -> Void) {
-        previousTask?.cancel()
-        previousTask = Task { @MainActor in
-            return try await block()
+    mutating func launchMain(block: @escaping @Sendable () -> Void) {
+        Task { @MainActor in
+            block()
         }
     }
 }

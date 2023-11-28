@@ -8,10 +8,7 @@ class LogInObserve : ObservableObject {
 
     var app: AppModule?
 
-    @Published private var _state = State()
-    var state: State {
-        return _state
-    }
+    @Published var state = State()
 
     func intiApp(_ app: AppModule) {
         if (self.app == nil) {
@@ -24,16 +21,16 @@ class LogInObserve : ObservableObject {
         invoke: @escaping (Lecturer, Int) -> Unit,
         failed: @escaping (String) -> Unit
     ) {
-        let s = _state
+        let s = state
         if (s.email.isEmpty || s.password.isEmpty) {
-            _state = state.copy(isErrorPressed: true)
+            self.state = self.state.copy(isErrorPressed: true)
             return
         }
         if (!isNetworkAvailable()) {
             failed("Failed: Internet is disconnected")
             return
         }
-        _state = state.copy(isProcessing: true)
+        self.state = self.state.copy(isProcessing: true)
         doLogIn(s, invoke, failed)
     }
 
@@ -51,7 +48,7 @@ class LogInObserve : ObservableObject {
                         self.saveUserState(r.value, invoke: invoke, failed: failed)
                     }
                 } else {
-                    self._state = self.state.copy(isProcessing: false)
+                    self.state = self.state.copy(isProcessing: false)
                     failed("Failed")
                 }
             }
@@ -68,12 +65,12 @@ class LogInObserve : ObservableObject {
                 await self.app?.project().course.getLecturerCourses(
                     id: lec!._id.stringValue
                 ) { r in
-                    self._state = self.state.copy(isProcessing: false)
+                    self.state = self.state.copy(isProcessing: false)
                     invoke(lec!, r.value.count)
                 }
             }
         } else {
-            self._state = self.state.copy(isProcessing: false)
+            self.state = self.state.copy(isProcessing: false)
             failed("Failed")
         }
     }
@@ -82,16 +79,16 @@ class LogInObserve : ObservableObject {
         invoke: @escaping (Lecturer) -> Unit,
         failed: @escaping (String) -> Unit
     ) {
-        let s = _state
+        let s = state
         if (s.email.isEmpty || s.password.isEmpty || s.brief.isEmpty || s.imageUri == nil || s.university.isEmpty || s.specialty.isEmpty || s.lecturerName.isEmpty || s.mobile.isEmpty) {
-            _state = state.copy(isErrorPressed: true)
+            self.state = self.state.copy(isErrorPressed: true)
             return
         }
         if (!isNetworkAvailable()) {
             failed("Failed: Internet is disconnected")
             return
         }
-        _state = state.copy(isProcessing: true)
+        self.state = self.state.copy(isProcessing: true)
         doSignUp(s, invoke, failed)
     }
     
@@ -103,7 +100,7 @@ class LogInObserve : ObservableObject {
         scope.launch {
             await self.realmSignIn(s: s,failed: failed).letBackN { user in
                 if (user != nil) {
-                    self._state = self.state.copy(alreadyLoggedIn: true)
+                    self.state = self.state.copy(alreadyLoggedIn: true)
                     await self.app?.project().fireApp?.upload(
                         s.imageUri!,
                         "LecturerImage/${user.id} ${System.currentTimeMillis()}",
@@ -116,11 +113,11 @@ class LogInObserve : ObservableObject {
                                 failed: failed
                             )
                     }, {
-                        self._state = self.state.copy(isProcessing: false)
+                        self.state = self.state.copy(isProcessing: false)
                         failed("Failed")
                     })
                 } else {
-                    self._state = self.state.copy(isProcessing: false)
+                    self.state = self.state.copy(isProcessing: false)
                     failed("Failed")
                 }
             }
@@ -150,7 +147,7 @@ class LogInObserve : ObservableObject {
                 )
             )
             if (it?.result == REALM_SUCCESS && it?.value != nil) {
-                self._state = self.state.copy(isProcessing: false)
+                self.state = self.state.copy(isProcessing: false)
                 invoke(it!.value!)
             } else {
                 failed("Failed")
@@ -187,7 +184,7 @@ class LogInObserve : ObservableObject {
                 return await loginRealm(s)
             } catch let error {
                 if (error.localizedDescription.contains("existing")) {
-                    _state = state.copy(isProcessing: false)
+                    self.state = self.state.copy(isProcessing: false)
                     failed("Failed: Already Exists")
                     return nil
                 } else {
@@ -209,42 +206,50 @@ class LogInObserve : ObservableObject {
     }
     
     func isLogin(it: Bool) {
-        _state = state.copy(isErrorPressed: false, isLogIn: it)
+        self.state = self.state.copy(isErrorPressed: false, isLogIn: it)
     }
 
     func setEmail(it: String) {
-        _state = state.copy(email: it, isErrorPressed: false)
+        self.state = self.state.copy(email: it, isErrorPressed: false)
     }
 
     func setPassword(it: String) {
-        _state = state.copy(password: it, isErrorPressed: false)
+        self.state = self.state.copy(password: it, isErrorPressed: false)
     }
 
     func setName(it: String) {
-        _state = state.copy(lecturerName: it, isErrorPressed: false)
+        self.state = self.state.copy(lecturerName: it, isErrorPressed: false)
     }
 
     func setMobile(it: String) {
-        _state = state.copy(mobile: it, isErrorPressed: false)
+        self.state = self.state.copy(mobile: it, isErrorPressed: false)
     }
 
     func setBrief(it: String) {
-        _state = state.copy(brief: it, isErrorPressed: false)
+        self.state = self.state.copy(brief: it, isErrorPressed: false)
     }
 
     func setSpecialty(it: String) {
-        _state = state.copy(specialty: it, isErrorPressed: false)
+        self.state = self.state.copy(specialty: it, isErrorPressed: false)
     }
 
     func setUniversity(it: String) {
-        _state = state.copy(university: it, isErrorPressed: false)
+        self.state = self.state.copy(university: it, isErrorPressed: false)
     }
 
     func setImageUri(it: URL) {
-        _state = state.copy(imageUri: it, isErrorPressed: false)
+        scope.launchMain {
+            self.state = self.state.copy(imageUri: it, isErrorPressed: false)
+            logger("imagUri", "Done")
+        }
     }
     
-    class State {
+    func setNadasdame() {
+        self.state = self.state.copy(isErrorPressed: true)
+    }
+
+    
+    struct State {
         var email: String = ""
         var password: String = ""
         var lecturerName: String = ""
@@ -258,7 +263,7 @@ class LogInObserve : ObservableObject {
         var isProcessing: Bool = false
         var alreadyLoggedIn: Bool = false
         
-        func copy(
+        mutating func copy(
             email: String? = nil,
             password: String? = nil,
             lecturerName: String? = nil,
