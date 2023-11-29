@@ -11,6 +11,8 @@
 		0740F9EE2B13CD2C00ECC5E0 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0740F9ED2B13CD2C00ECC5E0 /* Color.swift */; };
 		0740F9F02B13DDC700ECC5E0 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0740F9EF2B13DDC700ECC5E0 /* Theme.swift */; };
 		0740F9F32B13F5F500ECC5E0 /* icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0740F9F22B13F5F500ECC5E0 /* icons.swift */; };
+		07592E9D2B16BFB9008E9C57 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07592E9C2B16BFB9008E9C57 /* Views.swift */; };
+		07592E9F2B178752008E9C57 /* PrefObserve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07592E9E2B178752008E9C57 /* PrefObserve.swift */; };
 		076996D92B1129A2009D727F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 076996D82B1129A1009D727F /* GoogleService-Info.plist */; };
 		076996E42B115402009D727F /* LogInScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076996E32B115402009D727F /* LogInScreen.swift */; };
 		076996E62B11545D009D727F /* LogInObserve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076996E52B11545D009D727F /* LogInObserve.swift */; };
@@ -18,8 +20,10 @@
 		077FFF012B14FF2800A466FE /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077FFF002B14FF2800A466FE /* Media.swift */; };
 		077FFF032B15149B00A466FE /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077FFF022B15149B00A466FE /* Image.swift */; };
 		077FFF052B16996B00A466FE /* OutlinedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077FFF042B16996A00A466FE /* OutlinedTextField.swift */; };
+		07C105812B17C6E9003BBBA5 /* Navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C105802B17C6E9003BBBA5 /* Navigate.swift */; };
+		07C105832B17D153003BBBA5 /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C105822B17D153003BBBA5 /* BackButton.swift */; };
 		07FC88832B0D3E8500143419 /* cursoIosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88822B0D3E8500143419 /* cursoIosApp.swift */; };
-		07FC88852B0D3E8500143419 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88842B0D3E8500143419 /* ContentView.swift */; };
+		07FC88852B0D3E8500143419 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88842B0D3E8500143419 /* Main.swift */; };
 		07FC88872B0D3E8700143419 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07FC88862B0D3E8700143419 /* Assets.xcassets */; };
 		07FC888A2B0D3E8700143419 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07FC88892B0D3E8700143419 /* Preview Assets.xcassets */; };
 		07FC88922B0D415400143419 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 07FC88912B0D415400143419 /* Realm */; };
@@ -73,6 +77,8 @@
 		0740F9ED2B13CD2C00ECC5E0 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		0740F9EF2B13DDC700ECC5E0 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		0740F9F22B13F5F500ECC5E0 /* icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = icons.swift; sourceTree = "<group>"; };
+		07592E9C2B16BFB9008E9C57 /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
+		07592E9E2B178752008E9C57 /* PrefObserve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefObserve.swift; sourceTree = "<group>"; };
 		076996D82B1129A1009D727F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		076996DA2B112CD6009D727F /* cursoIos.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = cursoIos.entitlements; sourceTree = "<group>"; };
 		076996DB2B112CE2009D727F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -82,9 +88,11 @@
 		077FFF002B14FF2800A466FE /* Media.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
 		077FFF022B15149B00A466FE /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		077FFF042B16996A00A466FE /* OutlinedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlinedTextField.swift; sourceTree = "<group>"; };
+		07C105802B17C6E9003BBBA5 /* Navigate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigate.swift; sourceTree = "<group>"; };
+		07C105822B17D153003BBBA5 /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		07FC887F2B0D3E8500143419 /* cursoIos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cursoIos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		07FC88822B0D3E8500143419 /* cursoIosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cursoIosApp.swift; sourceTree = "<group>"; };
-		07FC88842B0D3E8500143419 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		07FC88842B0D3E8500143419 /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		07FC88862B0D3E8700143419 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		07FC88892B0D3E8700143419 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		07FC88AD2B10D50C00143419 /* AppModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppModule.swift; sourceTree = "<group>"; };
@@ -150,6 +158,8 @@
 				0740F9F22B13F5F500ECC5E0 /* icons.swift */,
 				077FFF022B15149B00A466FE /* Image.swift */,
 				077FFF042B16996A00A466FE /* OutlinedTextField.swift */,
+				07592E9C2B16BFB9008E9C57 /* Views.swift */,
+				07C105822B17D153003BBBA5 /* BackButton.swift */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -161,6 +171,7 @@
 				076996E22B1153D3009D727F /* course */,
 				076996DF2B1153A0009D727F /* lecturer */,
 				076996E12B1153C9009D727F /* student */,
+				07592E9E2B178752008E9C57 /* PrefObserve.swift */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -218,10 +229,10 @@
 				07FC88AC2B10D50C00143419 /* di */,
 				07FC88B02B10D50C00143419 /* global */,
 				076996DE2B115382009D727F /* ui */,
-				07FC88862B0D3E8700143419 /* Assets.xcassets */,
-				07FC88842B0D3E8500143419 /* ContentView.swift */,
+				07FC88842B0D3E8500143419 /* Main.swift */,
 				07FC88822B0D3E8500143419 /* cursoIosApp.swift */,
 				076996E72B1160EE009D727F /* Editor.swift */,
+				07FC88862B0D3E8700143419 /* Assets.xcassets */,
 				076996DA2B112CD6009D727F /* cursoIos.entitlements */,
 				076996D82B1129A1009D727F /* GoogleService-Info.plist */,
 				076996DB2B112CE2009D727F /* Info.plist */,
@@ -275,6 +286,7 @@
 				0740F9EB2B13884600ECC5E0 /* scope.swift */,
 				0740F9ED2B13CD2C00ECC5E0 /* Color.swift */,
 				0740F9EF2B13DDC700ECC5E0 /* Theme.swift */,
+				07C105802B17C6E9003BBBA5 /* Navigate.swift */,
 			);
 			path = base;
 			sourceTree = "<group>";
@@ -490,11 +502,13 @@
 				07FC89092B10D50E00143419 /* Article.swift in Sources */,
 				077FFF052B16996B00A466FE /* OutlinedTextField.swift in Sources */,
 				07FC88EB2B10D50D00143419 /* CourseData.swift in Sources */,
-				07FC88852B0D3E8500143419 /* ContentView.swift in Sources */,
+				07FC88852B0D3E8500143419 /* Main.swift in Sources */,
 				07FC88ED2B10D50D00143419 /* CourseRepo.swift in Sources */,
 				0740F9F02B13DDC700ECC5E0 /* Theme.swift in Sources */,
 				07FC89042B10D50E00143419 /* PushNotification.swift in Sources */,
+				07592E9F2B178752008E9C57 /* PrefObserve.swift in Sources */,
 				07FC89052B10D50E00143419 /* Messaging.swift in Sources */,
+				07592E9D2B16BFB9008E9C57 /* Views.swift in Sources */,
 				07FC890C2B10D50E00143419 /* ResultRealm.swift in Sources */,
 				07FC88F42B10D50D00143419 /* PrefRepoImp.swift in Sources */,
 				07FC89022B10D50D00143419 /* NotificationRepo.swift in Sources */,
@@ -504,6 +518,7 @@
 				0740F9EE2B13CD2C00ECC5E0 /* Color.swift in Sources */,
 				0740F9F32B13F5F500ECC5E0 /* icons.swift in Sources */,
 				07FC88FF2B10D50D00143419 /* RealmSync.swift in Sources */,
+				07C105812B17C6E9003BBBA5 /* Navigate.swift in Sources */,
 				07FC88832B0D3E8500143419 /* cursoIosApp.swift in Sources */,
 				07FC88E42B10D50D00143419 /* AppModule.swift in Sources */,
 				07FC88EC2B10D50D00143419 /* CourseRepoImp.swift in Sources */,
@@ -518,6 +533,7 @@
 				07FC89032B10D50E00143419 /* FCMService.swift in Sources */,
 				07FC88E62B10D50D00143419 /* AppDelegate.swift in Sources */,
 				07FC88E52B10D50D00143419 /* Project.swift in Sources */,
+				07C105832B17D153003BBBA5 /* BackButton.swift in Sources */,
 				07FC89072B10D50E00143419 /* Course.swift in Sources */,
 				07FC88E82B10D50D00143419 /* Web.swift in Sources */,
 				07FC89082B10D50E00143419 /* Lecturer.swift in Sources */,

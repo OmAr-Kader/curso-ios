@@ -2,8 +2,10 @@ import SwiftUI
 import PhotosUI
 
 struct LoginScreen: View {
-    
+        
     @EnvironmentObject var app: AppModule
+    @EnvironmentObject var pref: PrefObserve
+    
     @ObservedObject var loginObs: LogInObserve = LogInObserve()
     @State private var selectedItem: PhotosPickerItem?
     @FocusState private var isFocusedEmail: Bool
@@ -41,9 +43,8 @@ struct LoginScreen: View {
                         "Hello There."
                     ).foregroundStyle(app.theme.textColor)
                         .font(.system(size: 35))
-                        .padding(
-                            EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
-                        ).fixedSize(horizontal: false, vertical: true)
+                        .padding(leading: 20, trailing: 20)
+                        .fixedSize(horizontal: false, vertical: true)
                         .lineLimit(1)
                     Spacer()
                 }
@@ -52,9 +53,8 @@ struct LoginScreen: View {
                         "Login or sign up to continue."
                     ).foregroundStyle(app.theme.textColor)
                         .font(.system(size: 14))
-                        .padding(
-                            EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
-                        ).fixedSize(horizontal: false, vertical: true)
+                        .padding(leading: 20, trailing: 20)
+                        .fixedSize(horizontal: false, vertical: true)
                         .lineLimit(1)
                     Spacer()
                 }
@@ -63,7 +63,7 @@ struct LoginScreen: View {
                 alignment: .topLeading
             )
             VStack {
-                if (state.isLogIn) {
+                if (!state.isLogIn) {
                     VStack {
                         if (state.imageUri != nil) {
                             ImageView(
@@ -127,29 +127,146 @@ struct LoginScreen: View {
                 height: 120,
                 alignment: .topLeading
             )
-            ScrollView {
-                VStack {
-                    OutlinedTextField(
-                        text: state.email,
-                        onChange: { email in
-                            loginObs.setEmail(it: email)
-                        },
-                        hint: "Enter your email",
-                        isError: isEmailError,
-                        errorMsg: "Shouldn't be empty",
-                        theme: app.theme,
-                        lineLimit: 1
-                    )
-                }.padding(16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                            .fill(app.theme.backDark)
-                    )
+            VStack {
+                ScrollView {
+                    VStack {
+                        
+                        VStack {
+                            OutlinedTextField(
+                                text: state.email,
+                                onChange: { email in
+                                    loginObs.setEmail(it: email)
+                                },
+                                hint: "Enter email",
+                                isError: isEmailError,
+                                errorMsg: "Shouldn't be empty",
+                                theme: app.theme,
+                                lineLimit: 1,
+                                keyboardType: .emailAddress
+                            )
+                            OutlinedSecureField(
+                                text: state.password,
+                                onChange: { password in
+                                    loginObs.setPassword(it: password)
+                                },
+                                hint: "Enter password",
+                                isError: isPasswordError,
+                                errorMsg: "Shouldn't be empty",
+                                theme: app.theme,
+                                lineLimit: 1,
+                                keyboardType: .emailAddress
+                            ).padding(top: 16)
+                        }
+                        if !state.isLogIn {
+                            VStack {
+                                OutlinedTextField(
+                                    text: state.lecturerName,
+                                    onChange: { lecturerName in
+                                        loginObs.setName(it: lecturerName)
+                                    },
+                                    hint: "Enter your name",
+                                    isError: isNameError,
+                                    errorMsg: "Shouldn't be empty",
+                                    theme: app.theme,
+                                    lineLimit: 1,
+                                    keyboardType: .default
+                                ).padding(top: 16)
+                                OutlinedTextField(
+                                    text: state.lecturerName,
+                                    onChange: { lecturerName in
+                                        loginObs.setName(it: lecturerName)
+                                    },
+                                    hint: "Enter your name",
+                                    isError: isNameError,
+                                    errorMsg: "Shouldn't be empty",
+                                    theme: app.theme,
+                                    lineLimit: 1,
+                                    keyboardType: .default
+                                ).padding(top: 16)
+                            }
+                        }
+                    }.padding(16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 15)
+                                .fill(app.theme.backDark)
+                        )
+                }.onAppear {
+                    UIScrollView.appearance().bounces = false
+                }.onDisappear {
+                    UIScrollView.appearance().bounces = true
+                }
             }.padding(20)
             Spacer()
+            HStack(alignment: .bottom) {
+                Spacer()
+                CardAnimationButton(
+                    isChoose: state.isLogIn,
+                    isProcess: state.isProcessing,
+                    text: "Login",
+                    color: app.theme.primary,
+                    secondaryColor: app.theme.secondary,
+                    textColor: app.theme.textForPrimaryColor,
+                    onClick: {
+                        if (!state.isLogIn) {
+                            withAnimation {
+                                self.loginObs.isLogin(it: true)
+                            }
+                        } else {
+                            loginObs.login { it, i in
+                                pref.updateUserBase(
+                                    userBase: PrefObserve.UserBase(
+                                        id: it._id.stringValue,
+                                        name: it.lecturerName,
+                                        email: it.email,
+                                        password: state.password,
+                                        courses: i
+                                    )
+                                ) {
+                                    pref.writeArguments(
+                                        route: HOME_LECTURER_SCREEN_ROUTE,
+                                        one: it._id.stringValue,
+                                        two: it.lecturerName
+                                    )
+                                    /*navigate(
+                                        Navigate(
+                                            route: .HOME_LECTURER_SCREEN_ROUTE,
+                                            isHome: true,
+                                            title: "Home"
+                                        )
+                                    )*/
+                                }
+                            } failed: { it in
+                                /*scope.launch {
+                                    scaffoldState.showSnackbar(it)
+                                }*/
+                            }
+                        }
+                    }
+                )
+                Spacer()
+                CardAnimationButton(
+                    isChoose: !state.isLogIn,
+                    isProcess: state.isProcessing,
+                    text: "Sign up",
+                    color: app.theme.primary,
+                    secondaryColor: app.theme.secondary,
+                    textColor: app.theme.textForPrimaryColor,
+                    onClick: {
+                        if (state.isLogIn) {
+                            withAnimation {
+                                self.loginObs.isLogin(it: false)
+                            }
+                        } else {
+                            
+                        }
+                    }
+                )
+                Spacer()
+            }
         }.onAppear {
             loginObs.intiApp(self.app)
         }.background(app.theme.background.darker)
+        
     }
 }
 /*

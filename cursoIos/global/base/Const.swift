@@ -1,10 +1,3 @@
-//
-//  Const.swift
-//  firstApp
-//
-//  Created by OmAr on 19/11/2023.
-//
-
 import Foundation
 
 let SPLASH_SCREEN_ROUTE: String = "splash_screen"

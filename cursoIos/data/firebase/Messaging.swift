@@ -82,7 +82,7 @@ func unsubscribeToTopic(courseId: String) {
     })
 }
 
-func getFcmLogout(invoke: () -> Unit) {
+func getFcmLogout(_ invoke: () -> Unit) {
     FirebaseMessaging.Messaging.messaging().deleteToken { e in
         loggerError("deleteFcmToken", e?.localizedDescription ?? "")
     }

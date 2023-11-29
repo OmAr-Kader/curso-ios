@@ -11,7 +11,7 @@ class LogInObserve : ObservableObject {
     @Published var state = State()
 
     func intiApp(_ app: AppModule) {
-        if (self.app == nil) {
+        if (self.app != nil) {
             return
         }
         self.app = app

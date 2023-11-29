@@ -9,6 +9,8 @@ struct OutlinedTextField : View {
     let errorMsg: String
     let theme: Theme
     let lineLimit: Int?
+    let keyboardType: UIKeyboardType?
+
     @FocusState private var isFocused: Bool
 
     var body: some View {
@@ -30,7 +32,7 @@ struct OutlinedTextField : View {
                 .fixedSize(horizontal: false, vertical: true)
                 .lineLimit(lineLimit)
             .focused($isFocused)
-                .keyboardType(.emailAddress)
+            .keyboardType(keyboardType ?? .default)
                 .background(
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(
@@ -51,7 +53,62 @@ struct OutlinedTextField : View {
     }
 }
 
-extension TextField {
+
+struct OutlinedSecureField : View {
+    
+    let text: String
+    let onChange: (String) -> Unit
+    let hint: String
+    let isError: Bool
+    let errorMsg: String
+    let theme: Theme
+    let lineLimit: Int?
+    let keyboardType: UIKeyboardType?
+
+    @FocusState private var isFocused: Bool
+
+    var body: some View {
+        VStack {
+            SecureField(
+                "",
+                text: Binding(get: {
+                    text
+                }, set: { it, t in
+                    onChange(it)
+                })
+            ).placeholder(when: text.isEmpty) {
+                Text(hint).foregroundColor(theme.textHintColor)
+            }.foregroundStyle(theme.textColor)
+                .font(.system(size: 14))
+                .padding(
+                    EdgeInsets(top: 15, leading: 20, bottom: 10, trailing: 15)
+                )
+                .fixedSize(horizontal: false, vertical: true)
+                .lineLimit(lineLimit)
+            .focused($isFocused)
+            .keyboardType(keyboardType ?? .default)
+                .background(
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke(
+                            isError ? theme.error : (isFocused ? theme.primary : theme.secondary),
+                            lineWidth: 1.5
+                        )
+                )
+            if isError {
+                HStack {
+                    Text(errorMsg).padding(
+                        EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0)
+                    ).foregroundStyle(theme.error)
+                        .font(.system(size: 14))
+                    Spacer()
+                }
+            }
+        }
+    }
+}
+
+
+extension View {
     func placeholder<Content: View>(
         when shouldShow: Bool,
         alignment: Alignment = .leading,

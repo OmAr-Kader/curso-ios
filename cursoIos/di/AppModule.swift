@@ -1,6 +1,7 @@
 import Foundation
 import RealmSwift
 import FirebaseCore
+import SwiftUI
 //https://github.com/realm/realm-swift
 //https://github.com/firebase/firebase-ios-sdk
 
@@ -39,12 +40,12 @@ class AppModule: ObservableObject {
     }
     
     @MainActor
-    func provideRealmApp() -> App {
+    func provideRealmApp() -> RealmSwift.App {
         return App(id: REALM_APP_ID)
     }
     
     @MainActor
-    func provideRealmSync(app: App) async -> Realm? {
+    func provideRealmSync(app: RealmSwift.App) async -> Realm? {
         /*if(!isNetworkAvailable()) {
             return nil
         }*/

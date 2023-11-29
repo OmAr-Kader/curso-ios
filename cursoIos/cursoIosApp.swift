@@ -11,15 +11,16 @@ import SwiftUI
 struct cursoIosApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var app = AppModule()
+    @StateObject var pref = PrefObserve()
     @Environment(\.colorScheme) var colorScheme
     
     var body: some Scene {
         WindowGroup {
-            LoginScreen().environmentObject(
+            Main().environmentObject(
                 app.initTheme(
                     isDarkMode: colorScheme == .dark
                 )
-            )
+            ).environmentObject(pref)
         }
     }
 }

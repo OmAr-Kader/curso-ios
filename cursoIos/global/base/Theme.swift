@@ -15,6 +15,7 @@ struct Theme {
     let backDarkThr: Color
     let backGreyTrans: Color
     let textColor: Color
+    let textForPrimaryColor: Color
     let textGrayColor: Color
     let error: Color
     let textHintColor: Color
@@ -35,6 +36,7 @@ struct Theme {
             self.backDarkThr = Color(red: 100 / 255, green: 100 / 255, blue: 100 / 255)
             self.backGreyTrans = Color(red: 89 / 255, green: 85 / 255, blue: 85 / 255, opacity: 0.33)
             self.textColor = Color.white
+            self.textForPrimaryColor = Color.black
             self.textGrayColor = Color(UIColor.lightGray)
             self.error = Color(red: 255 / 255, green: 21 / 255, blue: 21 / 255)
             self.textHintColor = Color(red: 175 / 255, green: 175 / 255, blue: 175 / 255)
@@ -52,6 +54,7 @@ struct Theme {
             self.backDarkThr = Color(red: 172 / 255, green: 172 / 255, blue: 172 / 255)
             self.backGreyTrans = Color(red: 89 / 255, green: 170 / 255, blue: 170, opacity: 0.67)
             self.textColor = Color.black
+            self.textForPrimaryColor = Color.white
             self.textGrayColor = Color(UIColor.darkGray)
             self.error = Color(red: 155 / 255, green: 0, blue: 0)
             self.textHintColor = Color(red: 80 / 255, green: 80 / 255, blue: 80 / 255)

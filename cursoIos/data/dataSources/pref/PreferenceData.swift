@@ -12,11 +12,11 @@ class PreferenceData {
         repository.prefs(invoke: invoke)
     }
     
-    func insertPref(pref: Preference) async -> Preference? {
+    func insertPref(_ pref: Preference) async -> Preference? {
         return await repository.insertPref(pref: pref)
     }
     
-    func updatePref(pref: Preference, newValue: String) async -> Preference? {
+    func updatePref(_ pref: Preference,_ newValue: String) async -> Preference? {
         return await repository.updatePref(pref: pref, newValue: newValue)
     }
     
