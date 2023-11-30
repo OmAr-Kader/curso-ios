@@ -2,30 +2,48 @@ import Foundation
 import SwiftUI
 class PrefObserve : ObservableObject {
     
+    var app: AppModule?
+    
     @Published var navigationPath = NavigationPath()
     
-    var navigateCon: (Screen) -> Unit {
+    @Published var state = State()
+    
+    private var scope: Scope = Scope()
+            
+    private var preferences: [Preference] = []
+    private var prefsJob: Task<Unit, Error>?
+    
+    var navigateHome: (Screen) -> Unit {
         return { screen in
-            self.navigationPath.append(screen)
-
+            withAnimation {
+                self.state = self.state.copy(homeScreen: screen)
+            }
+            return ()
         }
     }
     
-    var remove: () -> Unit {
+    var navigateTo: (Screen) -> Unit {
+        return { screen in
+            self.navigationPath.append(screen)
+        }
+    }
+    
+    var backPress: () -> Unit {
         return {
             self.navigationPath.removeLast()
         }
     }
     
-    var scope: Scope = Scope()
-            
-    private var preferences: [Preference] = []
-    private var prefsJob: Task<Unit, Error>?
-
-    var app: AppModule?
-    
-    
-    @Published private var state = State()
+    private func inti(invoke: @escaping ([Preference]) -> Unit) {
+        prefsJob?.cancel()
+        prefsJob = Task(priority: .background) {
+            await app?.project().preference.prefs { list in
+                preferences = list
+                invoke(list)
+            }
+            return ()
+        }
+    }
 
     func getArgumentOne(it: String) -> String? {
         return self.state.argOne[it]
@@ -62,16 +80,6 @@ class PrefObserve : ObservableObject {
             return
         }
         self.app = app
-    }
-    
-    private func inti(invoke: @escaping ([Preference]) -> Unit) {
-        prefsJob?.cancel()
-        prefsJob = Task(priority: .background) {
-            await app?.project().preference.prefs { list in
-                preferences = list
-                invoke(list)
-            }
-        }
     }
     
     func downloadChanges(invoke: @escaping () -> Unit) {
@@ -212,11 +220,17 @@ class PrefObserve : ObservableObject {
     }
 
     struct State {
+        var homeScreen: Screen = .SPLASH_SCREEN_ROUTE
         var argOne = [String : String]()
         var argTwo = [String : String]()
         var argThree = [String : Int]()
         var argJson = [String : Any]()
         var sessionForDisplay: SessionForDisplay? = nil
+        
+        mutating func copy(homeScreen: Screen) -> Self {
+            self.homeScreen = homeScreen
+            return self
+        }
         
         mutating func copy(route: String, one: String, two: String) -> Self {
             self.argOne[route] = one
