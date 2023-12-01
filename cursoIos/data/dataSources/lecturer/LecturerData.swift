@@ -9,39 +9,39 @@ class LecturerData {
     }
     
     func getLecturerFollowed(
-        studentId: String,
-        lecturer: (ResultRealm<[Lecturer]>) -> Unit
+        _ studentId: String,
+        _ lecturer: (ResultRealm<[Lecturer]>) -> Unit
     ) async {
         await repository.getLecturerFollowed(studentId: studentId, lecturer: lecturer)
     }
     
     func getLecturer(
-        id: String,
-        lecturer: (ResultRealm<Lecturer?>) -> Unit
+        _ id: String,
+        _ lecturer: (ResultRealm<Lecturer?>) -> Unit
     ) async {
         await repository.getLecturer(id: id, lecturer: lecturer)
     }
 
     func getLecturerFlow(
-        id: String
+        _ id: String
     ) async-> ResultRealm<Lecturer?> {
         return await repository.getLecturerFlow(id: id)
     }
 
     func getLecturerEmail(
-        email: String,
-        lecturer: (ResultRealm<Lecturer?>) -> Unit
+        _ email: String,
+        _ lecturer: (ResultRealm<Lecturer?>) -> Unit
     ) async {
         await repository.getLecturerEmail(email: email, lecturer: lecturer)
     }
 
-    func insertLecturer(lecturer: Lecturer) async -> ResultRealm<Lecturer?> {
+    func insertLecturer(_ lecturer: Lecturer) async -> ResultRealm<Lecturer?> {
         return await repository.insertLecturer(lecturer: lecturer)
     }
 
     func editLecturer(
-        lecturer: Lecturer,
-        edit: Lecturer
+        _ lecturer: Lecturer,
+        _ edit: Lecturer
     ) async -> ResultRealm<Lecturer?> {
         return await repository.editLecturer(lecturer: lecturer, edit: edit)
     }

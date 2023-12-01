@@ -3,8 +3,8 @@ import Foundation
 
 
 func sendPushNotification(_ not: PushNotification) {
-    let receiverFCM = ""
-    let serverKey = ""
+    //let receiverFCM = ""
+    //let serverKey = ""
     
     let url = URL(string: "https://fcm.googleapis.com/fcm/send")!
     var request = URLRequest(url: url)

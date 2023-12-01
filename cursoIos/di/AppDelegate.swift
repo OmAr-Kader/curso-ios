@@ -1,17 +1,11 @@
-//
-//  AppDelegate.swift
-//  firstApp
-//
-//  Created by OmAr on 21/11/2023.
-//
-
 import Foundation
 import SwiftUI
 import FirebaseCore
 import FirebaseMessaging
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    
+    var app: AppModule = AppModule()
+
     var window: UIWindow?
     let gcmMessageIDKey = "gcm.message_id"
 

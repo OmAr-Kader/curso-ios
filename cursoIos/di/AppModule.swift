@@ -11,10 +11,11 @@ class AppModule: ObservableObject {
     
     var pro: Project? = nil
 
-    @MainActor
-    init() {
-        Task(priority: .high) {
-            pro = await provideProjcet()
+    func initApp(_ invoke: @escaping (Project) -> Unit) {
+        Task(priority: .background) {
+            let projcet = await provideProjcet()
+            self.pro = projcet
+            invoke(projcet)
         }
     }
 
@@ -54,12 +55,10 @@ class AppModule: ObservableObject {
             return nil
         }
         do {
-            return nil
-            /*
             return try await Realm(
                 configuration: user!.initialSubscriptionBlock,
                 downloadBeforeOpen: .always
-            )*/
+            )
         } catch {
             return nil
         }

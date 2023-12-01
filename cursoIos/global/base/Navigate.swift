@@ -16,12 +16,16 @@ enum Screen {
     case LECTURER_SCREEN_ROUTE
     case STUDENT_SCREEN_ROUTE
     
-    @ViewBuilder var targetScreen: some View {
+    @ViewBuilder func targetScreen(
+        _ app: AppModule,
+        _ pref: PrefObserve
+    ) -> some View {
         switch self {
             case .LOG_IN_LECTURER_SCREEN_ROUTE :
-                LoginScreen()
+                LoginScreen(app, pref)
             default:
-                SplashScreen()
+                SplashScreen(app, pref)
         }
     }
+    
 }

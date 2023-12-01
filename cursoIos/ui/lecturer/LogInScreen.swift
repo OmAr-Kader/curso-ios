@@ -2,14 +2,21 @@ import SwiftUI
 import PhotosUI
 
 struct LoginScreen: View {
-        
-    @EnvironmentObject var app: AppModule
-    @EnvironmentObject var pref: PrefObserve
+    @State private var toast: Toast? = nil
+
+    @ObservedObject var app: AppModule
+    @ObservedObject var pref: PrefObserve
+    @ObservedObject var loginObs: LogInObserve
     
-    @ObservedObject var loginObs: LogInObserve = LogInObserve()
     @State private var selectedItem: PhotosPickerItem?
     @FocusState private var isFocusedEmail: Bool
     
+    init(_ app: AppModule,_ pref: PrefObserve) {
+        self.app = app
+        self.pref = pref
+        self.loginObs = LogInObserve(app)
+    }
+
     var body: some View {
         
         let state = loginObs.state
@@ -130,7 +137,6 @@ struct LoginScreen: View {
             VStack {
                 ScrollView {
                     VStack {
-                        
                         VStack {
                             OutlinedTextField(
                                 text: state.email,
@@ -142,7 +148,7 @@ struct LoginScreen: View {
                                 errorMsg: "Shouldn't be empty",
                                 theme: app.theme,
                                 lineLimit: 1,
-                                keyboardType: .emailAddress
+                                keyboardType: UIKeyboardType.emailAddress
                             )
                             OutlinedSecureField(
                                 text: state.password,
@@ -154,7 +160,7 @@ struct LoginScreen: View {
                                 errorMsg: "Shouldn't be empty",
                                 theme: app.theme,
                                 lineLimit: 1,
-                                keyboardType: .emailAddress
+                                keyboardType: UIKeyboardType.default
                             ).padding(top: 16)
                         }
                         if !state.isLogIn {
@@ -169,19 +175,55 @@ struct LoginScreen: View {
                                     errorMsg: "Shouldn't be empty",
                                     theme: app.theme,
                                     lineLimit: 1,
-                                    keyboardType: .default
+                                    keyboardType: UIKeyboardType.default
                                 ).padding(top: 16)
                                 OutlinedTextField(
-                                    text: state.lecturerName,
-                                    onChange: { lecturerName in
-                                        loginObs.setName(it: lecturerName)
+                                    text: state.mobile,
+                                    onChange: { it in
+                                        loginObs.setMobile(it: it)
                                     },
-                                    hint: "Enter your name",
-                                    isError: isNameError,
+                                    hint: "Enter Mobile",
+                                    isError: isMobileError,
                                     errorMsg: "Shouldn't be empty",
                                     theme: app.theme,
                                     lineLimit: 1,
-                                    keyboardType: .default
+                                    keyboardType: UIKeyboardType.phonePad
+                                ).padding(top: 16)
+                                OutlinedTextField(
+                                    text: state.specialty,
+                                    onChange: { it in
+                                        loginObs.setSpecialty(it: it)
+                                    },
+                                    hint: "Enter Specialty",
+                                    isError: isSpecialtyError,
+                                    errorMsg: "Shouldn't be empty",
+                                    theme: app.theme,
+                                    lineLimit: 1,
+                                    keyboardType: UIKeyboardType.default
+                                ).padding(top: 16)
+                                OutlinedTextField(
+                                    text: state.university,
+                                    onChange: { it in
+                                        loginObs.setUniversity(it: it)
+                                    },
+                                    hint: "Enter University",
+                                    isError: isUniversityError,
+                                    errorMsg: "Shouldn't be empty",
+                                    theme: app.theme,
+                                    lineLimit: 1,
+                                    keyboardType: UIKeyboardType.default
+                                ).padding(top: 16)
+                                OutlinedTextField(
+                                    text: state.brief,
+                                    onChange: { it in
+                                        loginObs.setBrief(it: it)
+                                    },
+                                    hint: "Enter Info About you",
+                                    isError: isBriefError,
+                                    errorMsg: "Shouldn't be empty",
+                                    theme: app.theme,
+                                    lineLimit: nil,
+                                    keyboardType: UIKeyboardType.default
                                 ).padding(top: 16)
                             }
                         }
@@ -227,18 +269,10 @@ struct LoginScreen: View {
                                         one: it._id.stringValue,
                                         two: it.lecturerName
                                     )
-                                    /*navigate(
-                                        Navigate(
-                                            route: .HOME_LECTURER_SCREEN_ROUTE,
-                                            isHome: true,
-                                            title: "Home"
-                                        )
-                                    )*/
+                                    pref.navigateHome(Screen.HOME_LECTURER_SCREEN_ROUTE)
                                 }
                             } failed: { it in
-                                /*scope.launch {
-                                    scaffoldState.showSnackbar(it)
-                                }*/
+                                toast = Toast(style: .error, message: it)
                             }
                         }
                     }
@@ -257,189 +291,32 @@ struct LoginScreen: View {
                                 self.loginObs.isLogin(it: false)
                             }
                         } else {
-                            
+                            loginObs.signUp { value in
+                                pref.updateUserBase(
+                                    userBase: PrefObserve.UserBase(
+                                        id: value._id.stringValue,
+                                        name: value.lecturerName,
+                                        email: value.email,
+                                        password: state.password,
+                                        courses: 0
+                                    )
+                                ) {
+                                    pref.writeArguments(
+                                        route: HOME_LECTURER_SCREEN_ROUTE,
+                                        one: value._id.stringValue,
+                                        two: value.lecturerName
+                                    )
+                                    pref.navigateHome(Screen.HOME_LECTURER_SCREEN_ROUTE)
+                                }
+                            } failed: { it in
+                                toast = Toast(style: .error, message: it)
+                            }
                         }
                     }
                 )
                 Spacer()
             }
-        }.onAppear {
-            loginObs.intiApp(self.app)
         }.background(app.theme.background.darker)
-        
+            .toastView(toast: $toast)
     }
 }
-/*
- Box(
-     modifier = Modifier
-         .padding(20.dp)
-         .fillMaxWidth()
-         .fillMaxHeight()
-         .weight(1F),
- ) {
-     Card(
-         modifier = Modifier
-             .fillMaxWidth()
-             .wrapContentHeight(),
-         shape = MaterialTheme.shapes.medium,
-         colors = CardDefaults.cardColors(
-             containerColor = isSystemInDarkTheme().backDark,
-         ),
-     ) {
-         Column(
-             modifier = Modifier
-                 .wrapContentHeight()
-                 .verticalScroll(verticalScroll)
-                 .padding(16.dp)
-         ) {
-             OutlinedTextField(
-                 modifier = Modifier.fillMaxWidth(),
-                 value = state.email,
-                 onValueChange = {
-                     viewModel.setEmail(it)
-                 },
-                 placeholder = { Text(text = "Enter Email") },
-                 label = { Text(text = "Email") },
-                 supportingText = {
-                     if (isEmailError) {
-                         Text(text = "Shouldn't be empty", color = isSystemInDarkTheme().error, fontSize = 10.sp)
-                     }
-                 },
-                 isError = isEmailError,
-                 maxLines = 1,
-                 colors = isSystemInDarkTheme().outlinedTextFieldStyle(),
-                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-             )
-             OutlinedTextField(
-                 value = state.password,
-                 onValueChange = {
-                     viewModel.setPassword(it)
-                 },
-                 modifier = Modifier
-                     .padding(top = 16.dp)
-                     .fillMaxWidth(),
-                 placeholder = { Text(text = "Enter Password") },
-                 label = { Text(text = "Password") },
-                 supportingText = {
-                     if (isPasswordError) {
-                         Text(text = "Shouldn't be empty", color = isSystemInDarkTheme().error, fontSize = 10.sp)
-                     }
-                 },
-                 isError = isPasswordError,
-                 maxLines = 1,
-                 colors = isSystemInDarkTheme().outlinedTextFieldStyle(),
-                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-             )
-             AnimatedVisibility(
-                 visible = !state.isLogIn,
-                 enter = slideInVertically(),
-                 exit = slideOutVertically()
-             ) {
-                 Column(
-                     modifier = Modifier.background(color = isSystemInDarkTheme().backDark)
-                 ) {
-                     OutlinedTextField(
-                         value = state.lecturerName,
-                         onValueChange = {
-                             viewModel.setName(it)
-                         },
-                         modifier = Modifier
-                             .padding(top = 16.dp)
-                             .fillMaxWidth(),
-                         placeholder = { Text(text = "Enter Name") },
-                         label = { Text(text = "Name") },
-                         supportingText = {
-                             if (isNameError) {
-                                 Text(text = "Shouldn't be empty", color = isSystemInDarkTheme().error, fontSize = 10.sp)
-                             }
-                         },
-                         isError = isNameError,
-                         maxLines = 1,
-                         colors = isSystemInDarkTheme().outlinedTextFieldStyle(),
-                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                     )
-                     OutlinedTextField(
-                         value = state.mobile,
-                         onValueChange = {
-                             viewModel.setMobile(it)
-                         },
-                         modifier = Modifier
-                             .padding(top = 16.dp)
-                             .fillMaxWidth(),
-                         placeholder = { Text(text = "Enter Mobile") },
-                         label = { Text(text = "Mobile") },
-                         supportingText = {
-                             if (isMobileError) {
-                                 Text(text = "Shouldn't be empty", color = isSystemInDarkTheme().error, fontSize = 10.sp)
-                             }
-                         },
-                         isError = isMobileError,
-                         maxLines = 1,
-                         colors = isSystemInDarkTheme().outlinedTextFieldStyle(),
-                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                     )
-                     OutlinedTextField(
-                         value = state.specialty,
-                         onValueChange = {
-                             viewModel.setSpecialty(it)
-                         },
-                         modifier = Modifier
-                             .padding(top = 16.dp)
-                             .fillMaxWidth(),
-                         placeholder = { Text(text = "Enter Specialty") },
-                         label = { Text(text = "Specialty") },
-                         supportingText = {
-                             if (isSpecialtyError) {
-                                 Text(text = "Shouldn't be empty", color = isSystemInDarkTheme().error, fontSize = 10.sp)
-                             }
-                         },
-                         isError = isSpecialtyError,
-                         maxLines = 1,
-                         colors = isSystemInDarkTheme().outlinedTextFieldStyle(),
-                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                     )
-                     OutlinedTextField(
-                         value = state.university,
-                         onValueChange = {
-                             viewModel.setUniversity(it)
-                         },
-                         modifier = Modifier
-                             .padding(top = 16.dp)
-                             .fillMaxWidth(),
-                         placeholder = { Text(text = "Enter University") },
-                         label = { Text(text = "University") },
-                         supportingText = {
-                             if (isUniversityError) {
-                                 Text(text = "Shouldn't be empty", color = isSystemInDarkTheme().error, fontSize = 10.sp)
-                             }
-                         },
-                         isError = isUniversityError,
-                         maxLines = 1,
-                         colors = isSystemInDarkTheme().outlinedTextFieldStyle(),
-                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                     )
-                     OutlinedTextField(
-                         value = state.brief,
-                         onValueChange = {
-                             viewModel.setBrief(it)
-                         },
-                         modifier = Modifier
-                             .padding(top = 16.dp)
-                             .fillMaxWidth(),
-                         placeholder = { Text(text = "Enter Info About you") },
-                         label = { Text(text = "About") },
-                         supportingText = {
-                             if (isBriefError) {
-                                 Text(text = "Shouldn't be empty", color = isSystemInDarkTheme().error, fontSize = 10.sp)
-                             }
-                         },
-                         isError = isBriefError,
-                         colors = isSystemInDarkTheme().outlinedTextFieldStyle(),
-                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                     )
-                 }
-             }
-         }
-     }
- }
- */

@@ -1,8 +1,14 @@
 import Foundation
 import SwiftUI
+import RealmSwift
+
 class PrefObserve : ObservableObject {
     
-    var app: AppModule?
+    let app: AppModule
+    
+    init(_ app: AppModule) {
+        self.app = app
+    }
     
     @Published var navigationPath = NavigationPath()
     
@@ -34,15 +40,19 @@ class PrefObserve : ObservableObject {
         }
     }
     
+    func intiApp(_ app: AppModule,_ invoke: @escaping () -> Unit) {
+        downloadChanges(invoke)
+    }
+    
     private func inti(invoke: @escaping ([Preference]) -> Unit) {
         prefsJob?.cancel()
-        prefsJob = Task(priority: .background) {
-            await app?.project().preference.prefs { list in
-                preferences = list
+        prefsJob = scope.launchMain {
+            await self.app.project().preference.prefs { list in
+                self.preferences = list
                 invoke(list)
             }
-            return ()
         }
+        
     }
 
     func getArgumentOne(it: String) -> String? {
@@ -75,14 +85,7 @@ class PrefObserve : ObservableObject {
         state = state.copy(route: route, one: one, two: two, three: three, obj: obj)
     }
     
-    func intiApp(_ app: AppModule) {
-        if (self.app != nil) {
-            return
-        }
-        self.app = app
-    }
-    
-    func downloadChanges(invoke: @escaping () -> Unit) {
+    func downloadChanges(_ invoke: @escaping () -> Unit) {
         scope.launch {
             if (isNetworkAvailable()) {
                 await self.downloadAllServerChanges(invoke)
@@ -93,7 +96,7 @@ class PrefObserve : ObservableObject {
     
     private func downloadAllServerChanges(_ invoke: () -> Unit) async {
         do {
-            try await app?.project()
+            try await app.project()
                 .realmSync.cloud()?.syncSession?.wait(for: .upload)
             invoke()
         } catch {
@@ -103,20 +106,71 @@ class PrefObserve : ObservableObject {
         
     func signOut(invoke: @escaping () -> Unit, failed: @escaping () -> Unit) {
         scope.launch {
-            if (self.app == nil) {
-                failed()
-                return
-            }
-            let delete = await self.app?.project().preference.deletePrefAll()
+            let delete = await self.app.project().preference.deletePrefAll()
             if delete == REALM_SUCCESS {
                 do {
-                    try await self.app?.project().realmSync.realmApp.currentUser?.logOut()
+                    try await self.app.project().realmSync.realmApp.currentUser?.logOut()
                     getFcmLogout(invoke)
                 } catch let error {
                     logger("DELETE_PREF", error.localizedDescription)
                 }
             } else {
                 failed()
+            }
+        }
+    }
+    
+    
+    func checkIsUserValid(
+        userBase: UserBase,
+        isStudent: Bool,
+        invoke: @escaping () -> Unit,
+        failed: @escaping () -> Unit
+    ) {
+        scope.launch {
+            let app = await self.app.project().realmSync.realmApp
+            let it = await self.fetchUser(userBase, app)
+            if (it == nil || !it!.isLoggedIn) {
+                failed()
+                return
+            }
+            if (!isStudent) {
+                await self.app.project().lecturer.getLecturer(userBase.id) { r in
+                    if (r.value != nil) {
+                        invoke()
+                    } else {
+                        failed()
+                    }
+                }
+            } else {
+                await self.app.project().student.getStudent(userBase.id) { r in
+                    if (r.value != nil) {
+                        invoke()
+                    } else {
+                        failed()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func fetchUser(_ userBase: UserBase,_ app: RealmSwift.App) async -> User? {
+        let curr = app.currentUser
+        if (curr != nil) {
+            return curr
+        } else {
+            if (!isNetworkAvailable()) {
+                return nil
+            }
+            do {
+                return try await app.login(
+                    credentials: Credentials.emailPassword(
+                        email: userBase.email,
+                        password: userBase.password
+                    )
+                )
+            } catch {
+                return nil
             }
         }
     }
@@ -182,7 +236,7 @@ class PrefObserve : ObservableObject {
             it.ketString == key
         })
         if (per != nil) {
-            let new = await app?.project().preference.updatePref(
+            let new = await app.project().preference.updatePref(
                 preferences[per!],
                 newValue
             )
@@ -195,7 +249,7 @@ class PrefObserve : ObservableObject {
                 ketString: key,
                 value: newValue
             )
-            let newPref = await app?.project().preference.insertPref(new)
+            let newPref = await app.project().preference.insertPref(new)
             if (newPref != nil) {
                 preferences.append(newPref!)
             }

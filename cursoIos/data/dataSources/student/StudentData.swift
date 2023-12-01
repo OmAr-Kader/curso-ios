@@ -9,20 +9,20 @@ class StudentData {
     }
     
     func getStudent(
-        id: String,
-        student: (ResultRealm<Student?>) -> Unit
+        _ id: String,
+        _ student: (ResultRealm<Student?>) -> Unit
     ) async {
         await repository.getStudent(id: id, student: student)
     }
 
     func getStudentEmail(
-        email: String,
-        student: (ResultRealm<Student?>) -> Unit
+        _ email: String,
+        _ student: (ResultRealm<Student?>) -> Unit
     ) async {
         await repository.getStudentEmail(email: email, student: student)
     }
 
-    func insertStudent(student: Student) async -> ResultRealm<Student?> {
+    func insertStudent(_ student: Student) async -> ResultRealm<Student?> {
         return await repository.insertStudent(student: student)
     }
 
