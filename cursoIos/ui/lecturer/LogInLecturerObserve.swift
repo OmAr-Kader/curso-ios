@@ -60,7 +60,7 @@ class LogInObserveLecturer : ObservableObject {
         if (lec != nil) {
             scope.launch {
                 await self.app.project.course.getLecturerCourses(
-                    id: lec!._id.stringValue
+                    lec!._id.stringValue
                 ) { r in
                     self.state = self.state.copy(isProcessing: false)
                     invoke(lec!, r.value.count)

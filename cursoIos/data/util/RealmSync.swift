@@ -11,23 +11,24 @@ class RealmSync {
         realmCloud = realm
     }
 
-    func cloud() async -> Realm? {
+    func cloud() -> Realm? {
         if (realmCloud != nil) {
             return realmCloud
         } else {
-            let user = realmApp.currentUser
-            if (user == nil) {
-                return nil
-            } else {
-                do {
-                    self.realmCloud = try await Realm(
-                        configuration: user!.initialSubscriptionBlock,
-                        downloadBeforeOpen: .always
+            do {
+                let serialQueue = DispatchQueue.main
+                let user = realmApp.currentUser
+                if user != nil {
+                    realmCloud = try Realm(
+                        configuration: realmApp.currentUser!.initialSubscriptionBlock,
+                        queue: serialQueue
                     )
                     return realmCloud
-                } catch {
+                } else {
                     return nil
                 }
+            } catch {
+                return nil
             }
         }
     }

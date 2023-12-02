@@ -12,7 +12,7 @@ class BaseRepoImp {
         _ item: T,
         updatePolicy: Realm.UpdatePolicy = Realm.UpdatePolicy.all
     ) async -> ResultRealm<T?>  {
-        let realm = await realmSync.cloud()
+        let realm = realmSync.cloud()
         if (realm == nil) {
             return ResultRealm(value: nil, result: REALM_FAILED)
         }
@@ -33,7 +33,7 @@ class BaseRepoImp {
         _ id: ObjectId,
         _ edit: (T) -> T
     ) async -> ResultRealm<T?> {
-        let realm = await realmSync.cloud()
+        let realm = realmSync.cloud()
         if (realm == nil) {
             return ResultRealm(value: nil, result: REALM_FAILED)
         }
@@ -56,7 +56,7 @@ class BaseRepoImp {
         _ query: String,
         _ args: Any...
     ) async -> Int {
-        let realm = await realmSync.cloud()
+        let realm = realmSync.cloud()
         if (realm == nil) {
             return REALM_FAILED
         }
@@ -79,7 +79,7 @@ class BaseRepoImp {
         _ query: String,
         _ args: Any...
     ) async -> ResultRealm<T?> {
-        let realm = await realmSync.cloud()
+        let realm = realmSync.cloud()
         if (realm == nil) {
             return ResultRealm(value: nil, result: REALM_FAILED)
         }
@@ -103,7 +103,7 @@ class BaseRepoImp {
         _ query: String,
         _ args: Any...
     ) async {
-        let realm = await realmSync.cloud()
+        let realm = realmSync.cloud()
         if (realm == nil) {
             invoke(ResultRealm(value: nil, result: REALM_FAILED))
             return
@@ -130,7 +130,7 @@ class BaseRepoImp {
         _ query: String,
         _ args: Any...
       ) async {
-          let realm = await realmSync.cloud()
+          let realm = realmSync.cloud()
           if (realm == nil) {
               invoke(ResultRealm(value: [], result: REALM_FAILED))
               return
@@ -159,7 +159,7 @@ class BaseRepoImp {
         _ query: String,
         _ args: Any...
     ) async {
-        let realm = await realmSync.cloud()
+        let realm = realmSync.cloud()
         if (realm == nil) {
             invoke(ResultRealm(value: [], result: REALM_FAILED))
             return

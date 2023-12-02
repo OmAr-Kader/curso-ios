@@ -4,9 +4,10 @@ struct Main: View {
     @ObservedObject var app: AppModule
     @ObservedObject var pref: PrefObserve
 
-    init(_ app: AppModule) {
+    init(_ app: AppModule,_ isDarkMode: Bool) {
+        print("AA" + String(isDarkMode))
         self.app = app
-        self.pref = PrefObserve(app)
+        self.pref = PrefObserve(app, Theme(isDarkMode: isDarkMode))
     }
     
     var body: some View {
@@ -31,13 +32,12 @@ struct SplashScreen : View {
         ZStack {
             Image(
                 uiImage: UIImage(
-                    named: "photo.circle"
+                    named: "AppIcon"
                 )?.withTintColor(
-                    UIColor(app.theme.textColor)
+                    UIColor(pref.theme.textColor)
                 ) ?? UIImage()
             ).resizable()
                 .scaleEffect(scale)
-                .scaledToFit()
                 .frame(width: 100, height: 100)
         }.onAppear {
             withAnimation(Animation.easeInOut(duration: 1)) {

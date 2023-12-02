@@ -1,11 +1,10 @@
 import Foundation
 //https://mrezkys.medium.com/swiftui-device-to-device-push-notification-with-firebase-d215aa838361
 
-
 func sendPushNotification(_ not: PushNotification) {
     //let receiverFCM = ""
     //let serverKey = ""
-    
+
     let url = URL(string: "https://fcm.googleapis.com/fcm/send")!
     var request = URLRequest(url: url)
     request.httpMethod = "POST"

@@ -232,6 +232,26 @@ struct SessionForDisplay {
     var imageUri: String = ""
     var isDraft: Int = 0
     
+    init(title: String, date: Int64, dateStr: String, note: String, video: String, timelineMode: Int, courseId: String, courseName: String, lecturerId: String, lecturerName: String, studentId: String, studentName: String, timelineIndex: Int, mode: Int, duration: String, imageUri: String, isDraft: Int) {
+        self.title = title
+        self.date = date
+        self.dateStr = dateStr
+        self.note = note
+        self.video = video
+        self.timelineMode = timelineMode
+        self.courseId = courseId
+        self.courseName = courseName
+        self.lecturerId = lecturerId
+        self.lecturerName = lecturerName
+        self.studentId = studentId
+        self.studentName = studentName
+        self.timelineIndex = timelineIndex
+        self.mode = mode
+        self.duration = duration
+        self.imageUri = imageUri
+        self.isDraft = isDraft
+    }
+    
     init(course: CourseForData, timeline: TimelineData, mode: Int, userId: String, userName: String, i: Int) {
         title = timeline.title
         date = timeline.date

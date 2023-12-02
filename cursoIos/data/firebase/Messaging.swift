@@ -68,7 +68,7 @@ func getFcmToken(invoke: @escaping  (String) -> Unit, failed: @escaping () -> Un
     }
 }
 
-func subscribeToTopic(courseId: String, invoke: @escaping () -> Unit) {
+func subscribeToTopic(_ courseId: String,_ invoke: @escaping () -> Unit) {
     FirebaseMessaging.Messaging.messaging().subscribe(
         toTopic: "/topics/" + courseId) { e in
             loggerError("subscribeToTopic", e?.localizedDescription ?? "Done")
@@ -76,7 +76,7 @@ func subscribeToTopic(courseId: String, invoke: @escaping () -> Unit) {
         }
 }
 
-func unsubscribeToTopic(courseId: String) {
+func unsubscribeToTopic(_ courseId: String) {
     FirebaseMessaging.Messaging.messaging().unsubscribe(fromTopic: "/topics/" + courseId, completion: { e in
         loggerError("unsubscribeToTopic", e?.localizedDescription ?? "Done")
     })

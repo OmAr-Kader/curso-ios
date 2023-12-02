@@ -1,24 +1,14 @@
 import Foundation
-import RealmSwift
 
 struct Scope {
     var previousTask: Task<Void, Error>?
-    
+    var mainTask: Task<Void, Error>?
+
     @discardableResult mutating func launch(
         block: @Sendable @escaping () async -> Void
     ) -> Task<Void, Error>? {
-        previousTask = Task(priority: .background) { [previousTask] in
+        previousTask = Task(priority: .high) { [previousTask] in
             let _ = await previousTask?.result
-            return await block()
-        }
-        return previousTask
-    }
-    
-    @discardableResult mutating func launchNew(
-        block: @escaping @Sendable () async -> Void
-    ) -> Task<Void, Error>? {
-        previousTask?.cancel()
-        previousTask = Task(priority: .background) {
             return await block()
         }
         return previousTask
@@ -27,9 +17,11 @@ struct Scope {
     @discardableResult mutating func launchMain(
         block: @MainActor @escaping @Sendable () async -> Void
     ) -> Task<Void, Error>? {
-        return Task { @MainActor in
-            await block()
+        mainTask = Task { @MainActor [mainTask] in
+            let _ = await mainTask?.result
+            return await block()
         }
+        return mainTask
     }
 }
 
@@ -42,7 +34,6 @@ extension Optional where Wrapped: ScopeFunc {
         guard let self = self else { return nil }
         return block(self)
     }
-    
     
     @inline(__always) func letBack<R>(block: (Wrapped) async -> R) async -> R? {
         guard let self = self else { return nil }

@@ -2,6 +2,10 @@ import Foundation
 
 typealias Unit = ()
 
+var currentTime: Int64 {
+    return Int64(NSDate.now.timeIntervalSince1970 * 1000.0)
+}
+
 @inlinable func catchy(completion: () throws -> ()) {
     do {
         try completion()

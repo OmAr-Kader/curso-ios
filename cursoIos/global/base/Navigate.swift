@@ -22,7 +22,7 @@ enum Screen {
     ) -> some View {
         switch self {
             case .LOG_IN_LECTURER_SCREEN_ROUTE :
-                LoginScreen(app, pref)
+                LoginScreenLecturer(app, pref)
             default:
                 SplashScreen(app, pref)
         }

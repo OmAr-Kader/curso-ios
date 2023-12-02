@@ -211,4 +211,9 @@ struct StudentLecturerData {
         self.studentName = update.studentName
     }
     
+    init(studentId: String, studentName: String) {
+        self.studentName = studentName
+        self.studentName = studentName
+    }
+    
 }

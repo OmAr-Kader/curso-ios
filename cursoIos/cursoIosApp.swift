@@ -10,14 +10,13 @@ import SwiftUI
 @main
 struct cursoIosApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @Environment(\.colorScheme) var colorScheme
+    @State var isDarkMode = UITraitCollection.current.userInterfaceStyle.isDarkMode
 
     var body: some Scene {
         WindowGroup {
             Main(
-                delegate.app.initTheme(
-                    isDarkMode: colorScheme == .dark
-                )
+                delegate.app,
+                isDarkMode
             )
         }
     }

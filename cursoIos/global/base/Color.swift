@@ -1,16 +1,36 @@
 import SwiftUI
 
+extension UIColor {
+    
+    var toC: Color {
+        return Color(self)
+    }
+}
+
+extension UIUserInterfaceStyle {
+    var isDarkMode: Bool {
+        if self == .light {
+            return false
+        } else if self == .dark {
+            return true
+        }
+        return false
+    }
+}
 
 extension Color {
-    var darker: Color {
-        return Color(
-            UIColor(self) * 0.85 + .black * 0.15
-        )
+    
+    var toUic: UIColor {
+        UIColor(self)
+    }
+    
+    var margeWithPrimary: Color {
+        return (toUic * 0.85 + Purple40.toUic * 0.15).toC
     }
 
-    func darker(f: Double = 0.15) -> Color {
+    func margeWithPrimary(f: Double = 0.15) -> Color {
         return Color(
-            UIColor(self) * (1.0 - f) + .black * f
+            (toUic * (1.0 - f) + Purple40.toUic * f).toC
         )
     }
 }
@@ -18,7 +38,6 @@ extension Color {
 func addColor(_ color1: UIColor, with color2: UIColor) -> UIColor {
     var (r1, g1, b1, a1) = (CGFloat(0), CGFloat(0), CGFloat(0), CGFloat(0))
     var (r2, g2, b2, a2) = (CGFloat(0), CGFloat(0), CGFloat(0), CGFloat(0))
-
     color1.getRed(&r1, green: &g1, blue: &b1, alpha: &a1)
     color2.getRed(&r2, green: &g2, blue: &b2, alpha: &a2)
 
@@ -44,22 +63,31 @@ func rateColor(rate: Double) -> Color {
     return Color(UIColor(.yellow) * 0.5 + .darkGray * 0.5)
 }
 
+var Purple80: Color {
+    return Color(red: 208 / 255, green: 188 / 255, blue: 255 / 255)
+}
+ 
+var Purple40: Color {
+    return Color(red: 102 / 255, green: 80 / 255, blue: 164 / 255)
+}
+
+var DarkGray: Color {
+    return Color(red: 32 / 255, green: 32 / 255, blue: 32 / 255)
+}
+
+var LightViolet: Color {
+    return Color(red: 229 / 255, green: 215 / 255, blue: 232 / 255)
+}
+
 var shadowColor: Color {
     return Color(red: 0, green: 0, blue: 0, opacity: 50)
 }
 
-var Purple80: Color {
-    return Color(red: 208 / 255, green: 188 / 255, blue: 255 / 255)
-}
 var PurpleGrey80: Color {
     return Color(red: 204  / 255, green: 194 / 255, blue: 220 / 255)
 }
 var Pink80: Color {
     return Color(red: 239 / 255,green: 184 / 255, blue: 200 / 255)
-}
-
-var Purple40: Color {
-    return Color(red: 102 / 255, green: 80 / 255, blue: 164 / 255)
 }
 
 var PurpleGrey40: Color {
@@ -78,14 +106,6 @@ var Blue: Color {
     return Color(red: 13 / 255, green: 23 / 255, blue: 213 / 255)
 }
 
-var DarkGray: Color {
-    return Color(red: 32 / 255, green: 32 / 255, blue: 32 / 255)
-}
-
-var LightViolet: Color {
-    return Color(red: 229 / 255, green: 215 / 255, blue: 232 / 255)
-}
-
 var Yellow: Color {
     return Color(red: 224 / 255, green: 224 / 255, blue: 12 / 255)
 }
@@ -97,3 +117,46 @@ var BackSec: Color {
 var BackSecDark: Color {
     return Color(red: 201 / 255, green: 201 / 255, blue: 201 / 255)
 }
+
+/*
+ func schemeTransform(userInterfaceStyle:UIUserInterfaceStyle) -> ColorScheme {
+     if userInterfaceStyle == .light {
+         return .light
+     }else if userInterfaceStyle == .dark {
+         return .dark
+     }
+     return .light
+ }
+*/
+//static let ui = Color.UI()
+
+/*struct UI {
+    let yellow = Color("yellow")
+    
+    let primary: Color = Color("primaryApp")
+    let secondary: Color = Color("secondaryApp")
+    let background: Color = Color("backgroundApp")
+    func backgroundApp(_ isDarkMode: Bool) -> Color {
+        print("AAA" + String(isDarkMode))
+        return isDarkMode ? DarkGray : LightViolet
+    }
+
+    let surface: Color = Color("surface")
+    let backDark: Color = Color("backDark")
+    let backDarkSec: Color = Color("backDarkSec")
+    let backDarkThr: Color = Color("backDarkThr")
+    let backGreyTrans: Color = Color("backGreyTrans")
+    let textColor: Color = Color("textColor")
+    let textForPrimaryColor: Color = Color("textForPrimaryColor")
+    let textGrayColor: Color = Color("textGrayColor")
+    let error: Color = Color("error")
+    let textHintColor: Color = Color("textHintColor")
+    
+    func textFieldColor(isError: Bool, isEmpty: Bool) -> Color {
+        if (isError) {
+            return error
+        } else {
+            return isEmpty ? Color.black.opacity(0.7) : Color.black
+        }
+    }
+}*/

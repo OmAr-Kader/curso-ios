@@ -56,6 +56,14 @@ extension [StudentLecturerData] {
             StudentLecturer(update: it)
         }.toRealmList()
     }
+    
+    var alreadyFollowed: (String) -> Bool {
+        return { it in
+            first { sc in
+                sc.studentId == it
+            } != nil
+        }
+    }
 }
 
 extension List<StudentLecturer> {
@@ -63,6 +71,15 @@ extension List<StudentLecturer> {
     func toStudentLecturerData() -> [StudentLecturerData] {
         return self.toList().map { it in
             StudentLecturerData(update: it)
+        }
+    }
+}
+
+extension [Article] {
+    
+    func toArticleForData() -> [ArticleForData] {
+        return self.map { it in
+            ArticleForData(update: it)
         }
     }
 }
@@ -99,6 +116,46 @@ extension List<Message> {
     func toMessageData() -> [MessageForData] {
         return self.toList().map { it in
             MessageForData(update: it)
+        }
+    }
+}
+
+extension [CourseForData] {
+    
+    func splitCourses() -> [SessionForDisplay] {
+        var courses = [SessionForDisplay]()
+        forEach { course in
+            for (index, it) in course.timelines.enumerated() {
+                let it = SessionForDisplay(
+                    title: it.title,
+                    date: it.date,
+                    dateStr: it.date.toStr,
+                    note: it.note,
+                    video: it.video,
+                    timelineMode: it.mode,
+                    courseId: course.id,
+                    courseName: course.title,
+                    lecturerId: course.lecturerId,
+                    lecturerName: course.lecturerName,
+                    studentId: "",
+                    studentName: "",
+                    timelineIndex: index,
+                    mode: 1,
+                    duration: it.duration,
+                    imageUri: course.imageUri,
+                    isDraft: course.isDraft
+                )
+                courses.append(it)
+            }
+        }
+        return courses
+    }
+}
+
+extension [Course] {
+    func toCourseForData(_ currentTime: Int64) -> [CourseForData] {
+        return self.map { it in
+            CourseForData(update: it, currentTime: currentTime)
         }
     }
 }

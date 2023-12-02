@@ -1,8 +1,9 @@
 import Foundation
 import  RealmSwift
+import Combine
 
 class PrefRepoImp : PrefRepo {
-
+    
     let realm: Realm
     
     init(realm: Realm) {
@@ -10,35 +11,47 @@ class PrefRepoImp : PrefRepo {
     }
     
     func prefs(invoke: ([Preference]) -> Unit) {
-        let op: [Preference] = realm.objects(Preference.self).map { it in
+        let list: [Preference] = realm.objects(Preference.self).map { it in
             it
         }
-        invoke(op)
+        invoke(list)
     }
     
-    func insertPref(pref: Preference) async -> Preference? {
-        do {
-            try await realm.asyncWrite {
-                realm.add(pref)
+    /*func prefsBack(invoke: @escaping ([Preference]) -> Unit) -> AnyCancellable {
+        return realm.objects(Preference.self)
+            .collectionPublisher
+            .receive(on: DispatchQueue.main)
+            .subscribe(on: DispatchQueue.main)
+            .assertNoFailure()
+            .sink { response in
+                invoke(response.map { it in
+                    it
+                })
             }
-            return pref
-        } catch {
-            return nil
+    }*/
+    
+    func insertPref(_ pref: Preference,_ invoke: @escaping ((Preference?) -> Unit)) {
+          realm.writeAsync {
+              self.realm.add(pref)
+          } onComplete: { error in
+              invoke(error == nil ? pref : nil)
+          }
+    }
+    
+    func updatePref(
+        _ pref: Preference,
+        _ newValue: String,
+        _ invoke: @escaping (Preference?) -> Unit
+    ) {
+        let op = realm.object(ofType: Preference.self, forPrimaryKey: pref._id)
+        if (op == nil) {
+            insertPref(pref, invoke)
+            return
         }
-    }
-    
-    func updatePref(pref: Preference, newValue: String) async -> Preference? {
-        do {
-            let op = realm.object(ofType: Preference.self, forPrimaryKey: pref._id)
-            if (op == nil) {
-                return await insertPref(pref: pref)
-            }
-            try await realm.asyncWrite {
-                op!.value = newValue
-            }
-            return op
-        } catch {
-            return nil
+        self.realm.writeAsync {
+            op!.value = newValue
+        } onComplete: { error in
+            invoke(error == nil ? op : nil)
         }
     }
     

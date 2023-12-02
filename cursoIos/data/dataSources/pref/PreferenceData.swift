@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 class PreferenceData {
     
@@ -12,12 +13,19 @@ class PreferenceData {
         repository.prefs(invoke: invoke)
     }
     
-    func insertPref(_ pref: Preference) async -> Preference? {
-        return await repository.insertPref(pref: pref)
+    func insertPref(
+        _ pref: Preference,
+        _ invoke: @escaping (Preference?) -> Unit
+    ) {
+        repository.insertPref(pref, invoke)
     }
     
-    func updatePref(_ pref: Preference,_ newValue: String) async -> Preference? {
-        return await repository.updatePref(pref: pref, newValue: newValue)
+    func updatePref(
+        _ pref: Preference,
+        _ newValue: String,
+        _ invoke: @escaping (Preference?) -> Unit
+    ) {
+        repository.updatePref(pref, newValue, invoke)
     }
     
     func deletePref(key: String) -> Int {
