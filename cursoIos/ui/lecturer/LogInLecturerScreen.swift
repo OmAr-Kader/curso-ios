@@ -1,12 +1,12 @@
 import SwiftUI
 import PhotosUI
 
-struct LoginScreen: View {
+struct LoginScreenLecturer: View {
     @State private var toast: Toast? = nil
-
+    
     @ObservedObject var app: AppModule
     @ObservedObject var pref: PrefObserve
-    @ObservedObject var loginObs: LogInObserve
+    @ObservedObject var loginObs: LogInObserveLecturer
     
     @State private var selectedItem: PhotosPickerItem?
     @FocusState private var isFocusedEmail: Bool
@@ -14,7 +14,7 @@ struct LoginScreen: View {
     init(_ app: AppModule,_ pref: PrefObserve) {
         self.app = app
         self.pref = pref
-        self.loginObs = LogInObserve(app)
+        self.loginObs = LogInObserveLecturer(app)
     }
 
     var body: some View {
@@ -28,7 +28,6 @@ struct LoginScreen: View {
         let isSpecialtyError = state.isErrorPressed && state.specialty.isEmpty
         let isBriefError = state.isErrorPressed && state.brief.isEmpty
         let isImageError = state.isErrorPressed && state.imageUri == nil
-        
         VStack {
             VStack {
                 HStack {
@@ -48,7 +47,7 @@ struct LoginScreen: View {
                 HStack {
                     Text(
                         "Hello There."
-                    ).foregroundStyle(app.theme.textColor)
+                    ).foregroundStyle(pref.theme.textColor)
                         .font(.system(size: 35))
                         .padding(leading: 20, trailing: 20)
                         .fixedSize(horizontal: false, vertical: true)
@@ -58,7 +57,7 @@ struct LoginScreen: View {
                 HStack {
                     Text(
                         "Login or sign up to continue."
-                    ).foregroundStyle(app.theme.textColor)
+                    ).foregroundStyle(pref.theme.textColor)
                         .font(.system(size: 14))
                         .padding(leading: 20, trailing: 20)
                         .fixedSize(horizontal: false, vertical: true)
@@ -85,7 +84,7 @@ struct LoginScreen: View {
                                     uiImage: UIImage(
                                         named: "photo.circle"
                                     )?.withTintColor(
-                                        UIColor(app.theme.textColor)
+                                        UIColor(pref.theme.textColor)
                                     ) ?? UIImage()
                                 ).resizable()
                                     .imageScale(.large)
@@ -120,22 +119,22 @@ struct LoginScreen: View {
                             )
                         }
                     }.background(Color.gray)
-                    .clipShape(Circle())
-                    .frame(
-                        width: 120, height: 120, alignment: .topLeading
-                    ).overlay(
-                        Circle().stroke(
-                            isImageError ? app.theme.error : app.theme.background.opacity(0.0),
-                            lineWidth: isImageError ? 2 : 0
+                        .clipShape(Circle())
+                        .frame(
+                            width: 120, height: 120, alignment: .topLeading
+                        ).overlay(
+                            Circle().stroke(
+                                isImageError ? pref.theme.error : pref.theme.background.opacity(0.0),
+                                lineWidth: isImageError ? 2 : 0
+                            )
                         )
-                    )
                 }
             }.frame(
                 height: 120,
                 alignment: .topLeading
             )
             VStack {
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     VStack {
                         VStack {
                             OutlinedTextField(
@@ -146,7 +145,7 @@ struct LoginScreen: View {
                                 hint: "Enter email",
                                 isError: isEmailError,
                                 errorMsg: "Shouldn't be empty",
-                                theme: app.theme,
+                                theme: pref.theme,
                                 lineLimit: 1,
                                 keyboardType: UIKeyboardType.emailAddress
                             )
@@ -158,7 +157,7 @@ struct LoginScreen: View {
                                 hint: "Enter password",
                                 isError: isPasswordError,
                                 errorMsg: "Shouldn't be empty",
-                                theme: app.theme,
+                                theme: pref.theme,
                                 lineLimit: 1,
                                 keyboardType: UIKeyboardType.default
                             ).padding(top: 16)
@@ -173,7 +172,7 @@ struct LoginScreen: View {
                                     hint: "Enter your name",
                                     isError: isNameError,
                                     errorMsg: "Shouldn't be empty",
-                                    theme: app.theme,
+                                    theme: pref.theme,
                                     lineLimit: 1,
                                     keyboardType: UIKeyboardType.default
                                 ).padding(top: 16)
@@ -185,7 +184,7 @@ struct LoginScreen: View {
                                     hint: "Enter Mobile",
                                     isError: isMobileError,
                                     errorMsg: "Shouldn't be empty",
-                                    theme: app.theme,
+                                    theme: pref.theme,
                                     lineLimit: 1,
                                     keyboardType: UIKeyboardType.phonePad
                                 ).padding(top: 16)
@@ -197,7 +196,7 @@ struct LoginScreen: View {
                                     hint: "Enter Specialty",
                                     isError: isSpecialtyError,
                                     errorMsg: "Shouldn't be empty",
-                                    theme: app.theme,
+                                    theme: pref.theme,
                                     lineLimit: 1,
                                     keyboardType: UIKeyboardType.default
                                 ).padding(top: 16)
@@ -209,7 +208,7 @@ struct LoginScreen: View {
                                     hint: "Enter University",
                                     isError: isUniversityError,
                                     errorMsg: "Shouldn't be empty",
-                                    theme: app.theme,
+                                    theme: pref.theme,
                                     lineLimit: 1,
                                     keyboardType: UIKeyboardType.default
                                 ).padding(top: 16)
@@ -221,22 +220,24 @@ struct LoginScreen: View {
                                     hint: "Enter Info About you",
                                     isError: isBriefError,
                                     errorMsg: "Shouldn't be empty",
-                                    theme: app.theme,
+                                    theme: pref.theme,
                                     lineLimit: nil,
                                     keyboardType: UIKeyboardType.default
-                                ).padding(top: 16)
+                                ).padding(top: 16).onDisappear {
+                                        print("==> Disappear")
+                                    }
                             }
                         }
                     }.padding(16)
                         .background(
                             RoundedRectangle(cornerRadius: 15)
-                                .fill(app.theme.backDark)
+                                .fill(pref.theme.backDark)
                         )
-                }.onAppear {
+                }/*.onAppear {
                     UIScrollView.appearance().bounces = false
                 }.onDisappear {
                     UIScrollView.appearance().bounces = true
-                }
+                }*/
             }.padding(20)
             Spacer()
             HStack(alignment: .bottom) {
@@ -245,9 +246,9 @@ struct LoginScreen: View {
                     isChoose: state.isLogIn,
                     isProcess: state.isProcessing,
                     text: "Login",
-                    color: app.theme.primary,
-                    secondaryColor: app.theme.secondary,
-                    textColor: app.theme.textForPrimaryColor,
+                    color: pref.theme.primary,
+                    secondaryColor: pref.theme.secondary,
+                    textColor: pref.theme.textForPrimaryColor,
                     onClick: {
                         if (!state.isLogIn) {
                             withAnimation {
@@ -282,9 +283,9 @@ struct LoginScreen: View {
                     isChoose: !state.isLogIn,
                     isProcess: state.isProcessing,
                     text: "Sign up",
-                    color: app.theme.primary,
-                    secondaryColor: app.theme.secondary,
-                    textColor: app.theme.textForPrimaryColor,
+                    color: pref.theme.primary,
+                    secondaryColor: pref.theme.secondary,
+                    textColor: pref.theme.textForPrimaryColor,
                     onClick: {
                         if (state.isLogIn) {
                             withAnimation {
@@ -316,7 +317,6 @@ struct LoginScreen: View {
                 )
                 Spacer()
             }
-        }.background(app.theme.background.darker)
-            .toastView(toast: $toast)
+        }.background(pref.theme.background.margeWithPrimary).toastView(toast: $toast)
     }
 }

@@ -2,7 +2,7 @@ import Foundation
 import RealmSwift
 import Realm
 
-class LogInObserve : ObservableObject {
+class LogInObserveLecturer : ObservableObject {
     
     private var scope = Scope()
 
@@ -39,7 +39,7 @@ class LogInObserve : ObservableObject {
         scope.launch {
             await self.loginRealm(s).letBackN { user in
                 if (user != nil) {
-                    await self.app.project().lecturer.getLecturerEmail(
+                    await self.app.project.lecturer.getLecturerEmail(
                         s.email
                     ) { r in
                         self.saveUserState(r.value, invoke: invoke, failed: failed)
@@ -59,7 +59,7 @@ class LogInObserve : ObservableObject {
     ) {
         if (lec != nil) {
             scope.launch {
-                await self.app.project().course.getLecturerCourses(
+                await self.app.project.course.getLecturerCourses(
                     id: lec!._id.stringValue
                 ) { r in
                     self.state = self.state.copy(isProcessing: false)
@@ -98,7 +98,7 @@ class LogInObserve : ObservableObject {
             await self.realmSignIn(s: s,failed: failed).letBackN { user in
                 if (user != nil) {
                     self.state = self.state.copy(alreadyLoggedIn: true)
-                    await self.app.project().fireApp?.upload(
+                    self.app.project.fireApp?.upload(
                         s.imageUri!,
                         "LecturerImage/${user.id} ${System.currentTimeMillis()}",
                         //+ getMimeType(uri)
@@ -129,7 +129,7 @@ class LogInObserve : ObservableObject {
         failed: @escaping (String) -> Unit
     ) {
         scope.launch {
-            let it = await self.app.project().lecturer.insertLecturer(
+            let it = await self.app.project.lecturer.insertLecturer(
                 Lecturer(
                     lecturerName: s.lecturerName,
                     email: s.email,
@@ -157,12 +157,12 @@ class LogInObserve : ObservableObject {
         failed: @escaping (String) -> Unit
     ) async -> User? {
         if (state.alreadyLoggedIn) {
-            return await app.project().realmSync.realmApp.currentUser.letBackN { it in
+            return await app.project.realmSync.realmApp.currentUser.letBackN { it in
                 if (it != nil) {
                     return nil
                 } else {
                     do {
-                        try await app.project().realmSync
+                        try await app.project.realmSync
                             .realmApp.emailPasswordAuth.registerUser(
                                 email: s.email, password: s.password
                             )
@@ -174,7 +174,7 @@ class LogInObserve : ObservableObject {
             }
         } else {
             do {
-                try await app.project().realmSync
+                try await app.project.realmSync
                     .realmApp.emailPasswordAuth.registerUser(
                         email: s.email, password: s.password
                     )
@@ -193,7 +193,7 @@ class LogInObserve : ObservableObject {
 
 
     private func loginRealm(_ s: State) async -> User? {
-        let it = try? await app.project().realmSync.realmApp.login(
+        let it = try? await app.project.realmSync.realmApp.login(
             credentials: Credentials.emailPassword(
                 email: s.email,
                 password: s.password
