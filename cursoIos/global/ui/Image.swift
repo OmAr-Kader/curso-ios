@@ -1,6 +1,19 @@
 import Foundation
 import SwiftUI
 
+struct ImageAsset : View {
+    
+    let icon: String
+    let tint: Color
+    
+    var body: some View {
+        Image(
+            uiImage: UIImage(
+                named: icon
+            )?.withTintColor(UIColor(tint)) ?? UIImage()
+        )
+    }
+}
 
 class ImageViewModel: ObservableObject {
     @Published var image: UIImage?
@@ -66,8 +79,5 @@ struct ImageView: View {
             .background(Color.clear)
             .imageScale(.large)
             .aspectRatio(contentMode: .fill)
-            .frame(
-                width: 120, height: 120, alignment: .center
-            )
     }
 }

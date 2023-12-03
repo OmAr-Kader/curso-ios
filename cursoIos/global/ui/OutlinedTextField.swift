@@ -33,13 +33,13 @@ struct OutlinedTextField : View {
                 .lineLimit(lineLimit)
             .focused($isFocused)
             .keyboardType(keyboardType ?? .default)
-                .background(
-                    RoundedRectangle(cornerRadius: 5)
-                        .stroke(
-                            isError ? theme.error : (isFocused ? theme.primary : theme.secondary),
-                            lineWidth: 1.5
-                        )
-                )
+            .background(
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(
+                        isError ? theme.error : (isFocused ? theme.primary : theme.secondary),
+                        lineWidth: 1.5
+                    )
+            )
             if isError {
                 HStack {
                     Text(errorMsg).padding(

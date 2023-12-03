@@ -20,6 +20,21 @@ class Course: Object {
     @Persisted var partition: String = "public"
     @Persisted(primaryKey: true) var _id: ObjectId = ObjectId.init()
     
+    //students: List<StudentCourses>, rate: Double, raters: Int,
+    init(title: String, lecturerName: String, lecturerId: String, price: String, imageUri: String, about: List<AboutCourse>, briefVideo: String, timelines: List<Timeline>, lastEdit: Int64, isDraft: Int, _id: ObjectId) {
+        self.title = title
+        self.lecturerName = lecturerName
+        self.lecturerId = lecturerId
+        self.price = price
+        self.imageUri = imageUri
+        self.about = about
+        self.briefVideo = briefVideo
+        self.timelines = timelines
+        self.lastEdit = lastEdit
+        self.isDraft = isDraft
+        self._id = _id
+    }
+    
     override init() {
         title = ""
         lecturerName = ""
@@ -208,8 +223,14 @@ class Certificate : Object {
 
 
 struct AboutCourseData {
-    let font: Int
-    let text: String
+    var font: Int
+    var text: String
+    
+    mutating func copy(font: Int? = nil, text: String? = nil) -> Self {
+        self.font = font ?? self.font
+        self.text = text ?? self.text
+        return self
+    }
 }
 
 struct SessionForDisplay {
@@ -297,6 +318,23 @@ struct TimelineData {
         return mode == 1
     }
     
+    init(_ title: String,
+         _ date: Int64,
+         _ note: String,
+         _ duration: String,
+         _ video: String,
+         _ mode: Int,
+         _ degree: Int
+    ) {
+        self.title = title
+        self.date = date
+        self.note = note
+        self.duration = duration
+        self.video = video
+        self.mode = mode
+        self.degree = degree
+    }
+    
     init(it: Timeline) {
         title = it.title
         date = it.date
@@ -305,6 +343,23 @@ struct TimelineData {
         video = it.video
         mode = it.mode
         degree = it.degree
+    }
+    
+    mutating func copy(
+        video: String? = nil,
+        date: Int64? = nil,
+        note: String? = nil,
+        duration: String? = nil,
+        degree: Int? = nil,
+        title: String? = nil
+    ) -> Self {
+        self.video = video ?? self.video
+        self.date = date ?? self.date
+        self.note = note ?? self.note
+        self.duration = duration ?? self.duration
+        self.degree = degree ?? self.degree
+        self.title = title ?? self.title
+        return self
     }
 }
 

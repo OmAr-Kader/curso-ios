@@ -1,7 +1,7 @@
 import Foundation
 //https://mrezkys.medium.com/swiftui-device-to-device-push-notification-with-firebase-d215aa838361
 
-func sendPushNotification(_ not: PushNotification) {
+func postNotification(_ not: PushNotification) {
     //let receiverFCM = ""
     //let serverKey = ""
 

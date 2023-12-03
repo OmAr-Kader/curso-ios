@@ -2,9 +2,15 @@ import Foundation
 
 struct PushNotification : Codable {
     //origin //main
-    let data: NotificationData
-    let topic: String
     let to: String
+    let topic: String
+    let data: NotificationData
+
+    init(to: String, topic: String, data: NotificationData) {
+        self.to = to
+        self.topic = topic
+        self.data = data
+    }
     
     init(info: [AnyHashable : Any]) {
         topic = info["topic"] as? String ?? ""
@@ -22,6 +28,15 @@ struct NotificationData : Codable {
     let argTwo: String
     let argThree: Int
 
+    init(title: String, message: String, routeKey: String, argOne: String, argTwo: String, argThree: Int) {
+        self.title = title
+        self.message = message
+        self.routeKey = routeKey
+        self.argOne = argOne
+        self.argTwo = argTwo
+        self.argThree = argThree
+    }
+    
     init(info: [AnyHashable : Any]?) {
         title = info?["title"] as? String ?? ""
         message = info?["message"] as? String ?? ""

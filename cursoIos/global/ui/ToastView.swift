@@ -85,9 +85,9 @@ struct ToastModifier: ViewModifier {
           mainToastView()
             .offset(y: 32)
         }.animation(.spring(), value: toast)
-      ).onChange(of: toast, { oldValue, newValue in
+      ).onChange(toast) { newValue in
           showToast()
-      })
+      }
   }
 
   @ViewBuilder func mainToastView() -> some View {

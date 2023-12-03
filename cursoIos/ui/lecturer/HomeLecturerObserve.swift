@@ -7,7 +7,7 @@ class HomeLecturerObserve: ObservableObject {
     let app: AppModule
     
     @Published var state = State()
-    
+
     init(_ app: AppModule) {
         self.app = app
     }

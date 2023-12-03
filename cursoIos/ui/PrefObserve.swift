@@ -108,7 +108,7 @@ class PrefObserve : ObservableObject {
         }
     }
         
-    func signOut(invoke: @escaping () -> Unit, failed: @escaping () -> Unit) {
+    func signOut(_ invoke: @escaping () -> Unit,_ failed: @escaping () -> Unit) {
         let delete = self.app.project.preference.deletePrefAll()
         if delete == REALM_SUCCESS {
             self.app.project.realmSync.realmApp.currentUser?.logOut { _ in

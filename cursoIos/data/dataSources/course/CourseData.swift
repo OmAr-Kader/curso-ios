@@ -87,7 +87,7 @@ class CourseData {
         return await repository.insertCourse(course: course)
     }
 
-    func editCourse(_ course: Course, edit: Course) async -> ResultRealm<Course?> {
+    func editCourse(_ course: Course,_ edit: Course) async -> ResultRealm<Course?> {
         return await repository.editCourse(course: course, edit: edit)
     }
 

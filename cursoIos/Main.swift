@@ -29,7 +29,7 @@ struct SplashScreen : View {
     }
 
     var body: some View {
-        ZStack {
+        VStack(alignment: .center) {
             Image(
                 uiImage: UIImage(
                     named: "AppIcon"

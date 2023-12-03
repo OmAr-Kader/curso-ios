@@ -29,9 +29,7 @@ extension Color {
     }
 
     func margeWithPrimary(f: Double = 0.15) -> Color {
-        return Color(
-            (toUic * (1.0 - f) + Purple40.toUic * f).toC
-        )
+        return (toUic * (1.0 - f) + Purple40.toUic * f).toC
     }
 }
 

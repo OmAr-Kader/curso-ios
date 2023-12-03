@@ -38,15 +38,15 @@ class LogInObserveLecturer : ObservableObject {
     ) {
         scope.launch {
             await self.loginRealm(s).letBackN { user in
-                if (user != nil) {
-                    await self.app.project.lecturer.getLecturerEmail(
-                        s.email
-                    ) { r in
-                        self.saveUserState(r.value, invoke: invoke, failed: failed)
-                    }
-                } else {
+                guard let user else {
                     self.state = self.state.copy(isProcessing: false)
                     failed("Failed")
+                    return
+                }
+                await self.app.project.lecturer.getLecturerEmail(
+                    s.email
+                ) { r in
+                    self.saveUserState(r.value, invoke: invoke, failed: failed)
                 }
             }
         }
@@ -57,18 +57,18 @@ class LogInObserveLecturer : ObservableObject {
         invoke: @escaping (Lecturer, Int) -> Unit,
         failed: @escaping (String) -> Unit
     ) {
-        if (lec != nil) {
-            scope.launch {
-                await self.app.project.course.getLecturerCourses(
-                    lec!._id.stringValue
-                ) { r in
-                    self.state = self.state.copy(isProcessing: false)
-                    invoke(lec!, r.value.count)
-                }
-            }
-        } else {
+        guard let lec else {
             self.state = self.state.copy(isProcessing: false)
             failed("Failed")
+            return
+        }
+        scope.launch {
+            await self.app.project.course.getLecturerCourses(
+                lec._id.stringValue
+            ) { r in
+                self.state = self.state.copy(isProcessing: false)
+                invoke(lec, r.value.count)
+            }
         }
     }
 
@@ -96,27 +96,28 @@ class LogInObserveLecturer : ObservableObject {
     ) {
         scope.launch {
             await self.realmSignIn(s: s,failed: failed).letBackN { user in
-                if (user != nil) {
-                    self.state = self.state.copy(alreadyLoggedIn: true)
-                    self.app.project.fireApp?.upload(
-                        s.imageUri!,
-                        "LecturerImage/${user.id} ${System.currentTimeMillis()}",
-                        //+ getMimeType(uri)
-                        { it in
-                            self.doInsertLecturer(
-                                s: s,
-                                it: it,
-                                invoke: invoke,
-                                failed: failed
-                            )
-                    }, {
-                        self.state = self.state.copy(isProcessing: false)
-                        failed("Failed")
-                    })
-                } else {
+                let img = s.imageUri
+                guard let user, let img else {
                     self.state = self.state.copy(isProcessing: false)
                     failed("Failed")
+                    return
                 }
+                print(user)
+                self.state = self.state.copy(alreadyLoggedIn: true)
+                self.app.project.fireApp?.upload(
+                    img,
+                    "LecturerImage/${user.id}_" + String(currentTime) + s.imageUri!.pathExtension,
+                    { it in
+                        self.doInsertLecturer(
+                            s: s,
+                            it: it,
+                            invoke: invoke,
+                            failed: failed
+                        )
+                }, {
+                    self.state = self.state.copy(isProcessing: false)
+                    failed("Failed")
+                })
             }
         }
     }

@@ -2,12 +2,12 @@ import SwiftUI
 import PhotosUI
 
 struct LoginScreenLecturer: View {
-    @State private var toast: Toast? = nil
     
     @ObservedObject var app: AppModule
     @ObservedObject var pref: PrefObserve
     @ObservedObject var loginObs: LogInObserveLecturer
     
+    @State private var toast: Toast? = nil
     @State private var selectedItem: PhotosPickerItem?
     @FocusState private var isFocusedEmail: Bool
     
@@ -74,6 +74,8 @@ struct LoginScreenLecturer: View {
                         if (state.imageUri != nil) {
                             ImageView(
                                 urlString: state.imageUri!.absoluteString
+                            ).frame(
+                                width: 120, height: 120, alignment: .center
                             )
                         } else {
                             PhotosPicker(
@@ -95,13 +97,13 @@ struct LoginScreenLecturer: View {
                                     )
                             }
                             .clipShape(Circle())
-                            .onChange(of: selectedItem, {
+                            .onChange(selectedItem) { newIt in
                                 logger(
                                     "imageUri",
-                                    String(selectedItem == nil)
+                                    String(newIt == nil)
                                 )
-                                if (selectedItem != nil) {
-                                    getURL(item: selectedItem!) { result in
+                                if (newIt != nil) {
+                                    getURL(item: newIt!) { result in
                                         switch result {
                                         case .success(let url):
                                             loginObs.setImageUri(it: url)
@@ -114,7 +116,7 @@ struct LoginScreenLecturer: View {
                                         }
                                     }
                                 }
-                            }).frame(
+                            }.frame(
                                 width: 120, height: 120, alignment: .topLeading
                             )
                         }

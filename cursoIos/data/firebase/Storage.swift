@@ -30,7 +30,7 @@ extension FirebaseApp {
     }
     
     func deleteFile(
-        uri: String
+        _ uri: String
     ) {
         Storage.storage(app: self).reference(forURL: uri).delete { e in
             loggerError("FirebaseApp.delete", e?.localizedDescription ?? "")
