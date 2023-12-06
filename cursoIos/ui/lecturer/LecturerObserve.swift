@@ -1,10 +1,11 @@
 import Foundation
 import RealmSwift
+import Combine
 
 class LecturerObserve : ObservableObject {
     
     private var scope = Scope()
-    private var tokenFlow: NotificationToken? = nil
+    private var sinkLecturer: AnyCancellable? = nil
     
     let app: AppModule
     
@@ -13,8 +14,7 @@ class LecturerObserve : ObservableObject {
     init(_ app: AppModule) {
         self.app = app
     }
-    
-    
+
     var lecturerRate: String {
         let it = state.lecturer
         return it.rate == 0.0 ? "5" : String(it.rate)
@@ -35,40 +35,42 @@ class LecturerObserve : ObservableObject {
     
     func fetchLecturer(lecturerId: String, studentId: String) {
         setStudentId(studentId)
-        scope.launch {
-            self.tokenFlow = await self.app.project.lecturer.getLecturerFlow(lecturerId)
-                .value?.observe(on: .global()) { changes in
-                    switch changes {
-                    case .change(let object, _):
-                        let value = LecturerForData(update: object as! Lecturer)
-                        self.state = self.state.copy(
-                            lecturer: value,
-                            alreadyFollowed: value.follower.alreadyFollowed(studentId)
-                        )
-                        self.getCoursesForLecturer(lecturerId)
-                    default:
-                        return
-                    }
+        scope.launchRealm {
+            self.sinkLecturer = await self.app.project.lecturer.getLecturerFlow(id: lecturerId) { object in
+                guard let object else {
+                    return
                 }
+                let value = LecturerForData(update: object)
+                let isAlready = value.follower.alreadyFollowed(studentId)
+                self.scope.launchMain {
+                    self.state = self.state.copy(
+                        lecturer: value,
+                        alreadyFollowed: isAlready
+                    )
+                }
+            }
         }
+        self.getCoursesForLecturer(lecturerId)
     }
 
     private func getCoursesForLecturer(_ lecturerId: String) {
-        scope.launch {
+        scope.launchRealm {
             await self.app.project.course.getLecturerCourses(lecturerId) { r in
-                if (r.result == REALM_SUCCESS) {
-                    self.state = self.state.copy(courses: r.value.toCourseForData(currentTime))
-                }
-                self.getArticlesForLecturer(lecturerId)
+                self.getArticlesForLecturer(lecturerId, r)
             }
         }
     }
     
-    private func getArticlesForLecturer(_ lecturerId: String) {
-        scope.launch {
+    private func getArticlesForLecturer(_ lecturerId: String, _ coursesList: ResultRealm<[Course]>) {
+        scope.launchRealm {
             await self.app.project.article.getLecturerArticles(lecturerId) { r in
                 if (r.result == REALM_SUCCESS) {
-                    self.state = self.state.copy(articles: r.value.toArticleForData())
+                    self.scope.launchMain {
+                        self.state = self.state.copy(
+                            courses: coursesList.value.toCourseForData(currentTime),
+                            articles: r.value.toArticleForData()
+                        )
+                    }
                 }
             }
         }
@@ -81,25 +83,27 @@ class LecturerObserve : ObservableObject {
         _ failed: @escaping () -> Unit
     ) {
         if (alreadyFollowed) {
-            unFollow(studentId, invoke, failed)
+            unFollow(self.state.lecturer, studentId, invoke, failed)
         } else {
-            follow(studentId, invoke, failed)
+            follow(self.state.lecturer, studentId, invoke, failed)
         }
     }
 
     private func follow(
+        _ lec: LecturerForData,
         _ studentId: String,
         _ invoke: @escaping () -> Unit,
         _ failed: @escaping () -> Unit
     ) {
-        scope.launch {
+        scope.launchRealm {
             await self.app.project.student.getStudent(studentId) { r in
-                self.doFollow(r.value, invoke, failed)
+                self.doFollow(lec, r.value, invoke, failed)
             }
         }
     }
     
     private func doFollow(
+        _ lec: LecturerForData,
         _ value: Student?,
         _ invoke: @escaping () -> Unit,
         _ failed: @escaping () -> Unit
@@ -107,15 +111,14 @@ class LecturerObserve : ObservableObject {
         if (value == nil) {
             failed()
         } else {
-            scope.launch {
-                let l = self.state.lecturer
-                var followers: [StudentLecturerData] = (l.follower)
+            scope.launchRealm {
+                var followers: [StudentLecturerData] = (lec.follower)
                 let new = StudentLecturerData(
                     studentId: value!._id.stringValue,
                     studentName: value!.studentName
                 )
                 followers.append(new)
-                let lecturer = Lecturer(update: l)
+                let lecturer = Lecturer(update: lec)
                 let it = await self.app.project.lecturer.editLecturer(
                     lecturer,
                     Lecturer(update: lecturer, hexString: lecturer._id.stringValue, followers: followers.toStudentLecturer())
@@ -124,33 +127,41 @@ class LecturerObserve : ObservableObject {
                     subscribeToTopic(it.value!._id.stringValue) {
 
                     }
-                    invoke()
+                    self.scope.launchMain {
+                        invoke()
+                    }
                 } else {
-                    failed()
+                    self.scope.launchMain {
+                        failed()
+                    }
                 }
             }
         }
     }
 
     private func unFollow(
+        _ lec: LecturerForData,
         _ studentId: String,
         _ invoke: @escaping () -> Unit,
         _ failed: @escaping () -> Unit
     ) {
-        scope.launch {
-            let l = self.state.lecturer
-            let followers: [StudentLecturerData] = (l.follower)
+        scope.launchRealm {
+            let followers: [StudentLecturerData] = (lec.follower)
             let list = followers.filter { it in it.studentId != studentId }
-            let lecturer = Lecturer(update: l)
+            let lecturer = Lecturer(update: lec)
             let it = await self.app.project.lecturer.editLecturer(
                 lecturer,
                 Lecturer(update: lecturer, hexString: lecturer._id.stringValue, followers: list.toStudentLecturer())
             )
             if (it.result == REALM_SUCCESS && it.value != nil) {
                 unsubscribeToTopic(it.value!._id.stringValue)
-                invoke()
+                self.scope.launchMain {
+                    invoke()
+                }
             } else {
-                failed()
+                self.scope.launchMain {
+                    failed()
+                }
             }
         }
     }
@@ -179,8 +190,9 @@ class LecturerObserve : ObservableObject {
     }
     
     deinit {
-        tokenFlow?.invalidate()
-        tokenFlow = nil
+        sinkLecturer?.cancel()
+        sinkLecturer = nil
+        scope.deInit()
     }
     
 }

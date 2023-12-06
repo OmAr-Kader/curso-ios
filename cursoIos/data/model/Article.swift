@@ -98,12 +98,13 @@ class ArticleText: EmbeddedObject {
     
 }
 
-struct ArticleTextData {
+struct ArticleTextData : ForSubData {
+    
     var font: Int = 14
     var text: String = ""
 }
 
-struct ArticleForData {
+struct ArticleForData : ForData  {
     
     var title: String
     var lecturerName: String
@@ -117,6 +118,10 @@ struct ArticleForData {
     var lastEdit: Int64
     var isDraft: Int = 0
     var id: String
+    
+    var scrollId: String {
+        return id
+    }
     
     init() {
         title = ""

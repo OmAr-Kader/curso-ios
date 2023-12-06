@@ -1,4 +1,4 @@
-import Foundation
+import Combine
 
 class ChatData {
     var repository: ChatRepo
@@ -7,23 +7,33 @@ class ChatData {
         self.repository = repository
     }
     
+    @BackgroundActor
     func getMainChatFlow(
-        courseId: String
-    ) async -> ResultRealm<Conversation?> {
-        return await repository.getMainChatFlow(courseId: courseId)
+        courseId: String,
+        invoke: @escaping (Conversation?) -> Unit
+    ) async -> AnyCancellable? {
+        return await repository.getMainChatFlow(courseId: courseId, invoke: invoke)
     }
 
+    @BackgroundActor
     func getTimelineChatFlow(
         courseId: String,
-        type: Int
-    ) async -> ResultRealm<Conversation?> {
-        return await repository.getTimelineChatFlow(courseId: courseId, type: type)
+        type: Int,
+        invoke: @escaping (Conversation?) -> Unit
+    ) async -> AnyCancellable? {
+        return await repository.getTimelineChatFlow(
+            courseId: courseId,
+            type: type,
+            invoke: invoke
+        )
     }
 
+    @BackgroundActor
     func createChat(conversation: Conversation) async -> ResultRealm<Conversation?> {
         return await repository.createChat(conversation: conversation)
     }
 
+    @BackgroundActor
     func editChat(
         conversation: Conversation,
         edit: Conversation

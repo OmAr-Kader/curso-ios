@@ -5,27 +5,33 @@ import Combine
 
 class PrefObserve : ObservableObject {
     
-    private var sinkPrefs: AnyCancellable? = nil
-    private var tempPrefs: AnyCancellable? = nil
-
     let theme: Theme
 
     let app: AppModule
     
-    init(_ app: AppModule,_ theme: Theme) {
-        self.app = app
-        self.theme = theme
-        self.intiApp(app) {}
-    }
-    
+    private var scope = Scope()
+
     @Published var navigationPath = NavigationPath()
     
     @Published var state = State()
-    
-    private var scope: Scope = Scope()
             
     private var preferences: [Preference] = []
-    private var prefsJob: Task<Unit, Error>?
+    private var prefsTask: Task<Void, Error>? = nil
+    private var sinkPrefs: AnyCancellable? = nil
+
+    init(_ app: AppModule,_ theme: Theme) {
+        self.app = app
+        self.theme = theme
+        self.downloadChanges()
+        prefsTask?.cancel()
+        sinkPrefs?.cancel()
+        prefsTask = scope.launchRealm {
+            self.sinkPrefs = await self.app.project.preference.prefsBack { list in
+                print("=====>" + "Done" + String(list.count))
+                self.preferences = list
+            }
+        }
+    }
     
     var navigateHome: (Screen) -> Unit {
         return { screen in
@@ -48,14 +54,12 @@ class PrefObserve : ObservableObject {
         }
     }
     
-    func intiApp(_ app: AppModule,_ invoke: @escaping () -> Unit) {
-        downloadChanges(invoke)
-    }
-    
     private func inti(invoke: @escaping ([Preference]) -> Unit) {
-        self.app.project.preference.prefs { list in
-            self.preferences = list
-            invoke(list)
+        scope.launchRealm {
+            await self.app.project.preference.prefs { list in
+                self.preferences = list
+                invoke(list)
+            }
         }
     }
 
@@ -89,29 +93,46 @@ class PrefObserve : ObservableObject {
         state = state.copy(route: route, one: one, two: two, three: three, obj: obj)
     }
     
-    func downloadChanges(_ invoke: @escaping () -> Unit) {
-        scope.launch {
-            if (isNetworkAvailable()) {
-                await self.downloadAllServerChanges(invoke)
-            }
+    func downloadChanges() {
+        if (isNetworkAvailable() && self.app.project.realmApi.realmApp.currentUser != nil) {
+            self.downloadAllServerChanges()
         }
     }
 
-    
-    private func downloadAllServerChanges(_ invoke: () -> Unit) async {
-        do {
-            try await app.project
-                .realmSync.cloud()?.syncSession?.wait(for: .upload)
-            invoke()
-        } catch {
-            invoke()
+    private func downloadAllServerChanges() {
+        scope.launchRealm {
+            do {
+                try await self.app.project.realmApi.cloud()?.syncSession?.wait(for: .download)
+            } catch let error {
+                print("==>" + error.localizedDescription)
+            }
         }
     }
         
     func signOut(_ invoke: @escaping () -> Unit,_ failed: @escaping () -> Unit) {
-        let delete = self.app.project.preference.deletePrefAll()
+        scope.launchRealm {
+            let delete = await self.app.project.preference.deletePrefAll()
+            await self.userLogOut(delete, invoke, failed)
+        }
+    }
+    
+    private func userLogOut(
+        _ delete: Int,
+        _ invoke: @escaping () -> Unit,
+        _ failed: @escaping () -> Unit
+    ) async {
+        self.scope.launchMain {
+            self.doSignOut(delete, invoke, failed)
+        }
+    }
+    
+    private func doSignOut(
+        _ delete: Int,
+        _ invoke: @escaping () -> Unit,
+        _ failed: @escaping () -> Unit
+    ) {
         if delete == REALM_SUCCESS {
-            self.app.project.realmSync.realmApp.currentUser?.logOut { _ in
+            self.app.project.realmApi.realmApp.currentUser?.logOut { _ in
                 getFcmLogout(invoke)
             }
         } else {
@@ -126,50 +147,65 @@ class PrefObserve : ObservableObject {
         invoke: @escaping () -> Unit,
         failed: @escaping () -> Unit
     ) {
-        scope.launchMain {
-            let app = self.app.project.realmSync.realmApp
-            let it = await self.fetchUser(userBase, app)
+        self.fetchUser(userBase) { it in
             if (it == nil || !it!.isLoggedIn) {
                 failed()
                 return
             }
+            self.checkUserData(
+                userBase: userBase,
+                isStudent: isStudent,
+                invoke: invoke,
+                failed: failed
+            )
+        }
+    }
+    
+    private func checkUserData(
+        userBase: UserBase,
+        isStudent: Bool,
+        invoke: @escaping () -> Unit,
+        failed: @escaping () -> Unit
+    ) {
+        scope.launchRealm {
             if (!isStudent) {
                 await self.app.project.lecturer.getLecturer(userBase.id) { r in
-                    if (r.value != nil) {
-                        invoke()
-                    } else {
-                        failed()
+                    self.scope.launchMain {
+                        r.value != nil ? invoke() : failed()
                     }
                 }
             } else {
                 await self.app.project.student.getStudent(userBase.id) { r in
-                    if (r.value != nil) {
-                        invoke()
-                    } else {
-                        failed()
+                    self.scope.launchMain {
+                        r.value != nil ? invoke() : failed()
                     }
                 }
             }
         }
     }
     
-    private func fetchUser(_ userBase: UserBase,_ app: RealmSwift.App) async -> User? {
-        let curr = app.currentUser
+    private func fetchUser(_ userBase: UserBase,_ invoke: @escaping (User?) -> Unit) {
+        let curr = self.app.project.realmApi.realmApp.currentUser
         if (curr != nil) {
-            return curr
+            invoke(curr!)
         } else {
             if (!isNetworkAvailable()) {
-                return nil
+                invoke(nil)
+                return
             }
-            do {
-                return try await app.login(
-                    credentials: Credentials.emailPassword(
-                        email: userBase.email,
-                        password: userBase.password
-                    )
+            app.project.realmApi.realmApp.login(
+                credentials: Credentials.emailPassword(
+                    email: userBase.email,
+                    password: userBase.password
                 )
-            } catch {
-                return nil
+            ) { (result) in
+                switch result {
+                case .failure(let error):
+                    print("==>" + error.localizedDescription)
+                    invoke(nil)
+                case .success(let user):
+                    invoke(user)
+                }
             }
         }
     }
@@ -180,7 +216,9 @@ class PrefObserve : ObservableObject {
     ) {
         if (preferences.isEmpty) {
             inti { it in
-                value(it.first { it1 in it1.ketString == key }?.value)
+                self.scope.launchMain {
+                    value(it.first { it1 in it1.ketString == key }?.value)
+                }
             }
         } else {
             value(preferences.first { it1 in it1.ketString == key }?.value)
@@ -192,7 +230,10 @@ class PrefObserve : ObservableObject {
     ) {
         if (preferences.isEmpty) {
             inti { it in
-                value(self.fetchUserBase(it))
+                let userBase = self.fetchUserBase(it)
+                self.scope.launchMain {
+                    value(userBase)
+                }
             }
         } else {
             value(fetchUserBase(preferences))
@@ -205,7 +246,19 @@ class PrefObserve : ObservableObject {
         let email = list.first { it in it.ketString == PREF_USER_EMAIL }?.value
         let password = list.first { it in it.ketString == PREF_USER_PASSWORD }?.value
         let courses: String = list.first { it in it.ketString == PREF_USER_COURSES }?.value ?? "0"
+        print("SSSSS==>>" + (id ?? ""))
+        print("SSSSS==>>" + (String(self.preferences.count)))
+        print("SSSSS==>>" + (String(self.preferences.first?.value ?? "")))
         if (id == nil || name == nil || email == nil || password == nil) {
+            /*if app.project.realmApi.realmApp.currentUser != nil {
+                let user = UserBase(id: "6541ef0672e1526fcb4fcbe8", name: "OmAr", email: "lecturerthree@gmail.com", password: "123123", courses: 2)
+                updateUserBase(userBase: user) {
+                    print("SSSSS==>>" + (String(self.preferences.count)))
+                }
+                return user
+            } else {
+                return nil
+            }*/
             return nil
         }
         return UserBase(id: id!, name: name!, email: email!, password: password!, courses: Int(courses) ?? 0)
@@ -213,86 +266,41 @@ class PrefObserve : ObservableObject {
 
 
     func updateUserBase(userBase: UserBase, invoke: @escaping () -> Unit) {
-        self.updatePref(PREF_USER_ID, userBase.id) {
-            self.updatePref(PREF_USER_NAME, userBase.name) {
-                self.updatePref(PREF_USER_EMAIL, userBase.email) {
-                    self.updatePref(PREF_USER_PASSWORD, userBase.password) {
-                        invoke()
-                    }
+        scope.launchRealm {
+            var list : [Preference] = []
+            list.append(Preference(ketString: PREF_USER_ID, value: userBase.id))
+            list.append(Preference(ketString: PREF_USER_NAME, value: userBase.name))
+            list.append(Preference(ketString: PREF_USER_EMAIL, value: userBase.email))
+            list.append(Preference(ketString: PREF_USER_PASSWORD, value: userBase.password))
+            await self.app.project.preference.insertPref(list) { newPref in
+                //self.preferences = list
+                self.scope.launchMain {
+                    invoke()
                 }
             }
         }
     }
 
+    @BackgroundActor
     private func updatePref(
         _ key: String,
         _ newValue: String,
-        _ invoke: @escaping () -> Unit
-    ) {
-        let per = preferences.firstIndex(where: { it in
-            it.ketString == key
-        })
-        if (per != nil) {
-            app.project.preference.updatePref(
-                preferences[per!],
-                newValue
-            ) { new in
-                if (new != nil) {
-                    self.preferences[per!] = new!
-                }
-                invoke()
-            }
-        } else {
-            let new = Preference(
+        _ invoke: @escaping () async -> Unit
+    ) async {
+        await self.app.project.preference.insertPref(
+            Preference(
                 ketString: key,
                 value: newValue
-            )
-            app.project.preference.insertPref(new) { newPref in
-                if (newPref != nil) {
-                    self.preferences.append(newPref!)
-                }
-                invoke()
+            )) { _ in
+                await invoke()
             }
-        }
     }
     
-    
-    func updatePrefAsync(
-        _ key: String,
-        _ newValue: String,
-        _ invoke: @escaping () -> Unit
-    ) {
-        let per = preferences.firstIndex(where: { it in
-            it.ketString == key
-        })
-        if (per != nil) {
-            app.project.preference.updatePref(
-                preferences[per!],
-                newValue
-            ) { new in
-                if (new != nil) {
-                    self.preferences[per!] = new!
-                }
-                self.tempPrefs?.cancel()
-                invoke()
-            }
-        } else {
-            let new = Preference(
-                ketString: key,
-                value: newValue
-            )
-            app.project.preference.insertPref(new) { newPref in
-                if (newPref != nil) {
-                    self.preferences.append(newPref!)
-                }
-                invoke()
-            }
-        }
-    }
-
     func updatePref(key: String, newValue: String) {
-        self.updatePref(key, newValue) {
-            
+        scope.launchRealm {
+            await self.updatePref(key, newValue) {
+                
+            }
         }
     }
 
@@ -340,6 +348,14 @@ class PrefObserve : ObservableObject {
             }
             return self
         }
+    }
+    
+    deinit {
+        prefsTask?.cancel()
+        sinkPrefs?.cancel()
+        sinkPrefs = nil
+        prefsTask = nil
+        scope.deInit()
     }
     
 }

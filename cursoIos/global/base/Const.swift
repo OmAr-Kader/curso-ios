@@ -44,4 +44,4 @@ let FIREBASE_SENDER_ID: String = "139121033014"
 let FIREBASE_STORAGE_BUCKET: String = "curso-app-2023.appspot.com"
 let FIREBASE_PROJECT_ID: String = "curso-app-2023"
 
-let SCHEMA_VERSION: UInt64 = 2
+let SCHEMA_VERSION: UInt64 = 3

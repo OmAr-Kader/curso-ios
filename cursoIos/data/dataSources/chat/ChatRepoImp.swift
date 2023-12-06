@@ -1,32 +1,43 @@
+import Combine
 import Foundation
 
 class ChatRepoImp : BaseRepoImp, ChatRepo {
 
+    @BackgroundActor
     func getMainChatFlow(
-        courseId: String
-    ) async -> ResultRealm<Conversation?>  {
+        courseId: String,
+        invoke: @escaping (Conversation?) -> Unit
+    ) async -> AnyCancellable?  {
         return await querySingleFlow(
-            "getMainChat$courseId",
-            "partition == $0 AND courseId == $1 AND type == $2",
-            ["public", courseId, -1]
+            invoke,
+            "getMainChat\(courseId)",
+            "%K == %@ AND %K == %@ AND %K == %@",
+            "partition", "public",
+            "courseId", NSString(string: courseId), "type", NSNumber(value: -1)
         )
     }
     
+    @BackgroundActor
     func getTimelineChatFlow(
         courseId: String,
-        type: Int
-    ) async -> ResultRealm<Conversation?> {
+        type: Int,
+        invoke: @escaping (Conversation?) -> Unit
+    ) async -> AnyCancellable?  {
         return await querySingleFlow(
-            "getTimelineChat$courseId$type",
-            "partition == $0 AND courseId == $1 AND type == $2",
-            ["public", courseId, type]
+            invoke,
+            "getTimelineChat\(courseId)\(type)",
+            "%K == %@ AND %K == %@ AND %K == %@",
+            "partition", "public",
+            "courseId", NSString(string: courseId), "type", NSNumber(value: type)
         )
     }
 
+    @BackgroundActor
     func createChat(conversation: Conversation) async -> ResultRealm<Conversation?> {
         return await insert(conversation)
     }
 
+    @BackgroundActor
     func editChat(
         conversation: Conversation,
         edit: Conversation

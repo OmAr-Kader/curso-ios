@@ -4,56 +4,36 @@ import SwiftUI
 struct DrawerView<MainContent: View, DrawerContent: View>: View {
 
     @Binding var isOpen: Bool
+    let overlayColor: Color
     let theme: Theme
+    @ViewBuilder let main: () -> MainContent
+    @ViewBuilder let drawer: () -> DrawerContent
 
-    private let main: () -> MainContent
-    private let drawer: () -> DrawerContent
     private let overlap: CGFloat = 0.7
-    private let overlayColor = Color.gray.opacity(0.5)
     private let overlayOpacity = 0.7
-
-    init(isOpen: Binding<Bool>,
-         theme: Theme,
-         @ViewBuilder main: @escaping () -> MainContent,
-         @ViewBuilder drawer: @escaping () -> DrawerContent) {
-        self._isOpen = isOpen
-        self.main = main
-        self.drawer = drawer
-        self.theme = theme
-    }
-
+    
     var body: some View {
-        GeometryReader { proxy in
-            let drawerWidth = proxy.size.width * overlap
-            ZStack(alignment: .topLeading) {
+        ZStack(alignment: .topLeading) {
+            if isOpen {
                 main()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .overlay(mainOverlay)
-                drawer()
-                    .frame(minWidth: drawerWidth, idealWidth: drawerWidth,
-                           maxWidth: drawerWidth, maxHeight: .infinity)
-                    .offset(x: isOpen ? 0 : -drawerWidth, y: 0)
-                    .clipShape(
-                        .rect(
-                            topLeadingRadius: 0,
-                            bottomLeadingRadius: 0,
-                            bottomTrailingRadius: 20,
-                            topTrailingRadius: 20
-                        )
+                    .overlay(
+                        overlayColor.opacity(overlayOpacity)
+                            .onTapGesture {
+                                withAnimation {
+                                    isOpen.toggle()
+                                }
+                            }
                     )
-                    //.background(theme.backDark, in: RoundedRectangle(cornerRadius: 20))
-                    //.background(content: { theme.backDark.padding(.trailing, 20) })
+            } else {
+                main()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            if isOpen {
+                drawer().frame(width: 250)
+                    .transition(.move(edge: .leading))
             }
         }
-    }
-    
-    private var mainOverlay: some View {
-        overlayColor.opacity(isOpen ? overlayOpacity : 0.0)
-            .onTapGesture {
-                withAnimation {
-                    isOpen.toggle()
-                }
-            }
     }
 }
 
@@ -65,16 +45,16 @@ struct DrawerText : View {
     let action: () -> Unit
     
     var body: some View {
-        VStack {
-            Button {
-                action()
-            } label: {
-                Text(text)
-                    .font(.system(size: 20))
-                    .foregroundStyle(textColor).padding(leading: 16, trailing: 24)
-            }
-            Spacer()
-        }.frame(height: 56, alignment: .center).background(itemColor)
+        Button {
+            action()
+        } label: {
+            Text(text)
+                .font(.system(size: 20))
+                .frame(height: 56)
+                .foregroundStyle(textColor)
+                .padding(leading: 16, trailing: 24)
+                .onStart()
+        }.frame(width: 250, height: 56, alignment: .center).background(itemColor)
     }
 }
 
@@ -104,8 +84,9 @@ struct DrawerItem : View {
                     .foregroundStyle(
                         textColor
                     )
-            }
-        }
+            }.padding(leading: 16, trailing: 24)
+                .onStart()
+        }.frame(width: 250)
 
     }
 }

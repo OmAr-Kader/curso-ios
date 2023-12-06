@@ -113,7 +113,7 @@ class Lecturer : Object {
         }
     }
 
-    func copy(_ update: Lecturer) -> Lecturer {
+    @discardableResult func copy(_ update: Lecturer) -> Lecturer {
         lecturerName = update.lecturerName
         mobile = update.mobile
         email = update.email

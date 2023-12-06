@@ -13,61 +13,75 @@ class HomeLecturerObserve: ObservableObject {
     }
     
     func getCoursesForLecturer(id: String) {
-        scope.launch {
+        scope.launchRealm {
             await self.app.project.course.getLecturerCourses(id) { r in
                 if (r.result == REALM_SUCCESS) {
-                    self.state = self.state.copy(
-                        courses: r.value.toCourseForData(currentTime),
-                        isLoading: false
-                    )
+                    let courseDate = r.value.toCourseForData(currentTime)
+                    self.scope.launchMain { [courseDate] in
+                        self.state = self.state.copy(
+                            courses: courseDate,
+                            isLoading: false
+                        )
+                    }
                 }
             }
         }
     }
     
     func getArticlesForLecturer(id: String) {
-        scope.launch {
+        scope.launchRealm {
             await self.app.project.article.getLecturerArticles(id) { r in
                 if (r.result == REALM_SUCCESS) {
-                    self.state = self.state.copy(
-                        articles: r.value.toArticleForData(),
-                        isLoading: false
-                    )
+                    let articleData = r.value.toArticleForData()
+                    self.scope.launchMain { [articleData] in
+                        self.state = self.state.copy(
+                            articles: articleData,
+                            isLoading: false
+                        )
+                    }
                 }
             }
         }
     }
     
     func getUpcomingLecturerTimeline() {
-        scope.launch {
+        scope.launchMed {
             let splited = self.state.courses.sorted { c1, c2 in
                 return c1.lastEdit < c2.lastEdit
             }.splitCourses()
-            self.state = self.state.copy(sessionForDisplay: splited, isLoading: false)
+            self.scope.launchMain { [splited] in
+                self.state = self.state.copy(sessionForDisplay: splited, isLoading: false)
+            }
         }
     }
     
     func allCourses() {
-        scope.launch {
+        scope.launchRealm {
             await self.app.project.course.getAllCourses { r in
                 if (r.result == REALM_SUCCESS) {
-                    self.state = self.state.copy(
-                        allCourses: r.value.toCourseForData(currentTime),
-                        isLoading: false
-                    )
+                    let courseData = r.value.toCourseForData(currentTime)
+                    self.scope.launchMain { [courseData] in
+                        self.state = self.state.copy(
+                            allCourses: courseData,
+                            isLoading: false
+                        )
+                    }
                 }
             }
         }
     }
 
     func allArticles() {
-        scope.launch {
+        scope.launchRealm {
             await self.app.project.article.getAllArticles { r in
                 if (r.result == REALM_SUCCESS) {
-                    self.state = self.state.copy(
-                        allArticles: r.value.toArticleForData(),
-                        isLoading: false
-                    )
+                    let articleData = r.value.toArticleForData()
+                    self.scope.launchMain { [articleData] in
+                        self.state = self.state.copy(
+                            allArticles: articleData,
+                            isLoading: false
+                        )
+                    }
                 }
             }
         }
@@ -107,6 +121,10 @@ class HomeLecturerObserve: ObservableObject {
             self.isFABExpend = isFABExpend ?? self.isFABExpend
             return self
         }
+    }
+    
+    deinit {
+        scope.deInit()
     }
     
 }

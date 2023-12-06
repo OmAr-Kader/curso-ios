@@ -1,4 +1,4 @@
-import Foundation
+import Combine
 
 class LecturerData {
     
@@ -8,6 +8,7 @@ class LecturerData {
         self.repository = repository
     }
     
+    @BackgroundActor
     func getLecturerFollowed(
         _ studentId: String,
         _ lecturer: (ResultRealm<[Lecturer]>) -> Unit
@@ -15,30 +16,36 @@ class LecturerData {
         await repository.getLecturerFollowed(studentId: studentId, lecturer: lecturer)
     }
     
+    @BackgroundActor
     func getLecturer(
         _ id: String,
-        _ lecturer: (ResultRealm<Lecturer?>) -> Unit
+        _ lecturer: @escaping (ResultRealm<Lecturer?>) -> Unit
     ) async {
         await repository.getLecturer(id: id, lecturer: lecturer)
     }
 
+    @BackgroundActor
     func getLecturerFlow(
-        _ id: String
-    ) async-> ResultRealm<Lecturer?> {
-        return await repository.getLecturerFlow(id: id)
+        id: String,
+        invoke: @escaping (Lecturer?) -> Unit
+    ) async -> AnyCancellable? {
+        return await repository.getLecturerFlow(id: id, invoke: invoke)
     }
 
+    @BackgroundActor
     func getLecturerEmail(
         _ email: String,
-        _ lecturer: (ResultRealm<Lecturer?>) -> Unit
+        _ lecturer: @escaping (ResultRealm<Lecturer?>) -> Unit
     ) async {
         await repository.getLecturerEmail(email: email, lecturer: lecturer)
     }
 
+    @BackgroundActor
     func insertLecturer(_ lecturer: Lecturer) async -> ResultRealm<Lecturer?> {
         return await repository.insertLecturer(lecturer: lecturer)
     }
 
+    @BackgroundActor
     func editLecturer(
         _ lecturer: Lecturer,
         _ edit: Lecturer

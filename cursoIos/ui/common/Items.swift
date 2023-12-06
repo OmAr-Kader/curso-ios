@@ -7,24 +7,20 @@ struct MainItem<Content : View> : View {
     let content: () -> Content
     
     var body: some View {
-        Button {
-            bodyClick()
-        } label: {
-            HStack(alignment: .center) {
-                ImageForCurveItem(imageUri: imageUri, size: 80)
-                VStack {
-                    Text(
-                        title
-                    ).foregroundStyle(textColor)
-                        .font(.system(size: 14))
-                        .lineLimit(3)
-                        .padding(top: 3, leading: 5, bottom: 5, trailing: 3)
-                    content()
-                }.frame(alignment: .center)
-                Spacer()
+        HStack {
+            ImageForCurveItem(imageUri: imageUri, size: 80)
+            VStack {
+                Text(
+                    title
+                ).foregroundStyle(textColor)
+                    .font(.system(size: 14))
+                    .lineLimit(3)
+                    .padding(top: 3, leading: 5, bottom: 5, trailing: 3)
+                    .onStart()
+                content()
             }.frame(alignment: .center)
+            Spacer()
         }
-
     }
 }
 
@@ -42,7 +38,7 @@ struct MainItemEdit<Content : View> : View {
         Button {
             bodyClick()
         } label: {
-            HStack(alignment: .center) {
+            HStack {
                 ImageForCurveItem(imageUri: imageUri, size: 80)
                 VStack {
                     Text(
@@ -50,7 +46,7 @@ struct MainItemEdit<Content : View> : View {
                     ).foregroundStyle(textColor)
                         .font(.system(size: 14))
                         .lineLimit(3)
-                        .padding(top: 3, leading: 5, bottom: 5, trailing: 3)
+                        .onStart()
                     content()
                 }.frame(alignment: .center)
                 Spacer()
@@ -59,9 +55,8 @@ struct MainItemEdit<Content : View> : View {
                     textColor: textColorEdit,
                     sideButtonClicked: editClick
                 )
-            }.frame(alignment: .center)
+            }
         }
-
     }
 }
 
@@ -78,11 +73,13 @@ struct TimelineItem : View {
                 .font(.system(size: 10))
                 .lineLimit(1)
                 .padding(leading: 15, bottom: 3, trailing: 15)
+                .onStart()
             HStack {
                 Text("Date: " + date)
                     .font(.system(size: 10))
                     .foregroundStyle(textGrayColor)
                     .lineLimit(1)
+                Spacer()
                 if !duration.isEmpty {
                    Text("Duration: " + duration)
                        .font(.system(size: 10))
@@ -108,8 +105,9 @@ struct OwnArticleItem : View {
                 .foregroundStyle(theme.textColor)
                 .font(.system(size: 10))
                 .lineLimit(1)
-        }.padding(leading: 15, bottom: 3, trailing: 15)
-            .frame(alignment: .center)
+        }.frame(alignment: .center)
+            .padding(leading: 15, bottom: 3, trailing: 15)
+            .onStart()
     }
 }
 
@@ -126,6 +124,7 @@ struct OwnCourseItem : View {
                 .foregroundStyle(theme.secondary)
                 .lineLimit(1)
                 .padding(leading: 15, bottom: 3, trailing: 15)
+                .onStart()
             HStack {
                 ImageAsset(icon: "profile", tint: theme.primary)
                     .frame(width: 15, height: 15)
@@ -133,8 +132,9 @@ struct OwnCourseItem : View {
                     .foregroundStyle(theme.textColor)
                     .font(.system(size: 10))
                     .lineLimit(1)
-            }.padding(leading: 15, bottom: 3, trailing: 15)
-                .frame(alignment: .center)
+            }.frame(alignment: .center)
+                .padding(leading: 15, bottom: 3, trailing: 15)
+                .onStart()
         }.frame(alignment: .center)
     }
 }
@@ -152,18 +152,20 @@ struct AllCourseItem : View {
                     .foregroundStyle(theme.textGrayColor)
                     .font(.system(size: 10))
                     .lineLimit(1)
-            }.padding(trailing: 50)
-                .frame(alignment: .center)
+            }.frame(alignment: .center)
+                .padding(trailing: 50)
             Spacer()
             HStack {
                 ImageAsset(icon: "money", tint: theme.primary)
+                    .padding(3)
                     .frame(width: 15, height: 15)
                 Text(price)
+                    .padding(leading: -3)
                     .foregroundStyle(theme.textColor)
                     .font(.system(size: 10))
                     .lineLimit(1)
-            }.padding(leading: 15, bottom: 3, trailing: 15)
-                .frame(alignment: .center)
+            }.frame(alignment: .center)
+                .padding(leading: 15, bottom: 3, trailing: 15)
         }.frame(alignment: .center)
             .padding(leading: 15, bottom: 3,trailing: 15)
     }
@@ -188,8 +190,10 @@ struct AllArticleIem : View {
             Spacer()
             HStack {
                 ImageAsset(icon: "money", tint: theme.primary)
+                    .padding(3)
                     .frame(width: 15, height: 15)
                 Text(readers)
+                    .padding(leading: -3)
                     .foregroundStyle(theme.textColor)
                     .font(.system(size: 10))
                     .lineLimit(1)
@@ -199,56 +203,3 @@ struct AllArticleIem : View {
             .padding(leading: 15, bottom: 3,trailing: 15)
     }
 }
-
-/*
- @Composable
- fun BoxScope.AllArticleIem(lecturerName: String, readers: String) {
-     Row(
-         modifier = Modifier
-             .fillMaxWidth()
-             .align(Alignment.BottomCenter)
-             .wrapContentHeight()
-             .padding(start = 15.dp, end = 15.dp, bottom = 3.dp),
-         verticalAlignment = Alignment.CenterVertically,
-     ) {
-         Row(
-             verticalAlignment = Alignment.CenterVertically,
-             modifier = Modifier.padding(end = 50.dp),
-         ) {
-             Icon(
-                 imageVector = Icons.Default.Person,
-                 contentDescription = "Person",
-                 tint = isSystemInDarkTheme().textColor,
-                 modifier = Modifier
-                     .width(15.dp)
-                     .height(15.dp)
-             )
-             Text(
-                 text = lecturerName.firstSpace.firstCapital,
-                 color = isSystemInDarkTheme().textGrayColor,
-                 fontSize = 10.sp,
-                 maxLines = 1,
-                 style = MaterialTheme.typography.bodySmall,
-             )
-         }
-         Row(verticalAlignment = Alignment.CenterVertically) {
-             Icon(
-                 imageVector = Icons.Default.Person,
-                 contentDescription = "Readers",
-                 tint = MaterialTheme.colorScheme.primary,
-                 modifier = Modifier
-                     .width(15.dp)
-                     .height(15.dp)
-             )
-             Text(
-                 text = readers,
-                 color = isSystemInDarkTheme().textColor,
-                 fontSize = 10.sp,
-                 style = MaterialTheme.typography.bodySmall,
-                 maxLines = 1,
-             )
-         }
-     }
- }
-
-*/

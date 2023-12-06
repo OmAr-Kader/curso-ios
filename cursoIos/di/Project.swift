@@ -3,7 +3,7 @@ import RealmSwift
 import FirebaseCore
 
 struct Project {
-    let realmSync: RealmSync
+    let realmApi: RealmApi
     let article: ArticleData
     let course: CourseData
     let lecturer: LecturerData

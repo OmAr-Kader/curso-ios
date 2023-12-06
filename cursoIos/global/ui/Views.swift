@@ -1,5 +1,126 @@
 import SwiftUI
 
+struct CardButton : View {
+    let onClick: (() -> Unit)
+    let text: String
+    let color: Color// = MaterialTheme.colorScheme.primary,
+    let textColor: Color// = isSystemInDarkTheme().textForPrimaryColor
+    let width: CGFloat// = 80
+    let height: CGFloat// = 30
+    let curve: CGFloat //height / 2
+    let fontSize: CGFloat// = 11
+    
+    init(
+        onClick: @escaping () -> Unit,
+        text: String,
+        color: Color,
+        textColor: Color,
+        width: CGFloat = 80,
+        height: CGFloat = 30,
+        curve: CGFloat? = nil,
+        fontSize: CGFloat = 11
+    ) {
+        self.onClick = onClick
+        self.text = text
+        self.color = color
+        self.textColor = textColor
+        self.width = width
+        self.height = height
+        self.curve = curve ?? height / 2
+        self.fontSize = fontSize
+    }
+    
+    var body: some View {
+        VStack {
+            Text(
+                text
+            ).lineLimit(1).foregroundColor(textColor).font(.system(size: fontSize))
+        }.frame(width: width, height: height, alignment: .center).background(
+            RoundedRectangle(cornerRadius: curve).fill((color))
+        )
+    }
+}
+
+struct PagerTabButton : View {
+    let theme: Theme
+    let index: Int
+    let text: String
+    let currentPage: Int
+    let onPageChange: (Int) -> Unit
+
+    var body: some View {
+        let isCurrentPage = currentPage == index
+        let width: CGFloat = isCurrentPage ? 90 : 70
+        let color: Color = isCurrentPage ? theme.primary : theme.secondary
+        let corner: CGFloat = isCurrentPage ? 10 : 40
+        Button {
+            onPageChange(index)
+        } label: {
+            VStack(alignment: .center) {
+                Text(text).foregroundStyle(theme.textForPrimaryColor)
+                    .font(.system(size: width / 8)).lineLimit(1)
+            }
+        }.padding(leading: 6, trailing: 5).frame(width: width, height: width / 2).background(
+            RoundedRectangle(cornerRadius: corner).fill(color)
+        )
+
+    }
+}
+
+struct PagerTab<Content : View> : View {
+    
+    let currentPage: Int
+    let onPageChange: (Int) -> Unit
+    let list: [String]
+    let theme: Theme
+    @ViewBuilder var pageContent: () -> Content
+
+    var body: some View {
+        VStack {
+            VStack {
+                Spacer().frame(height: 15)
+                ForEach(0..<list.count, id: \.self) { index in
+                    PagerTabButton(theme: theme, index: index, text: list[index], currentPage: currentPage, onPageChange: onPageChange)
+                }
+                Spacer().frame(height: 15)
+                TabView(selection: Binding(get: {
+                    currentPage
+                }, set: { it in
+                    onPageChange(it)
+                }), content: pageContent).tabViewStyle(.page(indexDisplayMode: .never))
+            }.background(theme.background.margeWithPrimary)
+        }.clipShape(
+            .rect(topLeadingRadius: 15, topTrailingRadius: 15)
+        )
+    }
+}
+/*
+SubTopScreenButton
+    .toolbar{
+        ToolbarItem(placement: .navigationBarLeading) {
+            // Button
+        }
+    }
+*/
+struct ProfileItems : View {
+    let icon: String
+    let color: Color
+    let theme: Theme
+    let title: String
+    let numbers: String
+
+    var body: some View {
+        VStack(alignment: .center) {
+            ImageAsset(icon: icon, tint: color).frame(width: 30, height: 30)
+            Text(title).font(.system(size: 10)).padding(3).foregroundStyle(theme.textColor)
+            Text(numbers)
+                .font(.system(size: 10))
+                .padding(3)
+                .foregroundStyle(theme.textHintColor)
+        }.padding(10)
+    }
+}
+
 struct CardAnimationButton : View {
     let isChoose: Bool
     let isProcess: Bool
@@ -31,7 +152,7 @@ struct CardAnimationButton : View {
                         .font(.system(size: CGFloat(animatedSize) / 9))
                 } else {
                     ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
+                        .progressViewStyle(CircularProgressViewStyle(tint: textColor))
                 }
             }
         }).padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
@@ -82,6 +203,48 @@ extension View {
         )
     }
     
+    @inlinable public func onStart() -> some View {
+        return HStack {
+            self
+            Spacer()
+        }
+    }
+    
+    @inlinable public func onBottomEnd() -> some View {
+        return HStack {
+            Spacer()
+            VStack(alignment: .center) {
+                Spacer()
+                self
+            }
+        }
+    }
+
+    
+    @inlinable func safeArea() -> some View {
+        if #available(iOS 17.0, *) {
+            return safeAreaPadding()
+        } else {
+            return self
+        }
+    }
+    
+    @inlinable func safeAreaSpace(_ edges: Edge.Set) -> some View {
+        if #available(iOS 17.0, *) {
+            return safeAreaPadding(edges)
+        } else {
+            return self
+        }
+    }
+    
+    
+    @inlinable public func onTop() -> some View {
+        return VStack {
+            self
+            Spacer()
+        }
+    }
+    
     func onChange<T: Equatable>(_ it: T,_ action: @escaping (T) -> Void) -> some View {
         if #available(iOS 17.0, *) {
             return onChange(of: it) { oldValue, newValue in
@@ -97,55 +260,128 @@ extension View {
 
 
 struct FloatingButton: View {
-    let action: () -> Void
     let icon: String
-    var body: some View {
-        VStack {
-            Spacer()
-            HStack {
-                Spacer()
-                Button(action: action) {
-                    Image(
-                        uiImage: UIImage(
-                            named: icon
-                        ) ?? UIImage()
-                    ).font(.system(size: 25))
-                        .foregroundColor(.white)
+    let theme: Theme
+    let action: () -> Void
+    @State var isExtend: Bool = false
+    
+    @ViewBuilder var buttonContent: some View {
+        ZStack {
+            Button(action: {
+                withAnimation {
+                    isExtend.toggle()
                 }
-                .frame(width: 60, height: 60)
-                .background(Color.red)
-                .cornerRadius(30)
-                .shadow(radius: 10)
-                .offset(x: -25, y: 10)
+            }) {
+                ImageAsset(icon: icon, tint: theme.textForPrimaryColor)
+                    .padding(15)
+                    .rotationEffect(isExtend ? Angle(degrees: -45) : Angle(degrees: 0))
+                    .frame(width: 60, height: 60)
             }
+            .tint(theme.textForPrimaryColor)
+            .frame(width: 60, height: 60)
+            .background(theme.primary)
+            .cornerRadius(30)
+            .shadow(radius: 10)
+            .onBottomEnd()
+        }.padding(trailing: 20)
+    }
+    
+    @ViewBuilder var buttonExpendContent: some View {
+        ZStack {
+            ZStack {
+                VStack {
+                    Button(action: {
+                        withAnimation {
+                            isExtend.toggle()
+                        }
+                    }) {
+                        HStack {
+                            ImageAsset(icon: "plus", tint: theme.textForPrimaryColor)
+                                .padding(3)
+                                .frame(width: 25, height: 25)
+                            Text("Article")
+                                .padding(leading: -3)
+                                .foregroundStyle(theme.textForPrimaryColor)
+                                .font(.system(size: 14))
+                                .lineLimit(1)
+                        }.frame(alignment: .center)
+                    }
+                    .frame(width: 120, height: 50)
+                    .background(theme.secondary)
+                    .cornerRadius(10)
+                    .shadow(radius: 10)
+                    Spacer().frame(height: 20)
+                    Button(action: {
+                        withAnimation {
+                            isExtend.toggle()
+                        }
+                    }) {
+                        HStack {
+                            ImageAsset(icon: "plus", tint: theme.textForPrimaryColor)
+                                .padding(3)
+                                .frame(width: 25, height: 25)
+                            Text("Course")
+                                .padding(leading: -3)
+                                .foregroundStyle(theme.textForPrimaryColor)
+                                .font(.system(size: 14))
+                                .lineLimit(1)
+                        }.frame(alignment: .center)
+                    }
+                    .frame(width: 120, height: 50)
+                    .background(theme.secondary)
+                    .cornerRadius(10)
+                    .shadow(radius: 10)
+                }.onBottomEnd()
+            }.padding(bottom: 100, trailing: 20)
         }
+    }
+    
+    var body: some View {
+        buttonContent
+        if isExtend {
+            buttonExpendContent.background(
+                VStack {
+                    Spacer()
+                    ZStack {
+                        Image(
+                            uiImage: UIImage(
+                                named: theme.isDarkMode ? "circle.black" : "circle.white"
+                            ) ?? UIImage()
+                        ).resizable()
+                            .imageScale(.medium)
+                            .aspectRatio(contentMode: .fit)
+                    }
+                }
+            ).onTapGesture {
+                withAnimation {
+                    isExtend.toggle()
+                }
+            }
+        }/* else {
+            buttonContent
+        }*/
     }
 }
 
 struct UpperNavBar : View {
     
-    //@State private var scrollPosition: Int? = 0
-
     let list: [String]
     let currentIndex: Int
     let theme: Theme
-    let scrollTo: (ScrollViewProxy) -> Unit
     let onClick: (Int) -> Unit
-    
-    private func contentColor(proxy: ScrollViewProxy) -> Theme {
-        scrollTo(proxy)
-        return theme
-    }
     
     var body: some View {
         ScrollViewReader { proxy in
-            ScrollView(Axis.Set.vertical) {
+            ScrollView(Axis.Set.horizontal, showsIndicators: false) {
                 LazyHStack {
-                    ForEach(0...20, id: \.self) { idx in
-                        OutlinedButton(action: onClick, text: list[idx], index: idx, animate: currentIndex == idx, theme: contentColor(proxy: proxy))
+                    ForEach(0..<list.count, id: \.self) { index in
+                        let it = list[index]
+                        OutlinedButton(action: onClick, text: it, index: index, animate: currentIndex == index, theme: theme).id(index)
                     }
-                }//.scrollTargetLayout()
-            }//.scrollPosition(id: $scrollPosition, anchor: nil)
+                }.frame(height: 50)
+            }.onChange(currentIndex) { value in
+                proxy.scrollTo(value)
+            }
         }
     }
 }
@@ -171,21 +407,35 @@ struct OutlinedButton : View {
         Button {
             action(index)
         } label: {
-            Text(text)
-                .foregroundStyle(contentColor)
-                .lineLimit(1)
-                .frame(height: 50)
-                .font(.system(size: 12))
-                .padding(5)
-                .background(
-                    RoundedRectangle(cornerRadius: 5)
-                        .stroke(containerColor,lineWidth: 1)
-                ).animation(.linear(duration: 0.5), value: animate)
+            if animate {
+                Text(text)
+                    .foregroundStyle(theme.textForPrimaryColor)
+                    .lineLimit(1)
+                    .frame(height: 40)
+                    .font(.system(size: 12))
+                    //.padding(top: 5, leading: 15, bottom: 5, trailing: 15)
+                    .padding(leading: 15, trailing: 15)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20).fill(theme.primary)
+                    ).animation(.linear(duration: 0.5), value: animate)
+            } else {
+                Text(text)
+                    .foregroundStyle(theme.textColor)
+                    .lineLimit(1)
+                    .frame(height: 40)
+                    .font(.system(size: 12))
+                    //.padding(top: 5, leading: 15, bottom: 5, trailing: 15)
+                    .padding(leading: 15, trailing: 15)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(theme.primary, lineWidth: 1)
+                    ).animation(.linear(duration: 0.5), value: animate)
+            }
         }
     }
 }
 
-struct ListBody<D, Content: View> : View {
+struct ListBody<D : ForData, Content: View> : View {
     private let list: [D]
     private var itemColor: Color = Color.clear
     private let bodyClick: (D) -> Unit
@@ -204,55 +454,41 @@ struct ListBody<D, Content: View> : View {
     }
 
     var body: some View {
-        ScrollView(Axis.Set.horizontal) {
+        ScrollView(Axis.Set.vertical) {
             LazyVStack {
-                ForEach(list.indices, id: \.self) { idx in
+                ForEach(list) { it in
                     Button {
-                        bodyClick(list[idx])
+                        bodyClick(it)
                     } label: {
-                        ZStack {
-                            content(list[idx])
-                        }.frame(height: 80)
-                            .padding(5)
-                            .background(
-                                RoundedRectangle(cornerRadius: 15).fill(itemColor)
-                            )
-                    }
-                }
-            }
-        }
-    }
-}
-
-struct ListBodyEdit<D, Content: View> : View {
-    private let list: [D]
-    private var itemColor: Color = Color.clear
-    private let content: (D) -> Content
-    
-    init(
-        list: [D],
-        itemColor: Color? = nil,
-        @ViewBuilder content: @escaping (D) -> Content
-    ) {
-        self.list = list
-        self.itemColor = itemColor ?? self.itemColor
-        self.content = content
-    }
-
-    var body: some View {
-        ScrollView(Axis.Set.horizontal) {
-            LazyVStack {
-                ForEach(list.indices, id: \.self) { idx in
-                    ZStack {
-                        content(list[idx])
+                        content(it)
                     }.frame(height: 80)
-                        .padding(5)
                         .background(
                             RoundedRectangle(cornerRadius: 15).fill(itemColor)
                         )
                 }
             }
         }
+    }
+}
+
+struct ListBodyEdit<D : ForData, Content: View> : View {
+    let list: [D]
+    let itemColor: Color = Color.clear
+    let content: (D) -> Content
+
+    var body: some View {
+        ScrollView(Axis.Set.vertical) {
+            LazyVStack {
+                ForEach(list) { it in
+                    ZStack {
+                        content(it)
+                    }.frame(height: 80)
+                        .background(
+                            RoundedRectangle(cornerRadius: 15).fill(itemColor)
+                        )
+                }.id(UUID().uuidString)
+            }.id(UUID().uuidString)
+        }.id(UUID().uuidString)
     }
 }
 
@@ -276,12 +512,13 @@ struct ListBodyEditAdditional<D, Content: View, Additional: View> : View {
     }
 
     var body: some View {
-        ScrollView(Axis.Set.horizontal) {
+        ScrollView(Axis.Set.vertical) {
             LazyVStack {
                 additionalItem()
-                ForEach(0...20, id: \.self) { idx in
+                ForEach(0..<list.count, id: \.self) { index in
+                    let it = list[index]
                     ZStack {
-                        content(list[idx])
+                        content(it)
                     }.frame(height: 80)
                         .padding(5)
                         .background(
@@ -305,12 +542,7 @@ struct ImageForCurveItem : View {
             )
         }.frame(width: size, height: size, alignment: .center)
             .clipShape(
-                .rect(
-                    topLeadingRadius: 0,
-                    bottomLeadingRadius: 0,
-                    bottomTrailingRadius: 15,
-                    topTrailingRadius: 15
-                )
+                .rect(cornerRadius: 15)
             )
     }
 }
@@ -321,50 +553,56 @@ struct EditButton: View {
     let sideButtonClicked: () -> Unit
     
     var body: some View {
-        Button {
-            sideButtonClicked()
-        } label: {
-            VStack {
-                Spacer()
-                ImageAsset(icon: "edit", tint: textColor)
-                Spacer()
-            }.frame(width: 40, alignment: .center).background(color)
-        }
-
+        VStack {
+            Button {
+                sideButtonClicked()
+            } label: {
+                VStack {
+                    Spacer()
+                    ImageAsset(icon: "edit", tint: textColor).frame(width: 20, height: 20, alignment: .center).padding(7)
+                    Spacer()
+                }
+            }.background(color).frame(width: 40, alignment: .center)
+        }.clipShape(
+            .rect(
+                topLeadingRadius: 0,
+                bottomLeadingRadius: 0,
+                bottomTrailingRadius: 15,
+                topTrailingRadius: 15
+            )
+        )
     }
 }
 
-/*
- Icon(
-     imageVector = Icons.Default.Edit,
-     contentDescription = "Edit",
-     tint = textColor
- )
-fun BoxScope.EditButton(
-     color: Color,
-     textColor: Color,
-     sideButtonClicked: () -> Unit,
- ) {
-     Box(
-         modifier = Modifier
-             .fillMaxHeight()
-             .width(40.dp)
-             .align(Alignment.CenterEnd)
-             .background(color)
-             .clickable {
-                 sideButtonClicked.invoke()
-             },
-         contentAlignment = Alignment.Center
-     ) {
-         Icon(
-             imageVector = Icons.Default.Edit,
-             contentDescription = "Edit",
-             tint = textColor
-         )
-     }
- }
 
-*/
+struct TextFullPageScrollable : View {
+    let text: String
+    let textColor: Color
+
+    var body: some View {
+        //GeometryReader { geometry in
+        ScrollView(Axis.Set.horizontal) {
+            VStack {
+                Text(text)
+                    .foregroundStyle(textColor)
+                    .font(.system(size: 14))
+                    .padding(leading: 20, trailing: 20)
+                    .lineLimit(nil)
+                    /*.frame(
+                        minWidth: geometry.size.width,
+                        idealWidth: geometry.size.width,
+                        maxWidth: geometry.size.width,
+                        minHeight: geometry.size.height,
+                        idealHeight: geometry.size.height,
+                        maxHeight: .infinity,
+                        alignment: .topLeading
+                    )*/
+            }
+        }
+        //}
+    }
+}
+
 
 
 

@@ -14,7 +14,7 @@ class CreateCourseObserve : ObservableObject {
     }
     
     func getCourse(id: String) {
-        scope.launch {
+        scope.launchRealm {
             await self.app.project.course.getCoursesById(id) { r in
                 if r.value == nil {
                     return
@@ -24,30 +24,35 @@ class CreateCourseObserve : ObservableObject {
                     if aboutList.isEmpty {
                         aboutList.append(AboutCourseData(font: 22, text: ""))
                     }
-                    self.state = self.state.copy(
-                        course: CourseForData(update: r.value!, currentTime: currentTime),
-                        about: aboutList,
-                        timelines: r.value!.timelines.toTimelineData(),
-                        courseTitle: r.value!.title,
-                        price: r.value!.price,
-                        briefVideo: r.value!.briefVideo,
-                        imageUri: r.value!.imageUri
-                    )
+                    let about = aboutList
+                    self.scope.launchMain { [about] in
+                        self.state = self.state.copy(
+                            course: CourseForData(update: r.value!, currentTime: currentTime),
+                            about: about,
+                            timelines: r.value!.timelines.toTimelineData(),
+                            courseTitle: r.value!.title,
+                            price: r.value!.price,
+                            briefVideo: r.value!.briefVideo,
+                            imageUri: r.value!.imageUri
+                        )
+                    }
                 }
             }
         }
     }
     
     func deleteCourse(invoke: @escaping () -> Unit) {
-        scope.launch {
-            if self.state.course == nil {
-                return
-            }
+        if self.state.course == nil {
+            return
+        }
+        scope.launchRealm {
             let it = await self.app.project.course.deleteCourse(
                 Course(update: self.state.course!)
             )
             if (it == REALM_SUCCESS) {
-                invoke()
+                self.scope.launchMain {
+                    invoke()
+                }
             }
         }
     }
@@ -113,31 +118,31 @@ class CreateCourseObserve : ObservableObject {
         _ s: State,
         _ invoke: @escaping (Course?) -> Unit
     ) {
-        scope.launch {
-            self.courseForSave(isDraft, lecturerId, lecturerName, s, { course in
-                self.scope.launch {
-                    let it = await self.app.project.course.insertCourse(
-                        course
-                    )
-                    if (it.value != nil) {
-                        let courseId = it.value!._id.stringValue
-                        subscribeToTopic(courseId) {
-                            self.pushNotification(
-                                topicId: it.value!.lecturerId,
-                                msgTitle: "New Course",
-                                message: "${course.lecturerName} start new Course",
-                                argOne: it.value!._id.stringValue,
-                                argTwo: it.value!.title
-                            )
-                        }
+        self.courseForSave(isDraft, lecturerId, lecturerName, s, { course in
+            self.scope.launchRealm {
+                let it = await self.app.project.course.insertCourse(
+                    course
+                )
+                if (it.value != nil) {
+                    let courseId = it.value!._id.stringValue
+                    subscribeToTopic(courseId) {
+                        self.pushNotification(
+                            topicId: it.value!.lecturerId,
+                            msgTitle: "New Course",
+                            message: "${course.lecturerName} start new Course",
+                            argOne: it.value!._id.stringValue,
+                            argTwo: it.value!.title
+                        )
                     }
+                }
+                self.scope.launchMain {
                     self.state = self.state.copy(isProcessing: false, isDraftProcessing: false)
                     invoke(it.value)
                 }
-            }, {
-                invoke(nil)
-            })
-        }
+            }
+        }, {
+            invoke(nil)
+        })
     }
     
     func edit(
@@ -146,24 +151,22 @@ class CreateCourseObserve : ObservableObject {
         _ lecturerName: String,
         _ invoke: @escaping (Course?) -> Unit
     ) {
-        scope.launch { [self] in
-            let s = state
-            if (
-                (isDraft && (s.courseTitle.isEmpty || s.price.isEmpty)) ||
-                (!isDraft && (
-                    s.courseTitle.isEmpty ||
-                    s.about.map { it in it.text }.isEmpty ||
-                    s.briefVideo.isEmpty ||
-                    s.imageUri.isEmpty ||
-                    s.timelines.isEmpty)
-                )
-            ) {
-                state = state.copy(isErrorPressed: true)
-                return
-            }
-            state = state.copy(isProcessing: !isDraft, isDraftProcessing: isDraft)
-            doEdit(isDraft: isDraft, lecturerId: lecturerId, lecturerName: lecturerName, s: s, invoke: invoke)
+        let s = state
+        if (
+            (isDraft && (s.courseTitle.isEmpty || s.price.isEmpty)) ||
+            (!isDraft && (
+                s.courseTitle.isEmpty ||
+                s.about.map { it in it.text }.isEmpty ||
+                s.briefVideo.isEmpty ||
+                s.imageUri.isEmpty ||
+                s.timelines.isEmpty)
+            )
+        ) {
+            state = state.copy(isErrorPressed: true)
+            return
         }
+        state = state.copy(isProcessing: !isDraft, isDraftProcessing: isDraft)
+        doEdit(isDraft: isDraft, lecturerId: lecturerId, lecturerName: lecturerName, s: s, invoke: invoke)
     }
     
     private func courseForEdit(
@@ -209,13 +212,11 @@ class CreateCourseObserve : ObservableObject {
         s: State,
         invoke: @escaping (Course?) -> Unit
     ) {
-        scope.launch {
-            self.courseForEdit(isDraft, lecturerId, lecturerName, s, { course in
-                self.doEditCourse(s, course, invoke)
-            }, {
-                invoke(nil)
-            })
-        }
+        self.courseForEdit(isDraft, lecturerId, lecturerName, s, { course in
+            self.doEditCourse(s, course, invoke)
+        }, {
+            invoke(nil)
+        })
     }
     
     private func doEditCourse(
@@ -223,10 +224,10 @@ class CreateCourseObserve : ObservableObject {
         _ course: Course,
         _ invoke: @escaping (Course?) -> Unit
     ) {
-        scope.launch {
-            if s.course == nil {
-                return
-            }
+        if s.course == nil {
+            return
+        }
+        scope.launchRealm {
             let it = await self.app.project.course.editCourse(
                 Course(update: s.course!),
                 course
@@ -240,8 +241,10 @@ class CreateCourseObserve : ObservableObject {
                     argTwo: it.value!.title
                 )
             }
-            self.state = self.state.copy(isProcessing: false, isDraftProcessing: false)
-            invoke(it.value)
+            self.scope.launchMain {
+                self.state = self.state.copy(isProcessing: false, isDraftProcessing: false)
+                invoke(it.value)
+            }
         }
     }
     
@@ -635,6 +638,9 @@ class CreateCourseObserve : ObservableObject {
             return self
         }
     }
-
     
+    deinit {
+        scope.deInit()
+    }
+
 }

@@ -48,7 +48,7 @@ struct ToastView: View {
         .foregroundColor(style.themeColor)
       Text(message)
         .font(Font.caption)
-        .foregroundColor(Color("toastForeground"))
+        .foregroundColor(Color.black)
       
       Spacer(minLength: 10)
       
@@ -61,7 +61,7 @@ struct ToastView: View {
     }
     .padding()
     .frame(minWidth: 0, maxWidth: width)
-    .background(Color("toastBackground"))
+    .background(Color.gray)
     .cornerRadius(8)
     .overlay(
       RoundedRectangle(cornerRadius: 8)

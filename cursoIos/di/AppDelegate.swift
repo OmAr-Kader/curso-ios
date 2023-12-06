@@ -3,9 +3,32 @@ import SwiftUI
 import FirebaseCore
 import FirebaseMessaging
 
-class AppDelegate: NSObject, UIApplicationDelegate {
-    var app: AppModule = AppModule()
+class AppDelegate: NSObject, UIApplicationDelegate, ObservableObject {
+    static private(set) var del: AppDelegate! = nil
+    private(set) var appSet: AppModule! = nil
+    private(set) var prefSet: PrefObserve! = nil
+    
+    var app: AppModule {
+        guard let appSet else {
+            let ap = AppModule()
+            self.appSet = ap
+            return ap
+        }
+        return appSet
+    }
 
+    var pref: PrefObserve {
+        guard let prefSet else {
+            let pre = PrefObserve(
+                app,
+                Theme(isDarkMode: UITraitCollection.current.userInterfaceStyle.isDarkMode)
+            )
+            self.prefSet = pre
+            return pre
+        }
+        return prefSet
+    }
+    
     var window: UIWindow?
     let gcmMessageIDKey = "gcm.message_id"
 
@@ -13,6 +36,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
            _ application: UIApplication,
            didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
        ) -> Bool {
+           AppDelegate.del = self
            /*let options = FirebaseOptions.init(
                googleAppID: FIREBASE_APP_ID,
                gcmSenderID: FIREBASE_SENDER_ID

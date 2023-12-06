@@ -1,4 +1,3 @@
-import Foundation
 import Combine
 
 class PreferenceData {
@@ -9,30 +8,45 @@ class PreferenceData {
         self.repository = repository
     }
     
-    func prefs(invoke: ([Preference]) -> Unit) {
-        repository.prefs(invoke: invoke)
+    @BackgroundActor
+    func prefs(invoke: ([Preference]) -> Unit) async {
+        await repository.prefs(invoke: invoke)
     }
     
+    @BackgroundActor
+    func prefsBack(invoke: @escaping ([Preference]) -> Unit) async -> AnyCancellable? {
+        return await repository.prefsBack(invoke: invoke)
+    }
+    
+    @BackgroundActor
     func insertPref(
         _ pref: Preference,
-        _ invoke: @escaping (Preference?) -> Unit
-    ) {
-        repository.insertPref(pref, invoke)
+        _ invoke: @escaping (Preference?) async -> Unit
+    ) async {
+        await repository.insertPref(pref, invoke)
     }
     
+    @BackgroundActor
+    func insertPref(_ prefs: [Preference],_ invoke: @escaping ((Preference?) -> Unit)) async {
+        await repository.insertPref(prefs, invoke)
+    }
+
+    @BackgroundActor
     func updatePref(
         _ pref: Preference,
         _ newValue: String,
-        _ invoke: @escaping (Preference?) -> Unit
-    ) {
-        repository.updatePref(pref, newValue, invoke)
+        _ invoke: @escaping (Preference?) async -> Unit
+    ) async {
+        await repository.updatePref(pref, newValue, invoke)
+    }
+
+    @BackgroundActor
+    func deletePref(key: String) async -> Int {
+        return await repository.deletePref(key: key)
     }
     
-    func deletePref(key: String) -> Int {
-        return repository.deletePref(key: key)
-    }
-    
-    func deletePrefAll() -> Int {
-        return repository.deletePrefAll()
+    @BackgroundActor
+    func deletePrefAll() async -> Int {
+        return await repository.deletePrefAll()
     }
 }

@@ -1,27 +1,53 @@
 import Foundation
 import RealmSwift
 
-class RealmSync {
+class RealmApi {
     
     var realmApp: App
     var realmCloud: Realm? = nil
-    
-    init(app: App, realm: Realm?) {
-        realmApp = app
-        realmCloud = realm
-    }
+    var realmLocal: Realm? = nil
 
-    func cloud() -> Realm? {
-        if (realmCloud != nil) {
-            return realmCloud
+    init(app: App) {
+        realmApp = app
+    }
+    
+    @BackgroundActor
+    func local() async -> Realm? {
+        if (realmLocal != nil) {
+            return realmLocal
         } else {
             do {
-                let serialQueue = DispatchQueue.main
+                var config = Realm.Configuration.defaultConfiguration
+                config.objectTypes = listOfOnlyLocalSchemaRealmClass
+                config.schemaVersion = SCHEMA_VERSION
+                config.deleteRealmIfMigrationNeeded = false
+                config.shouldCompactOnLaunch = { _,_ in
+                    true
+                }
+                let realm = try await Realm(
+                    configuration: config,
+                    actor: BackgroundActor.shared
+                )
+                realmLocal = realm
+                return realm
+            } catch {
+                return nil
+            }
+        }
+    }
+
+    @BackgroundActor
+    func cloud() async -> Realm? {
+        if (realmCloud != nil) {
+            return realmCloud!
+        } else {
+            do {
                 let user = realmApp.currentUser
                 if user != nil {
-                    realmCloud = try Realm(
+                    realmCloud = try await Realm(
                         configuration: realmApp.currentUser!.initialSubscriptionBlock,
-                        queue: serialQueue
+                        actor: BackgroundActor.shared,
+                        downloadBeforeOpen: .always
                     )
                     return realmCloud
                 } else {
@@ -32,6 +58,7 @@ class RealmSync {
             }
         }
     }
+
 
 }
 
@@ -53,4 +80,8 @@ extension User {
         }
         return config
     }
+}
+
+@globalActor actor BackgroundActor: GlobalActor {
+    static var shared = BackgroundActor()
 }

@@ -2,21 +2,14 @@ import SwiftUI
 import PhotosUI
 
 struct LoginScreenLecturer: View {
-    
-    @ObservedObject var app: AppModule
-    @ObservedObject var pref: PrefObserve
-    @ObservedObject var loginObs: LogInObserveLecturer
+    @StateObject var app: AppModule
+    @StateObject var pref: PrefObserve
+    @StateObject var loginObs: LogInObserveLecturer
     
     @State private var toast: Toast? = nil
     @State private var selectedItem: PhotosPickerItem?
     @FocusState private var isFocusedEmail: Bool
     
-    init(_ app: AppModule,_ pref: PrefObserve) {
-        self.app = app
-        self.pref = pref
-        self.loginObs = LogInObserveLecturer(app)
-    }
-
     var body: some View {
         
         let state = loginObs.state
@@ -258,6 +251,15 @@ struct LoginScreenLecturer: View {
                             }
                         } else {
                             loginObs.login { it, i in
+                                let user = PrefObserve.UserBase(
+                                    id: it._id.stringValue,
+                                    name: it.lecturerName,
+                                    email: it.email,
+                                    password: state.password,
+                                    courses: i
+                                )
+                                print("=====>" + "Done" + user.id + user.name)
+                                print("=====>" + "Done" + user.password)
                                 pref.updateUserBase(
                                     userBase: PrefObserve.UserBase(
                                         id: it._id.stringValue,
@@ -320,5 +322,8 @@ struct LoginScreenLecturer: View {
                 Spacer()
             }
         }.background(pref.theme.background.margeWithPrimary).toastView(toast: $toast)
+            .navigationDestination(for: Screen.self) { route in
+                targetScreen(pref.state.homeScreen, app, pref)
+        }
     }
 }

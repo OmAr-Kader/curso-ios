@@ -1,18 +1,24 @@
-import Foundation
+import Combine
 
 protocol ChatRepo {
 
+    @BackgroundActor
     func getMainChatFlow(
-        courseId: String
-    ) async -> ResultRealm<Conversation?>
+        courseId: String,
+        invoke: @escaping (Conversation?) -> Unit
+    ) async -> AnyCancellable?
 
+    @BackgroundActor
     func getTimelineChatFlow(
         courseId: String,
-        type: Int
-    ) async -> ResultRealm<Conversation?>
-
+        type: Int,
+        invoke: @escaping (Conversation?) -> Unit
+    ) async -> AnyCancellable?
+    
+    @BackgroundActor
     func createChat(conversation: Conversation) async -> ResultRealm<Conversation?>
 
+    @BackgroundActor
     func editChat(
         conversation: Conversation,
         edit: Conversation

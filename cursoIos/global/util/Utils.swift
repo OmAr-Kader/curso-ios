@@ -10,7 +10,7 @@ var currentTime: Int64 {
     do {
         try completion()
     } catch {
-        
+        print("==>" + error.localizedDescription)
     }
 }
 

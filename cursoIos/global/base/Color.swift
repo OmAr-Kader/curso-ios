@@ -1,12 +1,5 @@
 import SwiftUI
 
-extension UIColor {
-    
-    var toC: Color {
-        return Color(self)
-    }
-}
-
 extension UIUserInterfaceStyle {
     var isDarkMode: Bool {
         if self == .light {
@@ -15,6 +8,19 @@ extension UIUserInterfaceStyle {
             return true
         }
         return false
+    }
+}
+
+extension UIViewController {
+    var appDelegate: AppDelegate {
+    return UIApplication.shared.delegate as! AppDelegate
+   }
+}
+
+extension UIColor {
+    
+    var toC: Color {
+        return Color(self)
     }
 }
 
@@ -78,7 +84,8 @@ var LightViolet: Color {
 }
 
 var shadowColor: Color {
-    return Color(red: 0, green: 0, blue: 0, opacity: 50)
+    //Color(red: 0, green: 0, blue: 0, opacity: 50)
+    return UIColor(_colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.5).toC
 }
 
 var PurpleGrey80: Color {

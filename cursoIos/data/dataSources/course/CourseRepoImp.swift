@@ -3,50 +3,81 @@ import RealmSwift
 
 class CourseRepoImp : BaseRepoImp, CourseRepo {
 
+    @BackgroundActor
     func getCoursesById(
         id: String,
         course: (ResultRealm<Course?>) -> Unit
     ) async {
         do {
             let realmId = try ObjectId.init(string: id)
-            await querySingle(course, "getCoursesById$id", "partition == $0 AND _id == $1", ["public", realmId])
+            await querySingle(
+                course,
+                "getCoursesById\(id)",
+                "%K == %@ AND %K == %@",
+                "partition", "public",
+                "_id", realmId
+            )
         } catch {
             course(ResultRealm(value: nil, result: REALM_FAILED))
         }
     }
 
+    @BackgroundActor
     func getAllCourses(
         course: (ResultRealm<[Course]>) -> Unit
     ) async {
-        await query(course, "getAllCourses", "partition == $0 AND isDraft == $1", ["public", -1])
+        await query(
+            course,
+            "getAllCourses",
+            "%K == %@ AND %K == %@",
+            "partition", "public",
+            "isDraft", NSNumber(-1)
+        )
     }
 
+    @BackgroundActor
     func getStudentCourses(
         id: String,
         course: (ResultRealm<[Course]>) -> Unit
     ) async {
-        await query(course, "getStudentCourses$id", "partition == $0 AND students.studentId == $1 AND isDraft == $2", ["public", id, -1])
+        await query(
+            course,
+            "getStudentCourses\(id)",
+            "%K == %@ AND %K == %@ AND %K == %@",
+            "partition", "public",
+            "students.studentId", NSString(string: id),
+            "isDraft", NSNumber(-1)
+        )
     }
 
+    @BackgroundActor
     func getLecturerCourses(
         id: String,
         course: (ResultRealm<[Course]>) -> Unit
     ) async {
-        await query(course, "getLecturerCourses$id", "partition == $0 AND lecturerId == $1", ["public", id])
+        await query(
+            course,
+            "getLecturerCourses\(id)",
+            "%K == %@ AND %K == %@",
+            "partition", "public",
+            "lecturerId", NSString(string: id))
     }
 
-     func getAvailableLecturerTimeline(
+     @BackgroundActor
+    func getAvailableLecturerTimeline(
         id: String,
         currentTime: Int64,
         course: (ResultRealm<[Course]>) -> Unit
      ) async {
          await queryLess(
             course,
-            "partition == $0 AND lecturerId == $1 AND timelines.date < $2",
-            ["public", id, currentTime]
+            "%K == %@ AND %K == %@ AND %K < %@",
+            "partition", "public",
+            "lecturerId ",NSString(string: id),"timelines.date", NSNumber(value: currentTime)
         )
      }
     
+    @BackgroundActor
     func getUpcomingLecturerTimeline(
         id: String,
         currentTime: Int64,
@@ -54,11 +85,13 @@ class CourseRepoImp : BaseRepoImp, CourseRepo {
     ) async {
         await queryLess(
             course,
-            "partition == $0 AND lecturerId == $1 AND timelines.date > $2",
-            ["public", id, currentTime]
+            "%K == %@ AND %K == %@ AND %K > %@",
+            "partition", "public",
+            "lecturerId ",NSString(string: id),"timelines.date", NSNumber(value: currentTime)
         )
     }
     
+    @BackgroundActor
     func getAvailableStudentTimeline(
         id: String,
         currentTime: Int64,
@@ -66,11 +99,14 @@ class CourseRepoImp : BaseRepoImp, CourseRepo {
     ) async {
         await queryLess(
             course,
-            "partition == $0 AND students.studentId == $1 AND isDraft == $2 AND timelines.date < $3",
-            ["public", id, -1, currentTime]
+            "%K == %@ AND %K == %@ AND %K == %@ AND %K < %@",
+            "partition", "public",
+            "students.studentId ",NSString(string: id),"isDraft", -1,
+            "timelines.date", NSNumber(value: currentTime)
         )
     }
 
+    @BackgroundActor
     func getUpcomingStudentTimeline(
         id: String,
         currentTime: Int64,
@@ -78,15 +114,19 @@ class CourseRepoImp : BaseRepoImp, CourseRepo {
     ) async {
         await queryLess(
             course,
-            "partition == $0 AND students.studentId == $1 AND isDraft == $2 AND timelines.date > $3",
-            ["public", id, -1, currentTime]
+            "%K == %@ AND %K == %@ AND %K == %@ AND %K > %@",
+            "partition", "public",
+            "students.studentId ",NSString(string: id),"isDraft", -1,
+            "timelines.date", NSNumber(value: currentTime)
         )
     }
 
+    @BackgroundActor
     func insertCourse(course: Course) async -> ResultRealm<Course?> {
         return await insert(course)
     }
 
+    @BackgroundActor
     func editCourse(
         course: Course,
         edit: Course
@@ -94,8 +134,9 @@ class CourseRepoImp : BaseRepoImp, CourseRepo {
         return await self.edit(course._id) { it in it.copy(edit) }
     }
 
+    @BackgroundActor
     func deleteCourse(course: Course) async -> Int {
-        return await delete(course, "_id == $0", course._id)
+        return await delete(course, course._id)
     }
     
 }

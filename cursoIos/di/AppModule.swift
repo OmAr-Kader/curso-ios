@@ -13,42 +13,15 @@ class AppModule: ObservableObject {
     }
 
     init() {
-        let app = App(id: REALM_APP_ID)
-        let realmSync: Realm?
-        do {
-            let serialQueue = DispatchQueue.global()
-            let user = app.currentUser
-            if user != nil {
-                realmSync = try Realm(
-                    configuration: app.currentUser!.initialSubscriptionBlock,
-                    queue: serialQueue
-                )
-            } else {
-                realmSync = nil
-            }
-        } catch {
-            realmSync = nil
-        }
-        let realmCloud = RealmSync(app: app, realm: realmSync)
-        var config =  Realm.Configuration(
-            inMemoryIdentifier: "CursoIos"
-        )
-        config.objectTypes = listOfOnlyLocalSchemaRealmClass
-        config.schemaVersion = SCHEMA_VERSION
-        config.eventConfiguration?.errorHandler = { error in
-            
-        }
-        let serialQueueQ = DispatchQueue.main
-        let realm = try! Realm(configuration: config, queue: serialQueueQ)
-        
-        let articleRepo = ArticleRepoImp(realmSync: realmCloud)
-        let chatRepo = ChatRepoImp(realmSync: realmCloud)
-        let courseRepo = CourseRepoImp(realmSync: realmCloud)
-        let lecturerRepo = LecturerRepoImp(realmSync: realmCloud)
-        let studentRepo = StudentRepoImp(realmSync: realmCloud)
-        let preferenceRepo = PrefRepoImp(realm: realm)
+        let realmApi = RealmApi(app: App(id: REALM_APP_ID))
+        let articleRepo = ArticleRepoImp(realmApi: realmApi)
+        let chatRepo = ChatRepoImp(realmApi: realmApi)
+        let courseRepo = CourseRepoImp(realmApi: realmApi)
+        let lecturerRepo = LecturerRepoImp(realmApi: realmApi)
+        let studentRepo = StudentRepoImp(realmApi: realmApi)
+        let preferenceRepo = PrefRepoImp(realmApi: realmApi)
         pro = Project(
-            realmSync: realmCloud,
+            realmApi: realmApi,
             article: ArticleData(repository: articleRepo),
             course: CourseData(repository: courseRepo),
             lecturer: LecturerData(repository: lecturerRepo),
@@ -58,11 +31,6 @@ class AppModule: ObservableObject {
             fireApp: FirebaseApp.app()
         )
     }
-
-    func initApp(_ invoke: @escaping (Project) -> Unit) {
-        invoke(pro)
-    }
-
 }
 
 

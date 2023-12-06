@@ -15,7 +15,7 @@ class LogInObserveLecturer : ObservableObject {
     }
     
     func login(
-        invoke: @escaping (Lecturer, Int) -> Unit,
+        invoke: @escaping @MainActor (Lecturer, Int) -> Unit,
         failed: @escaping (String) -> Unit
     ) {
         let s = state
@@ -33,16 +33,15 @@ class LogInObserveLecturer : ObservableObject {
 
     private func doLogIn(
         _ s: State,
-        _ invoke: @escaping (Lecturer, Int) -> Unit,
+        _ invoke: @escaping @MainActor (Lecturer, Int) -> Unit,
         _ failed: @escaping (String) -> Unit
     ) {
-        scope.launch {
-            await self.loginRealm(s).letBackN { user in
-                guard let user else {
-                    self.state = self.state.copy(isProcessing: false)
-                    failed("Failed")
-                    return
-                }
+        self.loginRealm(s) { user in
+            if user == nil {
+                self.state = self.state.copy(isProcessing: false)
+                return
+            }
+            self.scope.launchRealm {
                 await self.app.project.lecturer.getLecturerEmail(
                     s.email
                 ) { r in
@@ -54,20 +53,24 @@ class LogInObserveLecturer : ObservableObject {
     
     private func saveUserState(
         _ lec: Lecturer?,
-        invoke: @escaping (Lecturer, Int) -> Unit,
+        invoke: @escaping @MainActor (Lecturer, Int) -> Unit,
         failed: @escaping (String) -> Unit
     ) {
         guard let lec else {
-            self.state = self.state.copy(isProcessing: false)
-            failed("Failed")
+            scope.launchMain {
+                self.state = self.state.copy(isProcessing: false)
+                failed("Failed")
+            }
             return
         }
-        scope.launch {
+        scope.launchRealm {
             await self.app.project.course.getLecturerCourses(
                 lec._id.stringValue
             ) { r in
-                self.state = self.state.copy(isProcessing: false)
-                invoke(lec, r.value.count)
+                self.scope.launchMain {
+                    self.state = self.state.copy(isProcessing: false)
+                    invoke(lec, r.value.count)
+                }
             }
         }
     }
@@ -94,42 +97,43 @@ class LogInObserveLecturer : ObservableObject {
         _ invoke: @escaping (Lecturer) -> Unit,
         _ failed: @escaping (String) -> Unit
     ) {
-        scope.launch {
-            await self.realmSignIn(s: s,failed: failed).letBackN { user in
-                let img = s.imageUri
-                guard let user, let img else {
+        self.realmSignIn(s: s,failed: failed) { user in
+            let img = s.imageUri
+            guard let user, let img else {
+                self.scope.launchMain {
                     self.state = self.state.copy(isProcessing: false)
                     failed("Failed")
-                    return
                 }
-                print(user)
-                self.state = self.state.copy(alreadyLoggedIn: true)
-                self.app.project.fireApp?.upload(
-                    img,
-                    "LecturerImage/${user.id}_" + String(currentTime) + s.imageUri!.pathExtension,
-                    { it in
-                        self.doInsertLecturer(
-                            s: s,
-                            it: it,
-                            invoke: invoke,
-                            failed: failed
-                        )
-                }, {
+                return
+            }
+            print(user)
+            self.alreadyLogged()
+            self.app.project.fireApp?.upload(
+                img,
+                "LecturerImage/${user.id}_" + String(currentTime) + s.imageUri!.pathExtension,
+                { it in
+                    self.doInsertLecturer(
+                        s: s,
+                        it: it,
+                        invoke: invoke,
+                        failed: failed
+                    )
+            }, {
+                self.scope.launchMain {
                     self.state = self.state.copy(isProcessing: false)
                     failed("Failed")
-                })
-            }
+                }
+            })
         }
     }
     
-
     private func doInsertLecturer(
         s: State,
         it: String,
         invoke: @escaping (Lecturer) -> Unit,
         failed: @escaping (String) -> Unit
     ) {
-        scope.launch {
+        scope.launchRealm {
             let it = await self.app.project.lecturer.insertLecturer(
                 Lecturer(
                     lecturerName: s.lecturerName,
@@ -145,62 +149,94 @@ class LogInObserveLecturer : ObservableObject {
                 )
             )
             if (it.result == REALM_SUCCESS && it.value != nil) {
-                self.state = self.state.copy(isProcessing: false)
-                invoke(it.value!)
+                self.scope.launchMain {
+                    self.state = self.state.copy(isProcessing: false)
+                    invoke(it.value!)
+                }
             } else {
-                failed("Failed")
+                self.scope.launchMain {
+                    self.state = self.state.copy(isProcessing: false)
+                    failed("Failed")
+                }
             }
         }
     }
 
     private func realmSignIn(
         s: State,
-        failed: @escaping (String) -> Unit
-    ) async -> User? {
+        failed: @escaping (String) -> Unit,
+        invoke: @escaping (User?) -> Unit
+    ) {
         if (state.alreadyLoggedIn) {
-            return await app.project.realmSync.realmApp.currentUser.letBackN { it in
-                if (it != nil) {
-                    return nil
-                } else {
-                    do {
-                        try await app.project.realmSync
-                            .realmApp.emailPasswordAuth.registerUser(
-                                email: s.email, password: s.password
-                            )
-                        return await loginRealm(s)
-                    } catch {
-                        return nil
+            let it = app.project.realmApi.realmApp.currentUser
+            if (it == nil) {
+                self.scope.launchMain {
+                    self.state = self.state.copy(isProcessing: false)
+                    failed("Failed")
+                }
+            } else {
+                signUpRealm(s: s) { result in
+                    if result == REALM_SUCCESS {
+                        self.loginRealm(s) { user in
+                            invoke(user)
+                        }
+                    } else {
+                        invoke(nil)
                     }
                 }
             }
         } else {
-            do {
-                try await app.project.realmSync
-                    .realmApp.emailPasswordAuth.registerUser(
-                        email: s.email, password: s.password
-                    )
-                return await loginRealm(s)
-            } catch let error {
-                if (error.localizedDescription.contains("existing")) {
-                    self.state = self.state.copy(isProcessing: false)
-                    failed("Failed: Already Exists")
-                    return nil
+            app.project.realmApi.realmApp.emailPasswordAuth.registerUser(
+                    email: s.email, password: s.password
+            ) { (error) in
+                if error != nil {
+                    if (error!.localizedDescription.contains("existing")) {
+                        self.scope.launchMain {
+                            self.state = self.state.copy(isProcessing: false)
+                            failed("Failed: Already Exists")
+                        }
+                    } else {
+                        invoke(nil)
+                    }
                 } else {
-                    return nil
+                    self.loginRealm(s) { user in
+                        invoke(user)
+                    }
                 }
             }
         }
     }
+    
+    private func alreadyLogged() {
+        scope.launchMain {
+            self.state = self.state.copy(alreadyLoggedIn: true)
+        }
+    }
 
 
-    private func loginRealm(_ s: State) async -> User? {
-        let it = try? await app.project.realmSync.realmApp.login(
+    private func loginRealm(_ s: State, invoke: @escaping (User?) -> Unit) {
+        app.project.realmApi.realmApp.login(
             credentials: Credentials.emailPassword(
                 email: s.email,
                 password: s.password
             )
-        )
-        return  it?.isLoggedIn == true ? it : nil
+        ) { (result) in
+            switch result {
+            case .failure(let error):
+                print("==>" + error.localizedDescription)
+                invoke(nil)
+            case .success(let user):
+                invoke(user)
+            }
+        }
+    }
+    
+    private func signUpRealm(s: State, invoke: @escaping (Int) -> Unit) {
+        app.project.realmApi.realmApp.emailPasswordAuth.registerUser(
+                email: s.email, password: s.password
+        ) { (error) in
+            invoke(error == nil ? REALM_SUCCESS : REALM_FAILED)
+        }
     }
     
     func isLogin(it: Bool) {
@@ -289,6 +325,10 @@ class LogInObserveLecturer : ObservableObject {
             self.alreadyLoggedIn  = alreadyLoggedIn ?? self.alreadyLoggedIn
             return self
         }
+    }
+    
+    deinit {
+        scope.deInit()
     }
 
 }

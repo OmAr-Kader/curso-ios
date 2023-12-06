@@ -22,7 +22,7 @@ struct OutlinedTextField : View {
                 }, set: { it, t in
                     onChange(it)
                 })
-            ).placeholder(when: text.isEmpty) {
+            ).placeholder(when: text.isEmpty, alignment: .leading) {
                 Text(hint).foregroundColor(theme.textHintColor)
             }.foregroundStyle(theme.textColor)
                 .font(.system(size: 14))
@@ -33,6 +33,7 @@ struct OutlinedTextField : View {
                 .lineLimit(lineLimit)
             .focused($isFocused)
             .keyboardType(keyboardType ?? .default)
+            .preferredColorScheme(theme.isDarkMode ? .dark : .light)
             .background(
                 RoundedRectangle(cornerRadius: 5)
                     .stroke(
@@ -76,7 +77,7 @@ struct OutlinedSecureField : View {
                 }, set: { it, t in
                     onChange(it)
                 })
-            ).placeholder(when: text.isEmpty) {
+            ).placeholder(when: text.isEmpty, alignment: .leading) {
                 Text(hint).foregroundColor(theme.textHintColor)
             }.foregroundStyle(theme.textColor)
                 .font(.system(size: 14))
@@ -87,13 +88,14 @@ struct OutlinedSecureField : View {
                 .lineLimit(lineLimit)
             .focused($isFocused)
             .keyboardType(keyboardType ?? .default)
-                .background(
-                    RoundedRectangle(cornerRadius: 5)
-                        .stroke(
-                            isError ? theme.error : (isFocused ? theme.primary : theme.secondary),
-                            lineWidth: 1.5
-                        )
-                )
+            .preferredColorScheme(theme.isDarkMode ? .dark : .light)
+            .background(
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(
+                        isError ? theme.error : (isFocused ? theme.primary : theme.secondary),
+                        lineWidth: 1.5
+                    )
+            )
             if isError {
                 HStack {
                     Text(errorMsg).padding(

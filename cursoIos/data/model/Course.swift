@@ -222,7 +222,7 @@ class Certificate : Object {
 }
 
 
-struct AboutCourseData {
+struct AboutCourseData : ForSubData {
     var font: Int
     var text: String
     
@@ -233,7 +233,8 @@ struct AboutCourseData {
     }
 }
 
-struct SessionForDisplay {
+struct SessionForDisplay : ForData {
+    
     
     var title: String
     var date: Int64
@@ -252,6 +253,11 @@ struct SessionForDisplay {
     var duration: String = ""
     var imageUri: String = ""
     var isDraft: Int = 0
+    let id: String
+
+    var scrollId: String {
+        return String(timelineIndex) + lecturerId
+    }
     
     init(title: String, date: Int64, dateStr: String, note: String, video: String, timelineMode: Int, courseId: String, courseName: String, lecturerId: String, lecturerName: String, studentId: String, studentName: String, timelineIndex: Int, mode: Int, duration: String, imageUri: String, isDraft: Int) {
         self.title = title
@@ -271,6 +277,7 @@ struct SessionForDisplay {
         self.duration = duration
         self.imageUri = imageUri
         self.isDraft = isDraft
+        self.id = String(timelineIndex) + lecturerId
     }
     
     init(course: CourseForData, timeline: TimelineData, mode: Int, userId: String, userName: String, i: Int) {
@@ -300,11 +307,12 @@ struct SessionForDisplay {
         } else {
             1
         }
+        self.id = String(timelineIndex) + lecturerId
     }
 
 }
 
-struct TimelineData {
+struct TimelineData : ForSubData {
     
     var title: String
     var date: Int64
@@ -363,7 +371,7 @@ struct TimelineData {
     }
 }
 
-struct CourseForData {
+struct CourseForData : ForData {
 
     var title: String
     var lecturerName: String
@@ -381,6 +389,10 @@ struct CourseForData {
     var lastEdit: Int64
     var isDraft: Int = 0
     var id: String
+
+    var scrollId: String {
+        return id
+    }
     
     init() {
         title = ""
@@ -433,7 +445,7 @@ struct CourseForData {
 
 }
 
-struct StudentCoursesData {
+struct StudentCoursesData : ForSubData {
     let studentId: String
     let studentName: String
     let type: Int
