@@ -2,6 +2,10 @@ import Foundation
 
 typealias Unit = ()
 
+var durationList: [String] {
+    return ["15 min", "30 min", "45 min", "1 hour", "1.5 hour", "2 hour"]
+}
+
 var currentTime: Int64 {
     return Int64(NSDate.now.timeIntervalSince1970 * 1000.0)
 }
@@ -60,6 +64,14 @@ extension String {
             return defaultValue(self)
         } else {
             return nil
+        }
+    }
+    
+    @inlinable func ifEmpty(defaultValue: () -> Self) -> Self {
+        if (self.isEmpty) {
+            return defaultValue()
+        } else {
+            return self
         }
     }
 

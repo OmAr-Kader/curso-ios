@@ -12,6 +12,8 @@ struct ImageAsset : View {
                 named: icon
             )?.withTintColor(UIColor(tint)) ?? UIImage()
         ).resizable()
+            .renderingMode(.template)
+            .foregroundColor(tint)
             .background(Color.clear)
             .imageScale(.medium)
             .aspectRatio(contentMode: .fill)

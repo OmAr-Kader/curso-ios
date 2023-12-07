@@ -203,3 +203,33 @@ struct AllArticleIem : View {
             .padding(leading: 15, bottom: 3,trailing: 15)
     }
 }
+
+struct LecturerCourseItem : View {
+    let nextTimeLine: String
+    let students: String
+    let price: String
+    let theme: Theme
+    var body: some View {
+        VStack {
+            Text(nextTimeLine).foregroundStyle(theme.secondary)
+                .font(.system(size: 10)).lineLimit(1)
+                .padding(leading: 15, bottom: 3, trailing: 15)
+            HStack(alignment: .center) {
+                HStack {
+                    ImageAsset(icon: "profile", tint: theme.primary)
+                        .frame(width: 15, height: 15)
+                    Text(students).foregroundStyle(theme.textColor).lineLimit(1)
+                        .font(.system(size: 10))
+                }
+                Spacer()
+                HStack {
+                    ImageAsset(icon: "money", tint: theme.primary)
+                        .frame(width: 15, height: 15)
+                    Text(price).foregroundStyle(theme.textColor).lineLimit(1)
+                        .font(.system(size: 10))
+                }
+            }.padding(leading: 15, bottom: 3, trailing: 15)
+            
+        }.padding(leading: 15, bottom: 3, trailing: 15)
+    }
+}

@@ -31,16 +31,16 @@ struct OutlinedTextField : View {
                 )
                 .fixedSize(horizontal: false, vertical: true)
                 .lineLimit(lineLimit)
-            .focused($isFocused)
-            .keyboardType(keyboardType ?? .default)
-            .preferredColorScheme(theme.isDarkMode ? .dark : .light)
-            .background(
-                RoundedRectangle(cornerRadius: 5)
-                    .stroke(
-                        isError ? theme.error : (isFocused ? theme.primary : theme.secondary),
-                        lineWidth: 1.5
-                    )
-            )
+                .focused($isFocused)
+                .keyboardType(keyboardType ?? .default)
+                .preferredColorScheme(theme.isDarkMode ? .dark : .light)
+                .background(
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke(
+                            isError ? theme.error : (isFocused ? theme.primary : theme.secondary),
+                            lineWidth: 1.5
+                        )
+                )
             if isError {
                 HStack {
                     Text(errorMsg).padding(
@@ -54,6 +54,41 @@ struct OutlinedTextField : View {
     }
 }
 
+
+struct OutlinedTextFieldButton : View {
+    
+    let text: String
+    let onClick: () -> Unit
+    let isError: Bool
+    let theme: Theme
+
+    @FocusState private var isFocused: Bool
+
+    var body: some View {
+        VStack {
+            Button(action: onClick) {
+                Text(
+                    text
+                ).foregroundStyle(theme.textColor)
+                    .font(.system(size: 14))
+                    .padding(
+                        EdgeInsets(top: 15, leading: 20, bottom: 10, trailing: 15)
+                    )
+                    .fixedSize(horizontal: false, vertical: true)
+                    .lineLimit(1)
+                    .focused($isFocused)
+                    .preferredColorScheme(theme.isDarkMode ? .dark : .light)
+                    .background(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(
+                                isError ? theme.error : (isFocused ? theme.primary : theme.secondary),
+                                lineWidth: 1.5
+                            )
+                    )
+            }
+        }
+    }
+}
 
 struct OutlinedSecureField : View {
     

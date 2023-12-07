@@ -251,7 +251,7 @@ struct HomeLecturerScreen : View {
                     )
                 }
             }
-        }.navigationDestination(for: Screen.self) { route in
+        }.toastView(toast: $toast).navigationDestination(for: Screen.self) { route in
             targetScreen(pref.state.homeScreen, app, pref)
         }.onAppear {
             switchView(tab: state.currentTab)

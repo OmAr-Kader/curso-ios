@@ -604,6 +604,61 @@ struct TextFullPageScrollable : View {
 }
 
 
+struct RadioDialog : View {
+    
+    let current: String
+    let list: [String]
+    let onDismiss: () -> Unit
+    let onClick: (String) -> Unit
+    var body: some View {
+        ScrollView(Axis.Set.vertical) {
+            VStack {
+                ForEach(0..<list.count, id: \.self) { index in
+                    let it: String = list[index]
+                    Button(action: {
+                        onClick(it)
+                    }) {
+                        HStack {
+                            RadioButton(selected: it == current) {
+                                onClick(it)
+                            }
+                            Text(it).padding(leading: 10)
+                            Spacer()
+                        }.padding(16)
+                    }
+                }
+            }
+        }
+        Button("Cancel", role: .cancel) {
+            onDismiss()
+        }
+    }
+}
+
+struct RadioButton: View {
+    let selected: Bool
+    let onClick: () -> Unit
+    var body: some View {
+        Group{
+            if selected {
+                ZStack{
+                    Circle()
+                        .fill(Color.blue)
+                        .frame(width: 20, height: 20)
+                    Circle()
+                        .fill(Color.white)
+                        .frame(width: 8, height: 8)
+                }.onTapGesture {onClick()}
+            } else {
+                Circle()
+                    .fill(Color.white)
+                    .frame(width: 20, height: 20)
+                    .overlay(Circle().stroke(Color.gray, lineWidth: 1))
+                    .onTapGesture {onClick()}
+            }
+        }
+    }
+}
 
 
 

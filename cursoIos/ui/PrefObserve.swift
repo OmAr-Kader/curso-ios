@@ -42,16 +42,12 @@ class PrefObserve : ObservableObject {
         }
     }
     
-    var navigateTo: (Screen) -> Unit {
-        return { screen in
-            self.navigationPath.append(screen)
-        }
+    func navigateTo(_ screen: Screen) {
+        self.navigationPath.append(screen)
     }
     
-    var backPress: () -> Unit {
-        return {
-            self.navigationPath.removeLast()
-        }
+    func backPress() {
+        self.navigationPath.removeLast()
     }
     
     private func inti(invoke: @escaping ([Preference]) -> Unit) {

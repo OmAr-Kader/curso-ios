@@ -29,6 +29,10 @@ extension View {
                     pref: pref,
                     loginObs: LogInObserveLecturer(app)
                 )
+            case .LECTURER_SCREEN_ROUTE :
+                LecturerScreen(app: app, pref: pref, obs: LecturerObserve(app))
+            case .CREATE_COURSE_SCREEN_ROUTE :
+                CreateCourseScreen(app: app, pref: pref, obs: CreateCourseObserve(app))
             case .HOME_LECTURER_SCREEN_ROUTE :
                 HomeLecturerScreen(
                     app: app,

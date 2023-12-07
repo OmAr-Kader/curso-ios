@@ -28,6 +28,7 @@
 		077FFF012B14FF2800A466FE /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077FFF002B14FF2800A466FE /* Media.swift */; };
 		077FFF032B15149B00A466FE /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077FFF022B15149B00A466FE /* Image.swift */; };
 		077FFF052B16996B00A466FE /* OutlinedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077FFF042B16996A00A466FE /* OutlinedTextField.swift */; };
+		07A8F4BD2B21414700877045 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A8F4BC2B21414700877045 /* ChatView.swift */; };
 		07B2CF3B2B19191200509DE5 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B2CF3A2B19191200509DE5 /* ToastView.swift */; };
 		07C105812B17C6E9003BBBA5 /* Navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C105802B17C6E9003BBBA5 /* Navigate.swift */; };
 		07C105832B17D153003BBBA5 /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C105822B17D153003BBBA5 /* BackButton.swift */; };
@@ -105,6 +106,7 @@
 		077FFF002B14FF2800A466FE /* Media.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
 		077FFF022B15149B00A466FE /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		077FFF042B16996A00A466FE /* OutlinedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlinedTextField.swift; sourceTree = "<group>"; };
+		07A8F4BC2B21414700877045 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		07B2CF3A2B19191200509DE5 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		07C105802B17C6E9003BBBA5 /* Navigate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigate.swift; sourceTree = "<group>"; };
 		07C105822B17D153003BBBA5 /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
@@ -173,12 +175,12 @@
 		0740F9F12B13F5DC00ECC5E0 /* ui */ = {
 			isa = PBXGroup;
 			children = (
-				077FFF022B15149B00A466FE /* Image.swift */,
-				077FFF042B16996A00A466FE /* OutlinedTextField.swift */,
-				07592E9C2B16BFB9008E9C57 /* Views.swift */,
 				07C105822B17D153003BBBA5 /* BackButton.swift */,
-				07B2CF3A2B19191200509DE5 /* ToastView.swift */,
+				077FFF022B15149B00A466FE /* Image.swift */,
 				077E35042B1B8D8600652FEE /* NavigationDrawer.swift */,
+				077FFF042B16996A00A466FE /* OutlinedTextField.swift */,
+				07B2CF3A2B19191200509DE5 /* ToastView.swift */,
+				07592E9C2B16BFB9008E9C57 /* Views.swift */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -214,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				077E35082B1BFFB000652FEE /* AllCourses.swift */,
+				07A8F4BC2B21414700877045 /* ChatView.swift */,
 				077E35062B1BE5F200652FEE /* Items.swift */,
 			);
 			path = common;
@@ -524,6 +527,7 @@
 				07FC88FB2B10D50D00143419 /* LecturerRepoImp.swift in Sources */,
 				07FC88F82B10D50D00143419 /* ArticleRepoImp.swift in Sources */,
 				076996E82B1160EE009D727F /* Editor.swift in Sources */,
+				07A8F4BD2B21414700877045 /* ChatView.swift in Sources */,
 				07FC88F52B10D50D00143419 /* PreferenceData.swift in Sources */,
 				077E35032B1B655C00652FEE /* CreateCourseScreen.swift in Sources */,
 				077FFF012B14FF2800A466FE /* Media.swift in Sources */,
