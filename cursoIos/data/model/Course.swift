@@ -18,10 +18,11 @@ class Course: Object {
     @Persisted var lastEdit: Int64
     @Persisted var isDraft: Int = 0
     @Persisted var partition: String = "public"
-    @Persisted(primaryKey: true) var _id: ObjectId = ObjectId.init()
+    @Persisted(primaryKey: true) var _id: ObjectId
     
     //students: List<StudentCourses>, rate: Double, raters: Int,
-    init(title: String, lecturerName: String, lecturerId: String, price: String, imageUri: String, about: List<AboutCourse>, briefVideo: String, timelines: List<Timeline>, lastEdit: Int64, isDraft: Int, _id: ObjectId) {
+    init(title: String, lecturerName: String, lecturerId: String, price: String, imageUri: String, about: List<AboutCourse>, briefVideo: String, timelines: List<Timeline>, lastEdit: Int64, isDraft: Int) {
+        super.init()
         self.title = title
         self.lecturerName = lecturerName
         self.lecturerId = lecturerId
@@ -32,10 +33,25 @@ class Course: Object {
         self.timelines = timelines
         self.lastEdit = lastEdit
         self.isDraft = isDraft
-        self._id = _id
+    }
+    
+    init(title: String, lecturerName: String, lecturerId: String, price: String, imageUri: String, about: List<AboutCourse>, briefVideo: String, timelines: List<Timeline>, lastEdit: Int64, isDraft: Int, id: String) {
+        super.init()
+        self.title = title
+        self.lecturerName = lecturerName
+        self.lecturerId = lecturerId
+        self.price = price
+        self.imageUri = imageUri
+        self.about = about
+        self.briefVideo = briefVideo
+        self.timelines = timelines
+        self.lastEdit = lastEdit
+        self.isDraft = isDraft
+        self._id = try! ObjectId.init(string: id)
     }
     
     override init() {
+        super.init()
         title = ""
         lecturerName = ""
         lecturerId = ""
@@ -49,7 +65,6 @@ class Course: Object {
         raters = 0
         lastEdit = 0
         isDraft = 0
-        _id = ObjectId.init()
     }
 
     convenience init(update: CourseForData) {
@@ -201,14 +216,13 @@ class Certificate : Object {
     @Persisted var rate: Double
     @Persisted(indexed: true) var courseId: String = ""
     @Persisted var partition: String = "public"
-    @Persisted(primaryKey: true) var _id: ObjectId = ObjectId.init()
+    @Persisted(primaryKey: true) var _id: ObjectId
 
     override init() {
         title = ""
         rate = 0.0
         date = -1
         courseId = ""
-        _id = ObjectId.init()
     }
 
     func copy(update: Certificate) -> Certificate {

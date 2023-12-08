@@ -7,10 +7,267 @@ struct CreateCourseScreen : View {
     @StateObject var pref: PrefObserve
     @StateObject var obs: CreateCourseObserve
     
-    var body: some View {
-        VStack {
-            
+    @State private var toast: Toast? = nil
+    @State private var currentPage: Int  = 0
+
+    var courseId: String {
+        return pref.getArgumentOne(it: CREATE_COURSE_SCREEN_ROUTE) ?? ""
+    }
+    
+    var courseTitle: String {
+        return pref.getArgumentTwo(it: CREATE_COURSE_SCREEN_ROUTE) ?? ""
+    }
+    
+    func saveOrEdit(isDraft: Bool, userBase: PrefObserve.UserBase) {
+        let state = obs.state
+        if (!isDraft && state.timelines.isEmpty) {
+            toast = Toast(style: .error, message: "Should Add Timeline")
+            return
         }
+        if (!isDraft && state.briefVideo.isEmpty) {
+            toast = Toast(style: .error, message: "Should Add Brief Video")
+            return
+        }
+        if (!isDraft && state.imageUri.isEmpty) {
+            toast = Toast(style: .error, message: "Should Add Thumbnail Image")
+            return
+        }
+        if (!isDraft && state.about.map { it in it.text }.joined().isEmpty) {
+            toast = Toast(style: .error, message: "Should Add About Course")
+            return
+        }
+        if (state.course != nil) {
+            obs.edit(
+                isDraft, userBase.id, userBase.name
+            ) { it in
+                if (it != nil) {
+                    pref.backPress()
+                } else {
+                    toast = Toast(style: .error, message: "Failed")
+                }
+            }
+        } else {
+            obs.save(isDraft, userBase.id, userBase.name) { it in
+                if (it != nil) {
+                    pref.backPress()
+                } else {
+                    toast = Toast(style: .error, message: "Failed")
+                }
+            }
+        }
+    }
+
+    
+    var body: some View {
+        
+        let state = obs.state
+        ZStack {
+            VStack {
+                BriefVideoView(state: state, videoPicker: { it in
+                    obs.setBriefVideo(it: it.absoluteString)
+                }) {
+                    pref.writeArguments(
+                        route: VIDEO_SCREEN_ROUTE,
+                        one: state.briefVideo,
+                        two: state.courseTitle
+                    )
+                    pref.navigateTo(.VIDEO_SCREEN_ROUTE)
+                }
+                MainBarInfoView(state: state, theme: pref.theme, image: { it in
+                    obs.setImageUri(it: it.absoluteString)
+                }) {
+                    pref.writeArguments(
+                        route: IMAGE_SCREEN_ROUTE,
+                        one: state.imageUri,
+                        two: state.courseTitle
+                    )
+                    pref.navigateTo(.IMAGE_SCREEN_ROUTE)
+                }
+                PagerTab(currentPage: currentPage, onPageChange: { it in
+                    currentPage = it
+                }, list: ["Basics", "Timelines"], theme: pref.theme) {
+                    BasicsView(obs: obs, courseTitle: courseTitle, theme: pref.theme, scrollTo: currentPage).tag(0)
+                    TimelinesView(timelines: state.timelines, isDraft: state.course?.isDraft != -1, theme: pref.theme) { i in
+                        obs.deleteTimeLine(i: i)
+                    } onClick: { it, i in
+                        obs.makeDialogVisible(timeline: it, index: i)
+                    }.tag(1)
+                }.padding(10)
+                BottomBar(obs: obs, pref: pref) { userBase in
+                    saveOrEdit(isDraft: true, userBase: userBase)
+                }
+            }.confirmationDialog("", isPresented: Binding(get: {
+                state.dialogMode != 0
+            }, set: { it, _ in
+                print(String(it))
+                obs.makeDialogGone()
+            })) {
+                DialogWithImage(
+                    obs: obs,
+                    theme: pref.theme
+                ) {
+                    pref.writeArguments(
+                        route: VIDEO_SCREEN_ROUTE,
+                        one: state.timelineData.video,
+                        two: state.timelineData.title
+                    )
+                    pref.navigateTo(.VIDEO_SCREEN_ROUTE)
+                }
+            } message: {
+                Text("Timeline")
+            }.confirmationDialog("", isPresented: Binding(get: {
+                state.dateTimePickerMode != 0
+            }, set: { it, _ in
+                print(String(it))
+                obs.closeDateTimePicker()
+            })) {
+                DialogDateTimePicker(dateTime: state.timelineData.date, mode: state.dateTimePickerMode, theme: pref.theme) {
+                    obs.displayDateTimePicker()
+                } snake: { it in
+                    toast = Toast(style: .error, message: it)
+                } close: {
+                    obs.closeDateTimePicker()
+                } invoke: { timeSelected in
+                    obs.confirmTimelineDateTimePicker(timeSelected)
+                }
+            } message: {
+                Text("Date")
+            }.confirmationDialog("", isPresented: Binding(get: {
+                state.isConfirmDialogVisible
+            }, set: { it, _ in
+                print(String(it))
+                obs.changeUploadDialogGone(it: false)
+            })) {
+                DialogForUpload(theme: pref.theme) {
+                    obs.changeUploadDialogGone(it: false)
+                } onClick: {
+                    obs.changeUploadDialogGone(it: false)
+                    pref.findUserBase { userBase in
+                        guard let userBase else {
+                            return
+                        }
+                        saveOrEdit(isDraft: false, userBase: userBase)
+                    }
+                }
+            } message: {
+                Text("Confirm")
+            }.toolbarButton(state.course?.isDraft == 1) {
+                obs.deleteCourse {
+                    pref.backPress()
+                }
+            }.background(pref.theme.background.margeWithPrimary).toastView(toast: $toast)
+                .navigationDestination(for: Screen.self) { route in
+                    targetScreen(pref.state.homeScreen, app, pref)
+                }.onAppear {
+                    if (!courseId.isEmpty) {
+                        obs.getCourse(id: courseId)
+                    }
+                }
+            BackButton {
+                pref.backPress()
+            }.onStart().onTop()
+        }
+    }
+}
+
+struct BriefVideoView : View {
+    let state: CreateCourseObserve.State
+    let videoPicker: (URL) -> Unit
+    let nav: () -> Unit
+    
+    @State private var selectedItem: PhotosPickerItem?
+
+    var body: some View {
+        //GeometryReader { geo in
+            VStack {
+                if state.briefVideo.isEmpty {
+                    FullZStack {
+                        PhotosPicker(
+                            selection: $selectedItem,
+                            matching: .videos
+                        ) {
+                            ImageAsset(icon: "upload", tint: .white)
+                                .frame(width: 45, height: 45).padding(5)
+                        }.onChange(selectedItem, forChangePhoto(videoPicker)).frame(
+                            width: 45, height: 45, alignment: .center
+                        )
+                    }.frame(height: 200).background(
+                        UIColor(_colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.64).toC
+                    )
+                } else {
+                    ZStack {
+                        ImageView(urlString: state.briefVideo)
+                            .frame(height: 200)
+                        FullZStack {
+                            HStack {
+                                PhotosPicker(
+                                    selection: $selectedItem,
+                                    matching: .videos
+                                ) {
+                                    ImageAsset(icon: "upload", tint: .white)
+                                        .frame(width: 45, height: 45).padding(5)
+                                }.onChange(selectedItem, forChangePhoto(videoPicker)).frame(
+                                    width: 45, height: 45, alignment: .center
+                                )
+                                Spacer().frame(width: 20)
+                                ImageAsset(icon: "play", tint: .white)
+                                    .frame(width: 45, height: 45).padding(5).onTapGesture {
+                                        nav()
+                                    }
+                            }
+                        }.frame(height: 200).background(
+                            UIColor(_colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.64).toC
+                        )
+                    }
+                }
+            }//.frame(width: geo.size.width, height: 200)
+        //}.padding(0).fixedSize(horizontal: false, vertical: true).background(Color.blue)
+    }
+}
+
+struct MainBarInfoView : View {
+    let state: CreateCourseObserve.State
+    let theme: Theme
+    let image: (URL) -> Unit
+    let nav: () -> Unit
+    
+    @State private var selectedItem: PhotosPickerItem?
+
+    var body: some View {
+        let ifNotEmpty = !state.imageUri.isEmpty
+        VStack(alignment: .center) {
+            HStack {
+                Spacer()
+                if ifNotEmpty {
+                    CardButton(
+                        onClick: nav, text: "Display Image",
+                        color: theme.primary, textColor: theme.textForPrimaryColor,
+                        width: 120, height: 45, fontSize: 11
+                    )
+                }
+                PhotosPicker(
+                    selection: $selectedItem,
+                    matching: .images
+                ) {
+                    VStack {
+                        Text(
+                            ifNotEmpty ? "Re-upload" : "Upload Thumbnail"
+                        ).lineLimit(1)
+                            .foregroundColor(ifNotEmpty ? .black : theme.textForPrimaryColor)
+                            .font(.system(size: 11))
+                    }.frame(width: 120, height: 45, alignment: .center)
+                        .background(
+                            RoundedRectangle(cornerRadius: 22.5).fill(
+                                ifNotEmpty ? Color.green : theme.primary
+                            )
+                        )
+                }
+                .onChange(selectedItem, forChangePhoto(image)).frame(
+                    width: 120, height: 45, alignment: .center
+                )
+                Spacer()
+            }
+        }.padding(top: 10).frame(height: 60)
     }
 }
 
@@ -77,20 +334,19 @@ struct BasicsView : View {
                     OutlinedTextField(text: state.courseTitle.ifEmpty { courseTitle }, onChange: { it in
                         obs.setCourseTitle(it: it)
                     }, hint: "Enter Course Title", isError: isCourseTitleError, errorMsg: "Shouldn't be empty", theme: theme, lineLimit: 1, keyboardType: .default
-                    )
+                    ).padding(top: 5, leading: 20, bottom: 5, trailing: 20)
                     OutlinedTextField(text: state.price, onChange: { it in
                         obs.setPrice(it: it)
                     }, hint: "Enter Price", isError: isPriceError, errorMsg: "Shouldn't be empty", theme: theme, lineLimit: 1, keyboardType: .numberPad
-                    )
+                    ).padding(top: 5, leading: 20, bottom: 5, trailing: 20)
                     ForEach(0..<state.about.count, id: \.self) { index in
                         let it = state.about[index]
                         let isHeadline = it.font > 20
-                        HStack(alignment: .top) {
+                        HStack(alignment: .center) {
                             OutlinedTextField(text: it.text, onChange: { text in
                                 obs.changeAbout(it: text, index: index)
-                            }, hint: "Enter About Details", isError: false, errorMsg: "", theme: theme, lineLimit: nil, keyboardType: .default
+                            }, hint: isHeadline ? "Enter About Headline" : "Enter About Details", isError: false, errorMsg: "", theme: theme, lineLimit: nil, keyboardType: .default
                             )
-                            
                             Button(action: {
                                 if (index == state.about.count - 1) {
                                     obs.makeFontDialogVisible()
@@ -104,12 +360,13 @@ struct BasicsView : View {
                                         ImageAsset(
                                             icon: index == (state.about.count - 1) ? "plus" : "delete",
                                             tint: theme.textColor
-                                        ).frame(width: 50, height: 50).padding(5)
-                                    }.background(theme.background.margeWithPrimary(0.3))
+                                        )
+                                    }.padding(7).background(
+                                        theme.background.margeWithPrimary(0.3)
+                                    )
                                 }.clipShape(Circle())
-                            }).frame(width: 50, height: 50)
-                            
-                        }
+                            }).frame(width: 40, height: 40)
+                        }.padding(top: 5, leading: 20, bottom: 5, trailing: 20)
                     }
                     if state.isFontDialogVisible {
                         AboutCreator(obs: obs, theme: theme)
@@ -119,6 +376,7 @@ struct BasicsView : View {
                 proxy.scrollTo(value)
             }
         }
+        Spacer()
     }
 }
 
@@ -183,6 +441,7 @@ struct TimelinesView : View {
                 onClick(nil, -1)
             }
         }.background(theme.background.margeWithPrimary)
+        Spacer()
     }
 }
 
@@ -216,7 +475,7 @@ struct DialogWithImage : View {
                     if (state.timelineData.video.isEmpty) {
                         PhotosPicker(
                             selection: $selectedItem,
-                            matching: .images
+                            matching: .videos
                         ) {
                             Image(
                                 uiImage: UIImage(
@@ -229,13 +488,15 @@ struct DialogWithImage : View {
                                 .scaledToFit()
                                 .clipShape(Circle())
                                 .padding(20).frame(
-                                    width: 120, height: 120, alignment: .topLeading
+                                    height: 100, alignment: .center
                                 )
                         }.frame(height: 100).background(
                             RoundedRectangle(cornerRadius: 5).stroke(
                                 isErrorVideo ? theme.error : theme.textColor, lineWidth: 1
                             )
-                        )
+                        ).onChange(selectedItem, forChangePhoto({ url in
+                            obs.setVideoTimeLine(it: url.absoluteString)
+                        }))
                     } else {
                         ImageView(
                             urlString: state.timelineData.video
@@ -302,8 +563,9 @@ struct DialogWithImage : View {
 struct DialogForUpload : View {
     
     let theme: Theme
+    let onDismiss: () -> Unit
     let onClick: () -> Unit
-    
+
     var body: some View {
         VStack {
             VStack {
@@ -311,11 +573,14 @@ struct DialogForUpload : View {
                     "By confirm upload your course you haven't ability to delete your course or any timeline"
                 ).padding(20).foregroundStyle(theme.textColor).font(.system(size: 16))
                 Spacer().frame(height: 20)
-                Button(action: onClick, label: {
-                    Text("Dismiss").foregroundStyle(theme.textColor)
-                }).padding(5)
             }.background(theme.backDark)
         }.padding(20).clipShape(RoundedRectangle(cornerRadius: 20))
+        Button("Confirm", role: .destructive) {
+            onClick()
+        }
+        Button("Cancel", role: .cancel) {
+            onDismiss()
+        }
     }
 }
 

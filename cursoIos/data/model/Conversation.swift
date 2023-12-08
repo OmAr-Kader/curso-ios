@@ -8,14 +8,13 @@ class Conversation : Object {
     @Persisted var type: Int //  -1 => Main Course Conversation,
     @Persisted var messages: List<Message>
     @Persisted var partition: String = "public"
-    @Persisted(primaryKey: true) var _id: ObjectId = ObjectId.init()
+    @Persisted(primaryKey: true) var _id: ObjectId
     
     override init() {
         courseId = ""
         courseName = ""
         type = -1
         messages = List()
-        _id = ObjectId.init()
     }
 
     convenience init(update: ConversationForData) {

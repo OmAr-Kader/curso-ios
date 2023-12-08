@@ -1,4 +1,5 @@
 import SwiftUI
+import _PhotosUI_SwiftUI
 
 struct CardButton : View {
     let onClick: (() -> Unit)
@@ -79,8 +80,12 @@ struct PagerTab<Content : View> : View {
         VStack {
             VStack {
                 Spacer().frame(height: 15)
-                ForEach(0..<list.count, id: \.self) { index in
-                    PagerTabButton(theme: theme, index: index, text: list[index], currentPage: currentPage, onPageChange: onPageChange)
+                HStack {
+                    ForEach(0..<list.count, id: \.self) { index in
+                        Spacer()
+                        PagerTabButton(theme: theme, index: index, text: list[index], currentPage: currentPage, onPageChange: onPageChange)
+                    }
+                    Spacer()
                 }
                 Spacer().frame(height: 15)
                 TabView(selection: Binding(get: {
@@ -256,13 +261,59 @@ extension View {
             }
         }
     }
+    
+    
+    @inlinable func toolbarButton(
+        _ addSubButton: Bool,
+        _ action: @escaping () -> Void
+    ) -> some View {
+        return addSubButton ? self.toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("Delete", action: action)
+            }
+        } as! Self : self
+    }
+    
+    /*func iOS16navBarAdapter(_ colorScheme: ColorScheme) -> some View {
+        if #available(iOS 16, *) {
+            return self
+                .toolbarBackground(Color.navigationBar, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+                .toolbarColorScheme(colorScheme, for: .navigationBar)
+        } else {
+            return self
+        }
+    }*/
 }
 
+func forChangePhoto(_ image: @escaping (URL) -> Void) -> ((PhotosPickerItem?) -> Void){
+    return { newIt in
+        logger(
+            "imageUri",
+            String(newIt == nil)
+        )
+        if (newIt != nil) {
+            getURL(item: newIt!) { result in
+                switch result {
+                case .success(let url):
+                    image(url)
+                    logger("imageUri", url.absoluteString)
+                case .failure(let failure):
+                    logger(
+                        "imagUri",
+                        failure.localizedDescription
+                    )
+                }
+            }
+        }
+    }
+}
 
-struct FloatingButton: View {
+struct MultipleFloatingButton: View {
     let icon: String
     let theme: Theme
-    let action: () -> Void
+    let actionArt: () -> Void
+    let actionCourse: () -> Void
     @State var isExtend: Bool = false
     
     @ViewBuilder var buttonContent: some View {
@@ -291,6 +342,7 @@ struct FloatingButton: View {
             ZStack {
                 VStack {
                     Button(action: {
+                        actionArt()
                         withAnimation {
                             isExtend.toggle()
                         }
@@ -312,6 +364,7 @@ struct FloatingButton: View {
                     .shadow(radius: 10)
                     Spacer().frame(height: 20)
                     Button(action: {
+                        actionCourse()
                         withAnimation {
                             isExtend.toggle()
                         }
@@ -360,6 +413,28 @@ struct FloatingButton: View {
         }/* else {
             buttonContent
         }*/
+    }
+}
+
+struct FloatingButton: View {
+    let icon: String
+    let theme: Theme
+    let action: () -> Void
+    
+    var body: some View {
+        ZStack {
+            Button(action: action) {
+                ImageAsset(icon: icon, tint: theme.textForPrimaryColor)
+                    .padding(15)
+                    .frame(width: 60, height: 60)
+            }
+            .tint(theme.textForPrimaryColor)
+            .frame(width: 60, height: 60)
+            .background(theme.primary)
+            .cornerRadius(30)
+            .shadow(radius: 10)
+            .onBottomEnd()
+        }.padding(trailing: 20)
     }
 }
 
@@ -660,5 +735,46 @@ struct RadioButton: View {
     }
 }
 
+struct DialogDateTimePicker : View {
+    let dateTime: Int64
+    let mode: Int
+    let theme: Theme
+    let changeMode: () -> Unit
+    let snake: (String) -> Unit
+    let close: () -> Unit
+    let invoke: (Int64) -> Unit
+    @State var current: Int64 = currentTime
+    @State private var date = Date.now
 
-
+    var body: some View {
+        FullZStack {
+            if mode == 1 {
+                DatePicker("Enter Timeline Date", selection: $date, in: Date.now...)
+                    .datePickerStyle(GraphicalDatePickerStyle())
+                    .frame(maxHeight: 400)
+            } else if mode == 2 {
+                DatePicker("", selection: $date, displayedComponents: [.date, .hourAndMinute])
+                    .labelsHidden()
+                    .frame(maxHeight: 400)
+            }
+        }.frame(maxHeight: 400).onAppear {
+            let time = dateTime != -1 ? dateTime : current
+            date = Date(timeIntervalSince1970: Double(time) / 1000)
+        }
+        Button("Confirm", role: .destructive) {
+            if (mode == 1) {
+                changeMode()
+            } else {
+                let t: Int64 = Int64(date.timeIntervalSince1970 * 1000)
+                if (t < current) {
+                    snake("Invalid Date")
+                    return
+                }
+                invoke(t)
+            }
+        }
+        Button("Cancel", role: .cancel) {
+            close()
+        }
+    }
+}

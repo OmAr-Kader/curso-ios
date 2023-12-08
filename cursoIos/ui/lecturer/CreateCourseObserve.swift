@@ -102,8 +102,7 @@ class CreateCourseObserve : ObservableObject {
                         briefVideo: briefVideo,
                         timelines: timelines.toTimeline(),
                         lastEdit: currentTime,
-                        isDraft: isDraft ? 1 : -1,
-                        _id: ObjectId.init()
+                        isDraft: isDraft ? 1 : -1
                     )
                     invoke(it)
                 }, failed)
@@ -196,7 +195,7 @@ class CreateCourseObserve : ObservableObject {
                         timelines: timelines.toTimeline(),
                         lastEdit: currentTime,
                         isDraft: isDraft ? 1 : -1,
-                        _id: try! ObjectId.init(string: c!.id)
+                        id: c!.id
                     )
                     invoke(it)
                 }, failed)
@@ -552,8 +551,8 @@ class CreateCourseObserve : ObservableObject {
             }
             postNotification(
                 PushNotification(
-                    to: "/topics/$topicId",
-                    topic: "/topics/$topicId",
+                    to: "/topics/\(topicId)",
+                    topic: "/topics/\(topicId)",
                     data: NotificationData(
                         title: msgTitle,
                         message: message,

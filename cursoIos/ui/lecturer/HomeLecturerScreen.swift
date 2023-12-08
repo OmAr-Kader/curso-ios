@@ -6,7 +6,6 @@ struct HomeLecturerScreen : View {
     @StateObject var pref: PrefObserve
     @StateObject var homeObs: HomeLecturerObserve// = HomeLecturerObserve(AppDelegate.del!.app)
 
-    @State var userNameGet: String? = nil
     @State var isOpen = false
     @State private var toast: Toast? = nil
     @Environment(\.colorScheme) var colorScheme
@@ -16,12 +15,7 @@ struct HomeLecturerScreen : View {
     
     
     private var userName: String {
-        guard let userNameGet else {
-            let userName = (pref.getArgumentTwo(it: HOME_LECTURER_SCREEN_ROUTE) ?? "").firstSpace
-            self.userNameGet = userName
-            return userName
-        }
-        return userNameGet
+        return (pref.getArgumentTwo(it: HOME_LECTURER_SCREEN_ROUTE) ?? "").firstSpace
     }
     
     private func switchView(tab: Int) {
@@ -194,8 +188,20 @@ struct HomeLecturerScreen : View {
                         }
                     }
                 }.background(pref.theme.background).overlay {
-                    FloatingButton(icon: "plus", theme: pref.theme) {
-                        
+                    MultipleFloatingButton(icon: "plus", theme: pref.theme) {
+                        pref.writeArguments(
+                            route: CREATE_ARTICLE_SCREEN_ROUTE,
+                            one: "",
+                            two: ""
+                        )
+                        pref.navigateTo(.CREATE_ARTICLE_SCREEN_ROUTE)
+                    } actionCourse: {
+                        pref.writeArguments(
+                            route: CREATE_COURSE_SCREEN_ROUTE,
+                            one: "",
+                            two: ""
+                        )
+                        pref.navigateTo(.CREATE_COURSE_SCREEN_ROUTE)
                     }
                 }
             } drawer: {
@@ -251,9 +257,7 @@ struct HomeLecturerScreen : View {
                     )
                 }
             }
-        }.toastView(toast: $toast).navigationDestination(for: Screen.self) { route in
-            targetScreen(pref.state.homeScreen, app, pref)
-        }.onAppear {
+        }.toastView(toast: $toast).onAppear {
             switchView(tab: state.currentTab)
         }
     }

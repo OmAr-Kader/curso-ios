@@ -96,7 +96,6 @@ extension Int64 {
         let time = Calendar.current.date(bySettingHour: hour, minute: minute, second: 0,
              of: Date(timeIntervalSince1970: Double(integerLiteral: self) / 1000.0)
         )!.timeIntervalSince1970 * 1000.0
-        
         return Int64(time)
     }
     

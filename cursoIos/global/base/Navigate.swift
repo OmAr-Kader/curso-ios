@@ -31,6 +31,8 @@ extension View {
                 )
             case .LECTURER_SCREEN_ROUTE :
                 LecturerScreen(app: app, pref: pref, obs: LecturerObserve(app))
+            case .CREATE_ARTICLE_SCREEN_ROUTE :
+                CreateArticleScreen(app: app, pref: pref, obs: CreateArticleObservable(app))
             case .CREATE_COURSE_SCREEN_ROUTE :
                 CreateCourseScreen(app: app, pref: pref, obs: CreateCourseObserve(app))
             case .HOME_LECTURER_SCREEN_ROUTE :
@@ -39,6 +41,10 @@ extension View {
                     pref: pref,
                     homeObs: HomeLecturerObserve(app)
                 )
+            case .VIDEO_SCREEN_ROUTE :
+                PlayerView(videoURL: pref.getArgumentOne(it: VIDEO_SCREEN_ROUTE) ?? "")
+            case .IMAGE_SCREEN_ROUTE :
+                ImageViewScreen(imageUri: pref.getArgumentOne(it: IMAGE_SCREEN_ROUTE) ?? "")
             default:
                 SplashScreen(
                     app: app,

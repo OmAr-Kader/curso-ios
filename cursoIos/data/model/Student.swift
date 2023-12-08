@@ -11,7 +11,7 @@ class Student : Object {
     @Persisted var specialty: String
     @Persisted var university: String
     @Persisted var partition: String = "public"
-    @Persisted(primaryKey: true) var _id: ObjectId = ObjectId.init()
+    @Persisted(primaryKey: true) var _id: ObjectId
         
     override init() {
         studentName = ""
@@ -20,7 +20,6 @@ class Student : Object {
         imageUri = ""
         specialty = ""
         university = ""
-        _id = ObjectId.init()
     }
 
     convenience init(update: StudentForData) {

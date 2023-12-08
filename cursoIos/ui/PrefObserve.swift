@@ -25,12 +25,12 @@ class PrefObserve : ObservableObject {
         self.downloadChanges()
         prefsTask?.cancel()
         sinkPrefs?.cancel()
-        prefsTask = scope.launchRealm {
+        /*prefsTask = scope.launchRealm {
             self.sinkPrefs = await self.app.project.preference.prefsBack { list in
                 print("=====>" + "Done" + String(list.count))
                 self.preferences = list
             }
-        }
+        }*/
     }
     
     var navigateHome: (Screen) -> Unit {
@@ -47,7 +47,9 @@ class PrefObserve : ObservableObject {
     }
     
     func backPress() {
-        self.navigationPath.removeLast()
+        if !self.navigationPath.isEmpty {
+            self.navigationPath.removeLast()
+        }
     }
     
     private func inti(invoke: @escaping ([Preference]) -> Unit) {
@@ -232,7 +234,12 @@ class PrefObserve : ObservableObject {
                 }
             }
         } else {
-            value(fetchUserBase(preferences))
+            scope.launchRealm {
+                let userBase = self.fetchUserBase(self.preferences)
+                self.scope.launchMain {
+                    value(userBase)
+                }
+            }
         }
     }
 
@@ -269,9 +276,10 @@ class PrefObserve : ObservableObject {
             list.append(Preference(ketString: PREF_USER_EMAIL, value: userBase.email))
             list.append(Preference(ketString: PREF_USER_PASSWORD, value: userBase.password))
             await self.app.project.preference.insertPref(list) { newPref in
-                //self.preferences = list
-                self.scope.launchMain {
-                    invoke()
+                self.inti { _ in
+                    self.scope.launchMain {
+                        invoke()
+                    }
                 }
             }
         }

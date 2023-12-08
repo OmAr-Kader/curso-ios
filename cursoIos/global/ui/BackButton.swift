@@ -1,4 +1,4 @@
-/*import SwiftUI
+import SwiftUI
 
 
 struct BackButtonModifier: ViewModifier {
@@ -27,32 +27,29 @@ struct BackButton: View {
     let action: () -> Void
     
     var body: some View {
-        ZStack {
-            Spacer().frame(height: 100)
-            Button(action: {
-                action()
-            }) {
-                HStack {
-                    Image(
-                        uiImage: UIImage(
-                            named: "chevron.backward"
-                        )?.withTintColor(
-                            UIColor(Color.cyan)
-                        ) ?? UIImage()
-                    ).resizable()
-                        .imageScale(.medium)
-                        .scaledToFit().frame(
-                            width: 20, height: 20, alignment: .topLeading
-                        )
-                    Text(
-                        "Back"
-                    ).font(.system(size: 16))
-                        .foregroundStyle(
-                            Color(red: 9 / 255, green: 131 / 255, blue: 1)
-                        ).padding(leading: -10)
-                }
-            }
+        Button(action: {
+            action()
+        }) {
+            HStack {
+                Image(
+                    uiImage: UIImage(
+                        named: "chevron.backward"
+                    )?.withTintColor(
+                        UIColor(Color.cyan)
+                    ) ?? UIImage()
+                ).resizable()
+                    .imageScale(.medium)
+                    .scaledToFit().frame(
+                        width: 20, height: 20, alignment: .topLeading
+                    )
+                Text(
+                    "Back"
+                ).font(.system(size: 18))
+                    .foregroundStyle(
+                        Color(red: 9 / 255, green: 131 / 255, blue: 1)
+                    ).padding(leading: -5)
+            }.frame(width: 90, height: 45)
         }
     }
 }
-*/
+

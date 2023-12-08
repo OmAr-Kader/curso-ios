@@ -16,7 +16,7 @@ class Lecturer : Object {
     @Persisted(indexed: true) var approved: Bool = true
     @Persisted var follower: List<StudentLecturer>
     @Persisted var partition: String = "public"
-    @Persisted(primaryKey: true) var _id: ObjectId = ObjectId()
+    @Persisted(primaryKey: true) var _id: ObjectId
     
     convenience init(
         lecturerName: String,
@@ -56,7 +56,6 @@ class Lecturer : Object {
         self.university = ""
         self.approved = false
         self.follower = List()
-        self._id = ObjectId.init()
     }
 
     convenience init(update: LecturerForData) {

@@ -14,7 +14,21 @@ class Article: Object {
     @Persisted var lastEdit: Int64
     @Persisted var isDraft: Int = 0
     @Persisted var partition: String = "public"
-    @Persisted(primaryKey: true) var _id: ObjectId = ObjectId.init()
+    @Persisted(primaryKey: true) var _id: ObjectId
+    
+    init(title: String, lecturerName: String, lecturerId: String, imageUri: String, text: List<ArticleText>, lastEdit: Int64, isDraft: Int,
+         readerIds: List<String>? = nil, rate: Double? = nil, raters: Int? = nil) {
+        self.title = title
+        self.lecturerName = lecturerName
+        self.lecturerId = lecturerId
+        self.imageUri = imageUri
+        self.text = text
+        self.readerIds = readerIds ?? List()
+        self.rate = rate ??  5.0
+        self.raters = raters ?? 0
+        self.lastEdit = lastEdit
+        self.isDraft = isDraft
+    }
     
     override init() {
         title = ""
@@ -27,7 +41,6 @@ class Article: Object {
         raters = 0
         lastEdit = 0
         isDraft = 0
-        _id = ObjectId.init()
     }
 
     convenience init(update: Article, readerIds: [String]) {
@@ -102,6 +115,11 @@ struct ArticleTextData : ForSubData {
     
     var font: Int = 14
     var text: String = ""
+    
+    mutating func copy(text: String) -> Self {
+        self.text = text
+        return self
+    }
 }
 
 struct ArticleForData : ForData  {
