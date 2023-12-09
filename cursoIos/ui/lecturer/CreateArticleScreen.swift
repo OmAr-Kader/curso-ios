@@ -45,48 +45,46 @@ struct CreateArticleScreen : View {
     
     var body: some View {
         let state = obs.state
-        VStack {
-            ImageArticleView(state: state) { url in
-                obs.setImageUri(it: url.absoluteString)
-            } nav: {
-                pref.writeArguments(
-                    route: IMAGE_SCREEN_ROUTE,
-                    one: state.imageUri,
-                    two: state.articleTitle
-                )
-                pref.navigateTo(.IMAGE_SCREEN_ROUTE)
-            }
+        ZStack {
             VStack {
-                BasicsViewArticle(obs: obs, articleTitle: articleTitle, theme: pref.theme)
-            }.padding(20)
-            BottomBarArticle(obs: obs, pref: pref) { isDraft, userBase in
-                saveOrEdit(isDraft: isDraft, userBase: userBase)
-            }
-        }.confirmationDialog("", isPresented: Binding(get: {
-            state.isConfirmDialogVisible
-        }, set: { it, _ in
-            obs.changeUploadDialogGone(it: false)
-        })) {
-            DialogForUploadArticle(theme: pref.theme) {
-                obs.changeUploadDialogGone(it: false)
-            } onClick: {
-                obs.changeUploadDialogGone(it: false)
-                obs.deleteArticle {
-                    pref.backPress()
+                ImageArticleView(state: state) { url in
+                    obs.setImageUri(it: url.absoluteString)
+                } nav: {
+                    pref.writeArguments(
+                        route: IMAGE_SCREEN_ROUTE,
+                        one: state.imageUri,
+                        two: state.articleTitle
+                    )
+                    pref.navigateTo(.IMAGE_SCREEN_ROUTE)
                 }
-            }
-        } message: {
-            Text("Date")
-        }.toolbarButton(true) {
-            obs.changeUploadDialogGone(it: true)
-        }.background(pref.theme.background.margeWithPrimary).toastView(toast: $toast)
-            .navigationDestination(for: Screen.self) { route in
-                targetScreen(pref.state.homeScreen, app, pref)
-            }.onAppear {
-                if (!articleId.isEmpty) {
-                    //obs.getArticle(id: articleId)
+                VStack {
+                    BasicsViewArticle(obs: obs, articleTitle: articleTitle, theme: pref.theme)
+                }.padding(20)
+                BottomBarArticle(obs: obs, pref: pref) { isDraft, userBase in
+                    saveOrEdit(isDraft: isDraft, userBase: userBase)
                 }
-            }
+            }.confirmationDialog("", isPresented: Binding(get: {
+                state.isConfirmDialogVisible
+            }, set: { it, _ in
+                obs.changeUploadDialogGone(it: false)
+            })) {
+                DialogForUploadArticle(theme: pref.theme) {
+                    obs.changeUploadDialogGone(it: false)
+                } onClick: {
+                    obs.changeUploadDialogGone(it: false)
+                    obs.deleteArticle {
+                        pref.backPress()
+                    }
+                }
+            } message: {
+                Text("Date")
+            }.toolbarButton(true) {
+                obs.changeUploadDialogGone(it: true)
+            }.background(pref.theme.background.margeWithPrimary).toastView(toast: $toast)
+            BackButton {
+                pref.backPress()
+            }.onStart().onTop()
+        }
     }
 }
 
@@ -152,46 +150,46 @@ struct ImageArticleView : View {
 
     var body: some View {
         VStack {
-            GeometryReader { geo in
-                if state.imageUri.isEmpty {
+            if state.imageUri.isEmpty {
+                FullZStack {
+                    PhotosPicker(
+                        selection: $selectedItem,
+                        matching: .images
+                    ) {
+                        ImageAsset(icon: "upload", tint: .white)
+                            .frame(width: 60, height: 60).padding(5)
+                    }.onChange(selectedItem, forChangePhoto(imagePicker)).frame(
+                        width: 60, height: 60, alignment: .center
+                    )
+                }.frame(height: 200).background(
+                    UIColor(_colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.64).toC
+                )
+            } else {
+                ZStack {
                     FullZStack {
-                        PhotosPicker(
-                            selection: $selectedItem,
-                            matching: .images
-                        ) {
-                            ImageAsset(icon: "upload", tint: .white)
-                                .frame(width: 60, height: 60).padding(5)
-                        }.onChange(selectedItem, forChangePhoto(imagePicker)).frame(
-                            width: 60, height: 60, alignment: .center
-                        )
-                    }.frame(width: geo.size.width, height: 200).background(
+                        ImageView(urlString: state.imageUri)
+                            .frame(height: 200)
+                    }.frame(height: 200)
+                    FullZStack {
+                        HStack {
+                            PhotosPicker(
+                                selection: $selectedItem,
+                                matching: .images
+                            ) {
+                                ImageAsset(icon: "upload", tint: .white)
+                                    .frame(width: 45, height: 45).padding(5)
+                            }.onChange(selectedItem, forChangePhoto(imagePicker)).frame(
+                                width: 45, height: 45, alignment: .center
+                            )
+                            Spacer().frame(width: 20)
+                            ImageAsset(icon: "photo", tint: .white)
+                                .frame(width: 45, height: 45).padding(5).onTapGesture {
+                                    nav()
+                                }
+                        }
+                    }.frame(height: 200).background(
                         UIColor(_colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.64).toC
                     )
-                } else {
-                    ZStack {
-                        ImageView(urlString: state.imageUri)
-                            .frame(width: geo.size.width, height: 200)
-                        FullZStack {
-                            HStack {
-                                PhotosPicker(
-                                    selection: $selectedItem,
-                                    matching: .images
-                                ) {
-                                    ImageAsset(icon: "upload", tint: .white)
-                                        .frame(width: 45, height: 45).padding(5)
-                                }.onChange(selectedItem, forChangePhoto(imagePicker)).frame(
-                                    width: 45, height: 45, alignment: .center
-                                )
-                                Spacer().frame(width: 20)
-                                ImageAsset(icon: "photo", tint: .white)
-                                    .frame(width: 45, height: 45).padding(5).onTapGesture {
-                                        nav()
-                                    }
-                            }
-                        }.frame(width: geo.size.width, height: 200).background(
-                            UIColor(_colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.64).toC
-                        )
-                    }
                 }
             }
         }
@@ -235,11 +233,12 @@ struct BasicsViewArticle : View {
                                         ImageAsset(
                                             icon: index == (state.articleText.count - 1) ? "plus" : "delete",
                                             tint: theme.textColor
-                                        ).frame(width: 50, height: 50).padding(5)
-                                    }.background(theme.background.margeWithPrimary(0.3))
+                                        )
+                                    }.padding(7).background(
+                                        theme.background.margeWithPrimary(0.3)
+                                    )
                                 }.clipShape(Circle())
-                            }).frame(width: 50, height: 50)
-                            
+                            }).frame(width: 40, height: 40)
                         }
                     }
                     if state.isFontDialogVisible {
@@ -250,6 +249,7 @@ struct BasicsViewArticle : View {
                 proxy.scrollTo(value)
             }
         }
+        Spacer()
     }
 }
 

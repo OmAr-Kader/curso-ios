@@ -6,6 +6,7 @@ class CreateArticleObservable : ObservableObject {
     
     let app: AppModule
     
+    @MainActor
     @Published var state = State()
     
     init(_ app: AppModule) {
@@ -38,6 +39,7 @@ class CreateArticleObservable : ObservableObject {
         }
     }
 
+    @MainActor
     func deleteArticle(invoke: @escaping () -> Unit) {
         let art = state.article
         guard let art else {
@@ -53,6 +55,7 @@ class CreateArticleObservable : ObservableObject {
         }
     }
     
+    @MainActor
     func save(
         isDraft: Bool,
         lecturerId: String,
@@ -83,7 +86,7 @@ class CreateArticleObservable : ObservableObject {
         invoke: @escaping (Article) -> Unit,
         failed: @escaping () -> Unit
     ) {
-        uploadImage(lecturerId: lecturerId, invoke: { imageUri in
+        uploadImage(s: s, lecturerId: lecturerId, invoke: { imageUri in
             let it = Article(
                 title: s.articleTitle,
                 lecturerName: lecturerName,
@@ -131,6 +134,7 @@ class CreateArticleObservable : ObservableObject {
         })
     }
     
+    @MainActor
     func edit(
         _ isDraft: Bool,
         _ lecturerId: String,
@@ -167,7 +171,7 @@ class CreateArticleObservable : ObservableObject {
             failed()
             return
         }
-        uploadImage(lecturerId: lecturerId, invoke: { imageUri in
+        uploadImage(s: s, lecturerId: lecturerId, invoke: { imageUri in
             let it: Article = Article(
                 title: s.articleTitle,
                 lecturerName: lecturerName,
@@ -230,14 +234,17 @@ class CreateArticleObservable : ObservableObject {
         }
     }
     
+    @MainActor
     func setArticleTitle(it: String) {
         state = state.copy(articleTitle: it, isErrorPressed: false)
     }
 
+    @MainActor
     func makeFontDialogVisible() {
         state = state.copy(isFontDialogVisible: true)
     }
 
+    @MainActor
     func addAbout(type: Int) {
         var listT: [ArticleTextData] = (state.articleText)
         listT.append(ArticleTextData(font: type == 0 ? 14 : 22, text: ""))
@@ -245,6 +252,7 @@ class CreateArticleObservable : ObservableObject {
         state = state.copy(articleText: l, isErrorPressed: false, isFontDialogVisible: false)
     }
 
+    @MainActor
     func removeAboutIndex(index: Int) {
         var listT: [ArticleTextData] = (state.articleText)
         listT.remove(at: index)
@@ -252,6 +260,7 @@ class CreateArticleObservable : ObservableObject {
         state = state.copy(articleText: l, dummy: state.dummy + 1)
     }
 
+    @MainActor
     func changeAbout(it: String, index: Int) {
         var listT: [ArticleTextData] = (state.articleText)
         listT[index] = listT[index].copy(text: it)
@@ -259,20 +268,22 @@ class CreateArticleObservable : ObservableObject {
         state = state.copy(articleText: l, dummy: state.dummy + 1)
     }
 
+    @MainActor
     func setImageUri(it: String) {
         state = state.copy(imageUri: it, isErrorPressed: false)
     }
 
+    @MainActor
     func changeUploadDialogGone(it: Bool) {
         state = state.copy(isConfirmDialogVisible: it)
     }
     
     private func uploadImage(
+        s: State,
         lecturerId: String,
         invoke: @escaping (String) -> Unit,
         failed: @escaping () -> Unit
     ) {
-        let s = state
         let courseUri = s.article?.imageUri
         if (s.imageUri != courseUri && !s.imageUri.isEmpty) {
             let uri = URL(string: s.imageUri)
@@ -371,5 +382,9 @@ class CreateArticleObservable : ObservableObject {
             self.dummy = dummy ?? self.dummy
             return self
         }
+    }
+    
+    deinit {
+        scope.deInit()
     }
 }

@@ -87,7 +87,7 @@ class Course: Object {
         }
     }
 
-    convenience init(update: Course, hexString: String, student: [StudentCourses]) {
+    convenience init(update: Course, hexString: String, student: List<StudentCourses>) {
         self.init()
         title = update.title
         lecturerName = update.lecturerName
@@ -97,7 +97,7 @@ class Course: Object {
         about = update.about
         briefVideo = update.briefVideo
         timelines = update.timelines
-        students = student.toRealmList()
+        students = student//.toRealmList()
         rate = update.rate
         raters = update.raters
         lastEdit = update.lastEdit

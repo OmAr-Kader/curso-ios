@@ -10,6 +10,24 @@ class Conversation : Object {
     @Persisted var partition: String = "public"
     @Persisted(primaryKey: true) var _id: ObjectId
     
+    init(courseId: String, courseName: String, type: Int, messages: List<Message>) {
+        super.init()
+        self.courseId = courseId
+        self.courseName = courseName
+        self.type = type
+        self.messages = messages
+    }
+    
+    
+    init(courseId: String, courseName: String, type: Int, messages: List<Message>, id: String) {
+        super.init()
+        self.courseId = courseId
+        self.courseName = courseName
+        self.type = type
+        self.messages = messages
+        self._id = try! ObjectId.init(string: id)
+    }
+    
     override init() {
         courseId = ""
         courseName = ""
@@ -38,7 +56,7 @@ class Conversation : Object {
             try _id = ObjectId.init(string: hexString)
         }
     }
-
+    
     func copy(_ update: Conversation) -> Conversation {
         courseId = update.courseId
         courseName = update.courseName
@@ -86,6 +104,15 @@ struct MessageForData {
     var senderName: String
     var timestamp: Int64
     var fromStudent: Bool
+    
+    init(message: String, data: Int64, senderId: String, senderName: String, timestamp: Int64, fromStudent: Bool) {
+        self.message = message
+        self.data = data
+        self.senderId = senderId
+        self.senderName = senderName
+        self.timestamp = timestamp
+        self.fromStudent = fromStudent
+    }
     
     init(update: Message) {
         message = update.message

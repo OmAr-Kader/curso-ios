@@ -7,6 +7,7 @@ class CreateCourseObserve : ObservableObject {
     
     let app: AppModule
     
+    @MainActor
     @Published var state = State()
     
     init(_ app: AppModule) {
@@ -41,6 +42,7 @@ class CreateCourseObserve : ObservableObject {
         }
     }
     
+    @MainActor
     func deleteCourse(invoke: @escaping () -> Unit) {
         if self.state.course == nil {
             return
@@ -57,6 +59,7 @@ class CreateCourseObserve : ObservableObject {
         }
     }
     
+    @MainActor
     func save(
         _ isDraft: Bool,
         _ lecturerId: String,
@@ -89,9 +92,9 @@ class CreateCourseObserve : ObservableObject {
         _ invoke: @escaping (Course) -> Unit,
         _ failed: @escaping () -> Unit
     ) {
-        self.uploadImage(lecturerId, { imageUri in
-            self.uploadBriefVideo(lecturerId, { briefVideo in
-                self.uploadTimelineVideoSave(lecturerId, { timelines in
+        self.uploadImage(s, lecturerId, { imageUri in
+            self.uploadBriefVideo(s, lecturerId, { briefVideo in
+                self.uploadTimelineVideoSave(s, lecturerId, { timelines in
                     let it = Course(
                         title: s.courseTitle,
                         lecturerName: lecturerName,
@@ -144,6 +147,7 @@ class CreateCourseObserve : ObservableObject {
         })
     }
     
+    @MainActor
     func edit(
         _ isDraft: Bool,
         _ lecturerId: String,
@@ -179,11 +183,11 @@ class CreateCourseObserve : ObservableObject {
         if s.course == nil {
            failed()
            return
-       }
+        }
         let c = s.course
-        self.uploadImage(lecturerId, { imageUri in
-            self.uploadBriefVideo(lecturerId, { briefVideo in
-                self.uploadTimelineVideoEdit(lecturerId, c!, { timelines in
+        self.uploadImage(s, lecturerId, { imageUri in
+            self.uploadBriefVideo(s, lecturerId, { briefVideo in
+                self.uploadTimelineVideoEdit(s, lecturerId, c!, { timelines in
                     let it = Course(
                         title: s.courseTitle,
                         lecturerName: lecturerName,
@@ -247,44 +251,53 @@ class CreateCourseObserve : ObservableObject {
         }
     }
     
+    @MainActor
     func setCourseTitle(it: String) {
         state = state.copy(courseTitle: it, isErrorPressed: false)
     }
 
+    @MainActor
     func setPrice(it: String) {
         state = state.copy(price: it, isErrorPressed: false)
     }
 
+    @MainActor
     func makeFontDialogVisible() {
         state = state.copy(isFontDialogVisible: true)
     }
 
+    @MainActor
     func addAbout(type: Int) {
         var list = (state.about)
         list.append(AboutCourseData(font: type == 0 ? 14 : 22, text: ""))
         state = state.copy(about: list, isErrorPressed: false, isFontDialogVisible: false)
     }
 
+    @MainActor
     func removeAboutIndex(index: Int) {
         var list = (state.about)
         list.remove(at: index)
         state = state.copy(about: list, dummy: state.dummy + 1)
     }
     
+    @MainActor
     func changeAbout(it: String, index: Int) {
         var list = (state.about)
         list[index] = list[index].copy(text: it)
         state = state.copy(about: list, dummy: state.dummy + 1)
     }
 
+    @MainActor
     func setBriefVideo(it: String) {
         state = state.copy(briefVideo: it, isErrorPressed: false)
     }
 
+    @MainActor
     func setImageUri(it: String) {
         state = state.copy(imageUri: it, isErrorPressed: false)
     }
 
+    @MainActor
     func setTitleTimeline(it: String) {
         state = state.copy(
             timelineData: state.timelineData.copy(title: it),
@@ -292,6 +305,7 @@ class CreateCourseObserve : ObservableObject {
         )
     }
 
+    @MainActor
     func setDegreeTimeline(it: Int) {
         state = state.copy(
             timelineData: state.timelineData.copy(degree: it),
@@ -299,6 +313,7 @@ class CreateCourseObserve : ObservableObject {
         )
     }
     
+    @MainActor
     func setDurationTimeLine(it: String) {
         state = state.copy(
             timelineData: state.timelineData.copy(duration: it),
@@ -307,6 +322,7 @@ class CreateCourseObserve : ObservableObject {
         )
     }
 
+    @MainActor
     func setVideoTimeLine(it: String) {
         state = state.copy(
             timelineData: state.timelineData.copy(video: it),
@@ -314,22 +330,27 @@ class CreateCourseObserve : ObservableObject {
         )
     }
 
+    @MainActor
     func setDurationDialogVisible(it: Bool) {
         state = state.copy(isDialogPressed: false, isDurationDialogVisible: it)
     }
 
+    @MainActor
     func displayDateTimePicker() {
         state = state.copy(dateTimePickerMode: 1, isDialogPressed: false)
     }
 
+    @MainActor
     func displayTimePicker() {
         state = state.copy(dateTimePickerMode: 2, isDialogPressed: false)
     }
     
+    @MainActor
     func closeDateTimePicker() {
         state = state.copy(dateTimePickerMode: 0, isDialogPressed: false)
     }
 
+    @MainActor
     func confirmTimelineDateTimePicker(_ selectedDateMillis: Int64) {
         state = state.copy(
             timelineData: state.timelineData.copy(date: selectedDateMillis),
@@ -338,6 +359,7 @@ class CreateCourseObserve : ObservableObject {
         )
     }
 
+    @MainActor
     func setTimelineNote(it: String) {
         state = state.copy(
             timelineData: state.timelineData.copy(note: it),
@@ -345,6 +367,7 @@ class CreateCourseObserve : ObservableObject {
         )
     }
 
+    @MainActor
     func setIsExam(isExam: Bool) {
         state = state.copy(
             timelineData: TimelineData("", -1, "", "", "", isExam ? 1 : 0, 0),
@@ -353,10 +376,12 @@ class CreateCourseObserve : ObservableObject {
         )
     }
 
+    @MainActor
     func changeUploadDialogGone(it: Bool) {
         state = state.copy(isConfirmDialogVisible: it)
     }
 
+    @MainActor
     func makeDialogGone() {
         state = state.copy(
             timelineData: TimelineData("", -1, "", "", "", 0, 0), timelineIndex: -1, isErrorPressed: false, dialogMode: 0,
@@ -364,6 +389,7 @@ class CreateCourseObserve : ObservableObject {
         )
     }
 
+    @MainActor
     func makeDialogVisible(timeline: TimelineData?, index: Int = -1) {
         if timeline != nil {
             state = state.copy(
@@ -378,6 +404,7 @@ class CreateCourseObserve : ObservableObject {
         }
     }
 
+    @MainActor
     func addEditTimeline() {
         let s = state
         if (s.timelineData.date == -1 || s.timelineData.title.isEmpty ||
@@ -394,6 +421,7 @@ class CreateCourseObserve : ObservableObject {
         }
     }
     
+    @MainActor
     func deleteTimeLine(i: Int) {
         var timelines = [TimelineData](state.timelines)
         timelines.remove(at: i)
@@ -401,82 +429,99 @@ class CreateCourseObserve : ObservableObject {
     }
 
     private func addTimeline(s: State) {
-        var timelines = [TimelineData](s.timelines)
-        timelines.append(
-            s.timelineData
-        )
-        timelines.sort { c1, c2 in
-            return c1.date < c2.date
+        scope.launchMed {
+
+            var timelines = [TimelineData](s.timelines)
+            timelines.append(
+                s.timelineData
+            )
+            timelines.sort { c1, c2 in
+                return c1.date < c2.date
+            }
+            self.scope.launchMain { [timelines] in
+                self.state = self.state.copy(
+                    timelines: timelines,
+                    timelineData: TimelineData("", -1, "", "", "", 0, 0),
+                    timelineIndex: -1,
+                    isErrorPressed: false,
+                    dialogMode: 0,
+                    isDialogPressed: false
+                )
+            }
         }
-        self.state = self.state.copy(
-            timelines: timelines,
-            timelineData: TimelineData("", -1, "", "", "", 0, 0),
-            timelineIndex: -1,
-            isErrorPressed: false,
-            dialogMode: 0,
-            isDialogPressed: false
-        )
     }
     
     private func editTimeline(s: State) {
-        var timelines = [TimelineData](s.timelines)
-        timelines[s.timelineIndex] = s.timelineData
-        timelines.sort { c1, c2 in
-            return c1.date < c2.date
+        scope.launchMed {
+            var timelines = [TimelineData](s.timelines)
+            timelines[s.timelineIndex] = s.timelineData
+            timelines.sort { c1, c2 in
+                return c1.date < c2.date
+            }
+            self.scope.launchMain { [timelines] in
+                self.state = self.state.copy(
+                    timelines: timelines,
+                    timelineData: TimelineData("", -1, "", "", "", 0, 0),
+                    timelineIndex: -1,
+                    isErrorPressed: false,
+                    dialogMode: 0,
+                    isDialogPressed: false
+                )
+            }
         }
-        state = state.copy(
-            timelines: timelines,
-            timelineData: TimelineData("", -1, "", "", "", 0, 0),
-            timelineIndex: -1,
-            isErrorPressed: false,
-            dialogMode: 0,
-            isDialogPressed: false
-        )
     }
     
     private func uploadTimelineVideoEdit(
+        _ s: State,
         _ lecturerId: String,
         _ course: CourseForData,
         _ invoke: @escaping ([TimelineData]) -> Unit,
         _ failed: @escaping () -> Unit
     ) {
-        let s = state
-        var times = [TimelineData](s.timelines)
-        let currentVideos = course.timelines.map { it in it.video }
-        let new = [TimelineData](s.timelines).filter { it in
-            !currentVideos.contains(it.video)
-        }
-        if (new.isEmpty) {
-            invoke(s.timelines)
-            return
-        }
-        for (i, it) in new.enumerated() {
-            doUploadTmeLineVideo(lecturerId, URL(string: it.video)!, { str in
-                times[i] = times[i].copy(video: str)
-                if (i == new.count - 1) {
-                    invoke(s.timelines)
-                    self.state = self.state.copy(timelines: times)
-                }
-            }, failed)
+        scope.launchMed {
+            var times = [TimelineData](s.timelines)
+            let currentVideos = course.timelines.map { it in it.video }
+            let new = [TimelineData](s.timelines).filter { it in
+                !currentVideos.contains(it.video)
+            }
+            if (new.isEmpty) {
+                invoke(s.timelines)
+                return
+            }
+            for (i, it) in new.enumerated() {
+                self.doUploadTmeLineVideo(lecturerId, URL(string: it.video)!, { str in
+                    times[i] = times[i].copy(video: str)
+                    if (i == new.count - 1) {
+                        self.scope.launchMain { [times] in
+                            invoke(s.timelines)
+                            self.state = self.state.copy(timelines: times)
+                        }
+                    }
+                }, failed)
+            }
         }
     }
     
     private func uploadTimelineVideoSave(
+        _ s: State,
         _ lecturerId: String,
         _ invoke: @escaping ([TimelineData]) -> Unit,
         _ failed: @escaping () -> Unit
     ) {
-        let s = state
-        var empty = [TimelineData](s.timelines)
-        let list = empty.enumerated()
-        for (i, it) in list {
-            doUploadTmeLineVideo(lecturerId, URL(string: it.video)!, { it in
-                empty[i] = empty[i].copy(video: it)
-                if (i == empty.count - 1) {
-                    invoke(s.timelines)
-                    self.state = self.state.copy(timelines: empty)
-                }
-            }, failed)
+        scope.launchMed {
+            var empty = [TimelineData](s.timelines)
+            let list = empty.enumerated()
+            for (i, it) in list {
+                self.doUploadTmeLineVideo(lecturerId, URL(string: it.video)!, { it in
+                    empty[i] = empty[i].copy(video: it)
+                    if (i == empty.count - 1) {
+                        self.scope.launchMain { [empty] in
+                            invoke(s.timelines)
+                            self.state = self.state.copy(timelines: empty)
+                        }
+                    }
+                }, failed)
+            }
         }
     }
     
@@ -496,9 +541,11 @@ class CreateCourseObserve : ObservableObject {
     }
     
     private func uploadImage(
+        _ state: State,
         _ lecturerId: String,
         _ invoke: @escaping (String) -> Unit,
-        _ failed: @escaping () -> Unit) {
+        _ failed: @escaping () -> Unit
+    ) {
         let courseUri = state.course?.imageUri
         if (state.imageUri != courseUri && !state.imageUri.isEmpty) {
             let uri = URL(string: state.imageUri)!
@@ -506,8 +553,10 @@ class CreateCourseObserve : ObservableObject {
                 self.app.project.fireApp?.deleteFile(courseUri!)
             }
             self.app.project.fireApp?.upload(uri, lecturerId + "/" + "IMG_" + String(currentTime) + uri.pathExtension, { it in
-                invoke(it)
-                self.state = self.state.copy(imageUri: it, isErrorPressed: false)
+                self.scope.launchMain {
+                    invoke(it)
+                    self.state = self.state.copy(imageUri: it, isErrorPressed: false)
+                }
             }, {
                 failed()
             }) ?? failed()
@@ -517,6 +566,7 @@ class CreateCourseObserve : ObservableObject {
     }
     
     private func uploadBriefVideo(
+        _ state: State,
         _ lecturerId: String,
         _ invoke: @escaping (String) -> Unit,
         _ failed: @escaping () -> Unit
@@ -528,8 +578,10 @@ class CreateCourseObserve : ObservableObject {
                 self.app.project.fireApp?.deleteFile(briefUri!)
             }
             self.app.project.fireApp?.upload(uri, lecturerId + "/" + "V" + String(currentTime) + uri.pathExtension, { it in
-                invoke(it)
-                self.state = self.state.copy(briefVideo: it, isErrorPressed: false)
+                self.scope.launchMain {
+                    invoke(it)
+                    self.state = self.state.copy(briefVideo: it, isErrorPressed: false)
+                }
             }, {
                 failed()
             }) ?? failed()

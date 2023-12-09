@@ -1,6 +1,92 @@
 import SwiftUI
 import _PhotosUI_SwiftUI
 
+extension View {
+    
+    @inlinable public func padding(
+        top: CGFloat? = nil,
+        leading: CGFloat? = nil,
+        bottom: CGFloat? = nil,
+        trailing: CGFloat? = nil
+    ) -> some View {
+        return padding(
+            EdgeInsets(
+                top: top ?? 0,
+                leading: leading ?? 0,
+                bottom: bottom ?? 0,
+                trailing: trailing ?? 0
+            )
+        )
+    }
+    
+    @inlinable public func onStart() -> some View {
+        return HStack {
+            self
+            Spacer()
+        }
+    }
+    
+    @inlinable public func onBottomEnd() -> some View {
+        return HStack {
+            Spacer()
+            VStack(alignment: .center) {
+                Spacer()
+                self
+            }
+        }
+    }
+
+    
+    @inlinable func safeArea() -> some View {
+        if #available(iOS 17.0, *) {
+            return safeAreaPadding()
+        } else {
+            return self
+        }
+    }
+    
+    @inlinable func safeAreaSpace(_ edges: Edge.Set) -> some View {
+        if #available(iOS 17.0, *) {
+            return safeAreaPadding(edges)
+        } else {
+            return self
+        }
+    }
+    
+    
+    @inlinable public func onTop() -> some View {
+        return VStack {
+            self
+            Spacer()
+        }
+    }
+    
+    func onChange<T: Equatable>(_ it: T,_ action: @escaping (T) -> Void) -> some View {
+        if #available(iOS 17.0, *) {
+            return onChange(of: it) { oldValue, newValue in
+                action(newValue)
+            }
+        } else {
+            return onChange(of: it) { newValue in
+                action(newValue)
+            }
+        }
+    }
+    
+    
+    @inlinable func toolbarButton(
+        _ addSubButton: Bool,
+        _ action: @escaping () -> Void
+    ) -> some View {
+        return addSubButton ? self.toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("Delete", action: action)
+            }
+        } as! Self : self
+    }
+
+}
+
 struct CardButton : View {
     let onClick: (() -> Unit)
     let text: String
@@ -187,103 +273,6 @@ struct FullZStack<Content> : View where Content : View {
             Spacer()
         }
     }
-}
-
-
-extension View {
-    
-    @inlinable public func padding(
-        top: CGFloat? = nil,
-        leading: CGFloat? = nil,
-        bottom: CGFloat? = nil,
-        trailing: CGFloat? = nil
-    ) -> some View {
-        return padding(
-            EdgeInsets(
-                top: top ?? 0,
-                leading: leading ?? 0,
-                bottom: bottom ?? 0,
-                trailing: trailing ?? 0
-            )
-        )
-    }
-    
-    @inlinable public func onStart() -> some View {
-        return HStack {
-            self
-            Spacer()
-        }
-    }
-    
-    @inlinable public func onBottomEnd() -> some View {
-        return HStack {
-            Spacer()
-            VStack(alignment: .center) {
-                Spacer()
-                self
-            }
-        }
-    }
-
-    
-    @inlinable func safeArea() -> some View {
-        if #available(iOS 17.0, *) {
-            return safeAreaPadding()
-        } else {
-            return self
-        }
-    }
-    
-    @inlinable func safeAreaSpace(_ edges: Edge.Set) -> some View {
-        if #available(iOS 17.0, *) {
-            return safeAreaPadding(edges)
-        } else {
-            return self
-        }
-    }
-    
-    
-    @inlinable public func onTop() -> some View {
-        return VStack {
-            self
-            Spacer()
-        }
-    }
-    
-    func onChange<T: Equatable>(_ it: T,_ action: @escaping (T) -> Void) -> some View {
-        if #available(iOS 17.0, *) {
-            return onChange(of: it) { oldValue, newValue in
-                action(newValue)
-            }
-        } else {
-            return onChange(of: it) { newValue in
-                action(newValue)
-            }
-        }
-    }
-    
-    
-    @inlinable func toolbarButton(
-        _ addSubButton: Bool,
-        _ action: @escaping () -> Void
-    ) -> some View {
-        return addSubButton ? self.toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button("Delete", action: action)
-            }
-        } as! Self : self
-    }
-    
-    /*func iOS16navBarAdapter(_ colorScheme: ColorScheme) -> some View {
-        if #available(iOS 16, *) {
-            return self
-                .toolbarBackground(Color.navigationBar, for: .navigationBar)
-                .toolbarBackground(.visible, for: .navigationBar)
-                .toolbarColorScheme(colorScheme, for: .navigationBar)
-        } else {
-            return self
-        }
-    }*/
 }
 
 func forChangePhoto(_ image: @escaping (URL) -> Void) -> ((PhotosPickerItem?) -> Void){

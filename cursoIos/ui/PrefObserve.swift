@@ -25,12 +25,12 @@ class PrefObserve : ObservableObject {
         self.downloadChanges()
         prefsTask?.cancel()
         sinkPrefs?.cancel()
-        /*prefsTask = scope.launchRealm {
+        prefsTask = scope.launchRealm {
             self.sinkPrefs = await self.app.project.preference.prefsBack { list in
                 print("=====>" + "Done" + String(list.count))
                 self.preferences = list
             }
-        }*/
+        }
     }
     
     var navigateHome: (Screen) -> Unit {

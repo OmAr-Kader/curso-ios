@@ -8,12 +8,14 @@ class LogInObserveLecturer : ObservableObject {
 
     let app: AppModule
 
+    @MainActor
     @Published var state = State()
         
     init(_ app: AppModule) {
         self.app = app
     }
     
+    @MainActor
     func login(
         invoke: @escaping @MainActor (Lecturer, Int) -> Unit,
         failed: @escaping (String) -> Unit
@@ -38,7 +40,9 @@ class LogInObserveLecturer : ObservableObject {
     ) {
         self.loginRealm(s) { user in
             if user == nil {
-                self.state = self.state.copy(isProcessing: false)
+                self.scope.launchMain {
+                    self.state = self.state.copy(isProcessing: false)
+                }
                 return
             }
             self.scope.launchRealm {
@@ -75,6 +79,7 @@ class LogInObserveLecturer : ObservableObject {
         }
     }
 
+    @MainActor
     func signUp(
         invoke: @escaping (Lecturer) -> Unit,
         failed: @escaping (String) -> Unit
@@ -167,7 +172,7 @@ class LogInObserveLecturer : ObservableObject {
         failed: @escaping (String) -> Unit,
         invoke: @escaping (User?) -> Unit
     ) {
-        if (state.alreadyLoggedIn) {
+        if (s.alreadyLoggedIn) {
             let it = app.project.realmApi.realmApp.currentUser
             if (it == nil) {
                 self.scope.launchMain {
@@ -239,34 +244,42 @@ class LogInObserveLecturer : ObservableObject {
         }
     }
     
+    @MainActor
     func isLogin(it: Bool) {
         self.state = self.state.copy(isErrorPressed: false, isLogIn: it)
     }
 
+    @MainActor
     func setEmail(it: String) {
         self.state = self.state.copy(email: it, isErrorPressed: false)
     }
 
+    @MainActor
     func setPassword(it: String) {
         self.state = self.state.copy(password: it, isErrorPressed: false)
     }
 
+    @MainActor
     func setName(it: String) {
         self.state = self.state.copy(lecturerName: it, isErrorPressed: false)
     }
 
+    @MainActor
     func setMobile(it: String) {
         self.state = self.state.copy(mobile: it, isErrorPressed: false)
     }
 
+    @MainActor
     func setBrief(it: String) {
         self.state = self.state.copy(brief: it, isErrorPressed: false)
     }
 
+    @MainActor
     func setSpecialty(it: String) {
         self.state = self.state.copy(specialty: it, isErrorPressed: false)
     }
 
+    @MainActor
     func setUniversity(it: String) {
         self.state = self.state.copy(university: it, isErrorPressed: false)
     }
@@ -278,11 +291,11 @@ class LogInObserveLecturer : ObservableObject {
         }
     }
     
+    @MainActor
     func setNadasdame() {
         self.state = self.state.copy(isErrorPressed: true)
     }
 
-    
     struct State {
         var email: String = ""
         var password: String = ""

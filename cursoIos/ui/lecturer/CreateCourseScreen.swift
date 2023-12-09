@@ -178,50 +178,49 @@ struct BriefVideoView : View {
     @State private var selectedItem: PhotosPickerItem?
 
     var body: some View {
-        //GeometryReader { geo in
-            VStack {
-                if state.briefVideo.isEmpty {
+        VStack {
+            if state.briefVideo.isEmpty {
+                FullZStack {
+                    PhotosPicker(
+                        selection: $selectedItem,
+                        matching: .videos
+                    ) {
+                        ImageAsset(icon: "upload", tint: .white)
+                            .frame(width: 45, height: 45).padding(5)
+                    }.onChange(selectedItem, forChangePhoto(videoPicker)).frame(
+                        width: 45, height: 45, alignment: .center
+                    )
+                }.frame(height: 200).background(
+                    UIColor(_colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.64).toC
+                )
+            } else {
+                ZStack {
                     FullZStack {
-                        PhotosPicker(
-                            selection: $selectedItem,
-                            matching: .videos
-                        ) {
-                            ImageAsset(icon: "upload", tint: .white)
-                                .frame(width: 45, height: 45).padding(5)
-                        }.onChange(selectedItem, forChangePhoto(videoPicker)).frame(
-                            width: 45, height: 45, alignment: .center
-                        )
+                        ImageView(urlString: state.briefVideo).frame(height: 200)
+                    }.frame(height: 200)
+                    FullZStack {
+                        HStack {
+                            PhotosPicker(
+                                selection: $selectedItem,
+                                matching: .videos
+                            ) {
+                                ImageAsset(icon: "upload", tint: .white)
+                                    .frame(width: 45, height: 45).padding(5)
+                            }.onChange(selectedItem, forChangePhoto(videoPicker)).frame(
+                                width: 45, height: 45, alignment: .center
+                            )
+                            Spacer().frame(width: 20)
+                            ImageAsset(icon: "play", tint: .white)
+                                .frame(width: 45, height: 45).padding(5).onTapGesture {
+                                    nav()
+                                }
+                        }
                     }.frame(height: 200).background(
                         UIColor(_colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.64).toC
                     )
-                } else {
-                    ZStack {
-                        ImageView(urlString: state.briefVideo)
-                            .frame(height: 200)
-                        FullZStack {
-                            HStack {
-                                PhotosPicker(
-                                    selection: $selectedItem,
-                                    matching: .videos
-                                ) {
-                                    ImageAsset(icon: "upload", tint: .white)
-                                        .frame(width: 45, height: 45).padding(5)
-                                }.onChange(selectedItem, forChangePhoto(videoPicker)).frame(
-                                    width: 45, height: 45, alignment: .center
-                                )
-                                Spacer().frame(width: 20)
-                                ImageAsset(icon: "play", tint: .white)
-                                    .frame(width: 45, height: 45).padding(5).onTapGesture {
-                                        nav()
-                                    }
-                            }
-                        }.frame(height: 200).background(
-                            UIColor(_colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.64).toC
-                        )
-                    }
                 }
-            }//.frame(width: geo.size.width, height: 200)
-        //}.padding(0).fixedSize(horizontal: false, vertical: true).background(Color.blue)
+            }
+        }
     }
 }
 

@@ -9,17 +9,20 @@ class LecturerObserve : ObservableObject {
     
     let app: AppModule
     
+    @MainActor
     @Published var state = State()
     
     init(_ app: AppModule) {
         self.app = app
     }
 
+    @MainActor
     var lecturerRate: String {
         let it = state.lecturer
         return it.rate == 0.0 ? "5" : String(it.rate)
     }
 
+    @MainActor
     func lecturerFollowers(mode: Int) -> String {
         let it = state.lecturer
         if (mode == 1) {
@@ -29,10 +32,12 @@ class LecturerObserve : ObservableObject {
         }
     }
 
+    @MainActor
     private func setStudentId(_ studentId: String) {
         state = state.copy(studentId: studentId)
     }
     
+    @MainActor
     func fetchLecturer(lecturerId: String, studentId: String) {
         setStudentId(studentId)
         scope.launchRealm {
@@ -76,6 +81,7 @@ class LecturerObserve : ObservableObject {
         }
     }
     
+    @MainActor
     func followUnfollow(
         _ studentId: String,
         _ alreadyFollowed: Bool,

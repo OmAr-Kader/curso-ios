@@ -122,7 +122,7 @@ extension List<Message> {
 
 extension [CourseForData] {
     
-    func splitCourses() -> [SessionForDisplay] {
+    func splitCourses(studentId: String = "", studentName: String = "") -> [SessionForDisplay] {
         var courses = [SessionForDisplay]()
         forEach { course in
             for (index, it) in course.timelines.enumerated() {
@@ -202,6 +202,14 @@ extension [StudentCoursesData] {
         return self.map { it in
             StudentCourses(update: it)
         }.toRealmList()
+    }
+    
+    var alreadyEnrolled: (String) -> Bool {
+        return { it in
+            self.first { sc in
+                sc.studentId == it
+            } != nil
+        }
     }
 }
 

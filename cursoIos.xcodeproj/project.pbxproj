@@ -29,6 +29,18 @@
 		077FFF032B15149B00A466FE /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077FFF022B15149B00A466FE /* Image.swift */; };
 		077FFF052B16996B00A466FE /* OutlinedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077FFF042B16996A00A466FE /* OutlinedTextField.swift */; };
 		07A8F4BD2B21414700877045 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A8F4BC2B21414700877045 /* ChatView.swift */; };
+		07AA1A1D2B23E0AD007C70FF /* SessionViewObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A1C2B23E0AD007C70FF /* SessionViewObservable.swift */; };
+		07AA1A1F2B23F8EB007C70FF /* SessionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A1E2B23F8EB007C70FF /* SessionScreen.swift */; };
+		07AA1A212B23F93E007C70FF /* CourseObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A202B23F93E007C70FF /* CourseObservable.swift */; };
+		07AA1A232B2400E3007C70FF /* CourseScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A222B2400E3007C70FF /* CourseScreen.swift */; };
+		07AA1A252B244BE7007C70FF /* ArticleObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A242B244BE7007C70FF /* ArticleObservable.swift */; };
+		07AA1A272B244C0F007C70FF /* ArticleScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A262B244C0F007C70FF /* ArticleScreen.swift */; };
+		07AA1A292B245813007C70FF /* StudentObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A282B245813007C70FF /* StudentObservable.swift */; };
+		07AA1A2B2B245845007C70FF /* StudentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A2A2B245845007C70FF /* StudentScreen.swift */; };
+		07AA1A2F2B24586B007C70FF /* LogInStudentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A2E2B24586B007C70FF /* LogInStudentScreen.swift */; };
+		07AA1A312B24587A007C70FF /* LogInStudentObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A302B24587A007C70FF /* LogInStudentObservable.swift */; };
+		07AA1A352B2458AD007C70FF /* HomeStudentObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A342B2458AD007C70FF /* HomeStudentObservable.swift */; };
+		07AA1A372B2458B8007C70FF /* HomeStudentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A362B2458B8007C70FF /* HomeStudentScreen.swift */; };
 		07B007922B228B1A00C72C53 /* CreateArticleObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B007912B228B1A00C72C53 /* CreateArticleObservable.swift */; };
 		07B007942B228B5D00C72C53 /* CreateArticleScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B007932B228B5D00C72C53 /* CreateArticleScreen.swift */; };
 		07B007962B22AB6A00C72C53 /* FullScreenViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B007952B22AB6A00C72C53 /* FullScreenViews.swift */; };
@@ -111,6 +123,18 @@
 		077FFF022B15149B00A466FE /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		077FFF042B16996A00A466FE /* OutlinedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlinedTextField.swift; sourceTree = "<group>"; };
 		07A8F4BC2B21414700877045 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		07AA1A1C2B23E0AD007C70FF /* SessionViewObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewObservable.swift; sourceTree = "<group>"; };
+		07AA1A1E2B23F8EB007C70FF /* SessionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionScreen.swift; sourceTree = "<group>"; };
+		07AA1A202B23F93E007C70FF /* CourseObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseObservable.swift; sourceTree = "<group>"; };
+		07AA1A222B2400E3007C70FF /* CourseScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseScreen.swift; sourceTree = "<group>"; };
+		07AA1A242B244BE7007C70FF /* ArticleObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleObservable.swift; sourceTree = "<group>"; };
+		07AA1A262B244C0F007C70FF /* ArticleScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleScreen.swift; sourceTree = "<group>"; };
+		07AA1A282B245813007C70FF /* StudentObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentObservable.swift; sourceTree = "<group>"; };
+		07AA1A2A2B245845007C70FF /* StudentScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentScreen.swift; sourceTree = "<group>"; };
+		07AA1A2E2B24586B007C70FF /* LogInStudentScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInStudentScreen.swift; sourceTree = "<group>"; };
+		07AA1A302B24587A007C70FF /* LogInStudentObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInStudentObservable.swift; sourceTree = "<group>"; };
+		07AA1A342B2458AD007C70FF /* HomeStudentObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeStudentObservable.swift; sourceTree = "<group>"; };
+		07AA1A362B2458B8007C70FF /* HomeStudentScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeStudentScreen.swift; sourceTree = "<group>"; };
 		07B007912B228B1A00C72C53 /* CreateArticleObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateArticleObservable.swift; sourceTree = "<group>"; };
 		07B007932B228B5D00C72C53 /* CreateArticleScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateArticleScreen.swift; sourceTree = "<group>"; };
 		07B007952B22AB6A00C72C53 /* FullScreenViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenViews.swift; sourceTree = "<group>"; };
@@ -236,6 +260,12 @@
 		076996E12B1153C9009D727F /* student */ = {
 			isa = PBXGroup;
 			children = (
+				07AA1A342B2458AD007C70FF /* HomeStudentObservable.swift */,
+				07AA1A362B2458B8007C70FF /* HomeStudentScreen.swift */,
+				07AA1A302B24587A007C70FF /* LogInStudentObservable.swift */,
+				07AA1A2E2B24586B007C70FF /* LogInStudentScreen.swift */,
+				07AA1A282B245813007C70FF /* StudentObservable.swift */,
+				07AA1A2A2B245845007C70FF /* StudentScreen.swift */,
 			);
 			path = student;
 			sourceTree = "<group>";
@@ -243,7 +273,13 @@
 		076996E22B1153D3009D727F /* course */ = {
 			isa = PBXGroup;
 			children = (
+				07AA1A242B244BE7007C70FF /* ArticleObservable.swift */,
+				07AA1A262B244C0F007C70FF /* ArticleScreen.swift */,
+				07AA1A202B23F93E007C70FF /* CourseObservable.swift */,
+				07AA1A222B2400E3007C70FF /* CourseScreen.swift */,
 				07B007952B22AB6A00C72C53 /* FullScreenViews.swift */,
+				07AA1A1E2B23F8EB007C70FF /* SessionScreen.swift */,
+				07AA1A1C2B23E0AD007C70FF /* SessionViewObservable.swift */,
 			);
 			path = course;
 			sourceTree = "<group>";
@@ -540,23 +576,33 @@
 				07FC88F82B10D50D00143419 /* ArticleRepoImp.swift in Sources */,
 				076996E82B1160EE009D727F /* Editor.swift in Sources */,
 				07A8F4BD2B21414700877045 /* ChatView.swift in Sources */,
+				07AA1A352B2458AD007C70FF /* HomeStudentObservable.swift in Sources */,
 				07FC88F52B10D50D00143419 /* PreferenceData.swift in Sources */,
 				077E35032B1B655C00652FEE /* CreateCourseScreen.swift in Sources */,
 				077FFF012B14FF2800A466FE /* Media.swift in Sources */,
 				07B007922B228B1A00C72C53 /* CreateArticleObservable.swift in Sources */,
 				07FC88FD2B10D50D00143419 /* Realm.swift in Sources */,
 				07FC89092B10D50E00143419 /* Article.swift in Sources */,
+				07AA1A2F2B24586B007C70FF /* LogInStudentScreen.swift in Sources */,
+				07AA1A232B2400E3007C70FF /* CourseScreen.swift in Sources */,
 				077FFF052B16996B00A466FE /* OutlinedTextField.swift in Sources */,
+				07AA1A2B2B245845007C70FF /* StudentScreen.swift in Sources */,
 				07FC88EB2B10D50D00143419 /* CourseData.swift in Sources */,
 				07FC88852B0D3E8500143419 /* Main.swift in Sources */,
 				076EF5A42B1A73E900ACDE4A /* LecturerObserve.swift in Sources */,
+				07AA1A292B245813007C70FF /* StudentObservable.swift in Sources */,
 				077E35012B1B64F800652FEE /* CreateCourseObserve.swift in Sources */,
 				07FC88ED2B10D50D00143419 /* CourseRepo.swift in Sources */,
+				07AA1A372B2458B8007C70FF /* HomeStudentScreen.swift in Sources */,
+				07AA1A272B244C0F007C70FF /* ArticleScreen.swift in Sources */,
 				0740F9F02B13DDC700ECC5E0 /* Theme.swift in Sources */,
+				07AA1A1F2B23F8EB007C70FF /* SessionScreen.swift in Sources */,
 				07FC89042B10D50E00143419 /* PushNotification.swift in Sources */,
 				07592E9F2B178752008E9C57 /* PrefObserve.swift in Sources */,
 				07FC89052B10D50E00143419 /* Messaging.swift in Sources */,
 				07592E9D2B16BFB9008E9C57 /* Views.swift in Sources */,
+				07AA1A312B24587A007C70FF /* LogInStudentObservable.swift in Sources */,
+				07AA1A212B23F93E007C70FF /* CourseObservable.swift in Sources */,
 				07FC890C2B10D50E00143419 /* ResultRealm.swift in Sources */,
 				07FC88F42B10D50D00143419 /* PrefRepoImp.swift in Sources */,
 				07FC89022B10D50D00143419 /* NotificationRepo.swift in Sources */,
@@ -586,6 +632,7 @@
 				07FC88EF2B10D50D00143419 /* ChatData.swift in Sources */,
 				07FC89032B10D50E00143419 /* FCMService.swift in Sources */,
 				07FC88E62B10D50D00143419 /* AppDelegate.swift in Sources */,
+				07AA1A252B244BE7007C70FF /* ArticleObservable.swift in Sources */,
 				07FC88E52B10D50D00143419 /* Project.swift in Sources */,
 				07C105832B17D153003BBBA5 /* BackButton.swift in Sources */,
 				07FC89072B10D50E00143419 /* Course.swift in Sources */,
@@ -604,6 +651,7 @@
 				0740F9EC2B13884600ECC5E0 /* Scope.swift in Sources */,
 				076996E42B115402009D727F /* LogInLecturerScreen.swift in Sources */,
 				07FC88FA2B10D50D00143419 /* LecturerData.swift in Sources */,
+				07AA1A1D2B23E0AD007C70FF /* SessionViewObservable.swift in Sources */,
 				07FC88EA2B10D50D00143419 /* Const.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

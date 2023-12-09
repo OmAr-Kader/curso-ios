@@ -228,11 +228,7 @@ struct LoginScreenLecturer: View {
                             RoundedRectangle(cornerRadius: 15)
                                 .fill(pref.theme.backDark)
                         )
-                }/*.onAppear {
-                    UIScrollView.appearance().bounces = false
-                }.onDisappear {
-                    UIScrollView.appearance().bounces = true
-                }*/
+                }
             }.padding(20)
             Spacer()
             HStack(alignment: .bottom) {
@@ -322,8 +318,5 @@ struct LoginScreenLecturer: View {
                 Spacer()
             }
         }.background(pref.theme.background.margeWithPrimary).toastView(toast: $toast)
-            .navigationDestination(for: Screen.self) { route in
-                targetScreen(pref.state.homeScreen, app, pref)
-        }
     }
 }

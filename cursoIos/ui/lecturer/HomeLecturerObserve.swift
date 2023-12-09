@@ -6,6 +6,7 @@ class HomeLecturerObserve: ObservableObject {
     
     let app: AppModule
     
+    @MainActor
     @Published var state = State()
 
     init(_ app: AppModule) {
@@ -44,9 +45,11 @@ class HomeLecturerObserve: ObservableObject {
         }
     }
     
+    @MainActor
     func getUpcomingLecturerTimeline() {
-        scope.launchMed {
-            let splited = self.state.courses.sorted { c1, c2 in
+        let courses = self.state.courses
+        scope.launchMed { [courses] in
+            let splited = courses.sorted { c1, c2 in
                 return c1.lastEdit < c2.lastEdit
             }.splitCourses()
             self.scope.launchMain { [splited] in
@@ -87,6 +90,7 @@ class HomeLecturerObserve: ObservableObject {
         }
     }
     
+    @MainActor
     func updateCurrentTabIndex(it: Int) {
         state = state.copy(currentTab: it, isLoading: true)
     }

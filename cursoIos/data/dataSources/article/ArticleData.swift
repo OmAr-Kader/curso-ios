@@ -36,7 +36,7 @@ class ArticleData {
     }
 
     @BackgroundActor
-    func editArticle(_ article: Article,_ edit: Article) async -> ResultRealm<Article?> {
+    @discardableResult func editArticle(_ article: Article,_ edit: Article) async -> ResultRealm<Article?> {
         return await repository.editArticle(article: article, edit: edit)
     }
 
