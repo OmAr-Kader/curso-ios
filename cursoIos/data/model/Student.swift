@@ -13,7 +13,25 @@ class Student : Object {
     @Persisted var partition: String = "public"
     @Persisted(primaryKey: true) var _id: ObjectId
         
+    convenience init(
+        studentName: String,
+        email: String,
+        mobile: String,
+        imageUri: String,
+        specialty: String,
+        university: String
+    ) {
+        self.init()
+        self.studentName = studentName
+        self.email = email
+        self.mobile = mobile
+        self.imageUri = imageUri
+        self.specialty = specialty
+        self.university = university
+    }
+    
     override init() {
+        super.init()
         studentName = ""
         email = ""
         mobile = ""

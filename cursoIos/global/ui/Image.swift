@@ -1,5 +1,7 @@
 import Foundation
+import AVFoundation
 import SwiftUI
+import Combine
 
 struct ImageAsset : View {
     
@@ -20,29 +22,121 @@ struct ImageAsset : View {
     }
 }
 
-class ImageViewModel: ObservableObject {
-    @Published var image: UIImage?
-
-    private var imageCache: NSCache<NSString, UIImage>?
-
-    init(urlString: String?) {
-        loadImage(urlString: urlString)
+struct ImageCacheView: View {
+    private let urlString: String
+    private let isVideoPreview: Bool
+    @StateObject private var obs: UrlImageModel
+    init(_ urlString: String, isVideoPreview: Bool = false) {
+        self.urlString = urlString
+        self.isVideoPreview = isVideoPreview
+        self._obs = StateObject(
+            wrappedValue: UrlImageModel(url: URL(string: urlString), isPreview: isVideoPreview)
+        )
     }
 
-    private func loadImage(urlString: String?) {
-        guard let urlString = urlString else { return }
+    var body: some View {
+        Image(uiImage: obs.image ?? UIImage())
+            .resizable()
+            .renderingMode(.original)
+            .background(Color.clear)
+            .imageScale(.large)
+            .aspectRatio(contentMode: .fit)
+            .onChange(urlString) { it in
+                if obs.image == nil {
+                    obs.inti(url: URL(string: urlString), isPreview: isVideoPreview)
+                }
+            }
+    }
 
-        if let imageFromCache = getImageFromCache(from: urlString) {
-            self.image = imageFromCache
+}
+
+
+class UrlImageModel: ObservableObject {
+    @Published var image: UIImage?
+    private var url: URL?
+    private var cancellable: AnyCancellable?
+    private var imageCache = ImageCache.getImageCache()
+
+    init(url: URL?, isPreview: Bool) {
+        self.url = url
+        if isPreview {
+            loadVideo()
+        } else {
+            loadImage()
+        }
+    }
+    
+    func inti(url: URL?, isPreview: Bool) {
+        self.url = url
+        if isPreview {
+            loadVideoFromURL()
+        } else {
+            loadImage()
+        }
+    }
+
+    func loadImage() {
+        if loadImageFromCache() {
+            print("Cache hit")
             return
         }
 
-        loadImageFromURL(urlString: urlString)
+        print("Cache missing, loading from url")
+        loadImageFromUrl()
+    }
+    
+    func loadVideo() {
+        if loadImageFromCache() {
+            print("Cache hit")
+            return
+        }
+
+        print("Cache missing, loading from url")
+        loadVideoFromURL()
     }
 
-    private func loadImageFromURL(urlString: String) {
-        guard let url = URL(string: urlString) else { return }
+    func loadImageFromCache() -> Bool {
+        guard let url = url else {
+            return false
+        }
 
+        guard let cacheImage = imageCache[url] else {
+            return false
+        }
+        image = cacheImage
+        return true
+    }
+
+    func loadImageFromUrl() {
+        guard let url = url else {
+            return
+        }
+
+        cancellable = URLSession.shared.dataTaskPublisher(for: url)
+            .map { UIImage(data: $0.data) }
+            .replaceError(with: nil)
+            // set image into cache!
+            .handleEvents(receiveOutput: { [weak self] image in
+                print("WWW URL => " + String(image == nil))
+                guard let image = image else {return}
+                if self == nil {
+                    return
+                }
+                Task { @MainActor [weak self] in
+                    self?.image = image
+                    self?.imageCache[url] = image
+                }
+            })
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.image, on: self)
+    }
+    
+    /*private func loadImageFromURL() {
+        print("WWW URL => " + (url?.absoluteString ?? "NULL"))
+        guard let url = url else {
+            return
+        }
+        print("WWW URL => " + url.absoluteString)
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard error == nil else {
                 print(error ?? "unknown error")
@@ -56,33 +150,45 @@ class ImageViewModel: ObservableObject {
 
             DispatchQueue.main.async { [weak self] in
                 guard let loadedImage = UIImage(data: data) else { return }
+                print("WWW URL => " + "LOADED")
                 self?.image = loadedImage
-                self?.setImageCache(image: loadedImage, key: urlString)
+                self?.imageCache[url] = loadedImage
             }
         }.resume()
-    }
+    }*/
+    
+    private func loadVideoFromURL() {
+        guard let url = url else {
+            return
+        }
+        let asset = AVAsset(url: url)
+        let assetImgGenerate = AVAssetImageGenerator(asset: asset)
+        assetImgGenerate.appliesPreferredTrackTransform = true
+        let time = CMTimeMakeWithSeconds(Float64(1), preferredTimescale: 100)
+        do {
+            let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
+            let thumbnail = UIImage(cgImage: img)
+            self.image = thumbnail
+            self.imageCache[url] = image
+        } catch {
 
-    private func setImageCache(image: UIImage, key: String) {
-        imageCache?.setObject(image, forKey: key as NSString)
-    }
-
-    private func getImageFromCache(from key: String) -> UIImage? {
-        return imageCache?.object(forKey: key as NSString) as? UIImage
+        }
     }
 }
 
-struct ImageView: View {
-    @ObservedObject private var imageViewModel: ImageViewModel
-    
-    init(urlString: String?) {
-        imageViewModel = ImageViewModel(urlString: urlString)
+class ImageCache {
+    var cache = NSCache<NSURL, UIImage>()
+
+    subscript(_ key: URL) -> UIImage? {
+        get { cache.object(forKey: key as NSURL) }
+        set { newValue == nil ? cache.removeObject(forKey: key as NSURL) : cache.setObject(newValue!, forKey: key as NSURL) }
     }
-    
-    var body: some View {
-        Image(uiImage: imageViewModel.image ?? UIImage())
-            .resizable()
-            .background(Color.clear)
-            .imageScale(.large)
-            .aspectRatio(contentMode: .fill)
+}
+
+extension ImageCache {
+    private static var imageCache = ImageCache()
+
+    static func getImageCache() -> ImageCache {
+        return imageCache
     }
 }

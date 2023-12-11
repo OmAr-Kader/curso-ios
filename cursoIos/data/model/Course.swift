@@ -21,8 +21,8 @@ class Course: Object {
     @Persisted(primaryKey: true) var _id: ObjectId
     
     //students: List<StudentCourses>, rate: Double, raters: Int,
-    init(title: String, lecturerName: String, lecturerId: String, price: String, imageUri: String, about: List<AboutCourse>, briefVideo: String, timelines: List<Timeline>, lastEdit: Int64, isDraft: Int) {
-        super.init()
+    convenience init(title: String, lecturerName: String, lecturerId: String, price: String, imageUri: String, about: List<AboutCourse>, briefVideo: String, timelines: List<Timeline>, lastEdit: Int64, isDraft: Int) {
+        self.init()
         self.title = title
         self.lecturerName = lecturerName
         self.lecturerId = lecturerId
@@ -35,8 +35,8 @@ class Course: Object {
         self.isDraft = isDraft
     }
     
-    init(title: String, lecturerName: String, lecturerId: String, price: String, imageUri: String, about: List<AboutCourse>, briefVideo: String, timelines: List<Timeline>, lastEdit: Int64, isDraft: Int, id: String) {
-        super.init()
+    convenience init(title: String, lecturerName: String, lecturerId: String, price: String, imageUri: String, about: List<AboutCourse>, briefVideo: String, timelines: List<Timeline>, lastEdit: Int64, isDraft: Int, id: String) {
+        self.init()
         self.title = title
         self.lecturerName = lecturerName
         self.lecturerId = lecturerId
@@ -219,6 +219,7 @@ class Certificate : Object {
     @Persisted(primaryKey: true) var _id: ObjectId
 
     override init() {
+        super.init()
         title = ""
         rate = 0.0
         date = -1

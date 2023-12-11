@@ -26,6 +26,20 @@ extension View {
         }
     }
     
+    @inlinable public func onEnd() -> some View {
+        return HStack {
+            Spacer()
+            self
+        }
+    }
+    
+    @inlinable public func onTop() -> some View {
+        return VStack {
+            self
+            Spacer()
+        }
+    }
+    
     @inlinable public func onBottomEnd() -> some View {
         return HStack {
             Spacer()
@@ -53,14 +67,6 @@ extension View {
         }
     }
     
-    
-    @inlinable public func onTop() -> some View {
-        return VStack {
-            self
-            Spacer()
-        }
-    }
-    
     func onChange<T: Equatable>(_ it: T,_ action: @escaping (T) -> Void) -> some View {
         if #available(iOS 17.0, *) {
             return onChange(of: it) { oldValue, newValue in
@@ -71,18 +77,6 @@ extension View {
                 action(newValue)
             }
         }
-    }
-    
-    
-    @inlinable func toolbarButton(
-        _ addSubButton: Bool,
-        _ action: @escaping () -> Void
-    ) -> some View {
-        return addSubButton ? self.toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button("Delete", action: action)
-            }
-        } as! Self : self
     }
 
 }
@@ -124,7 +118,9 @@ struct CardButton : View {
             ).lineLimit(1).foregroundColor(textColor).font(.system(size: fontSize))
         }.frame(width: width, height: height, alignment: .center).background(
             RoundedRectangle(cornerRadius: curve).fill((color))
-        )
+        ).onTapGesture {
+            onClick()
+        }
     }
 }
 
@@ -151,6 +147,35 @@ struct PagerTabButton : View {
             RoundedRectangle(cornerRadius: corner).fill(color)
         )
 
+    }
+}
+
+struct PagerTabW<Content : View> : View {
+    
+    @Binding var currentPage: Int
+    let list: [String]
+    let theme: Theme
+    @ViewBuilder var pageContent: () -> Content
+
+    var body: some View {
+        VStack {
+            VStack {
+                Spacer().frame(height: 15)
+                HStack {
+                    ForEach(0..<list.count, id: \.self) { index in
+                        Spacer()
+                        PagerTabButton(theme: theme, index: index, text: list[index], currentPage: currentPage, onPageChange: { it in
+                            currentPage = it
+                        })
+                    }
+                    Spacer()
+                }
+                Spacer().frame(height: 15)
+                TabView(selection: $currentPage, content: pageContent).tabViewStyle(.page(indexDisplayMode: .never))
+            }.background(theme.background.margeWithPrimary)
+        }.clipShape(
+            .rect(topLeadingRadius: 15, topTrailingRadius: 15)
+        )
     }
 }
 
@@ -558,22 +583,10 @@ struct ListBodyEdit<D : ForData, Content: View> : View {
 
 
 struct ListBodyEditAdditional<D, Content: View, Additional: View> : View {
-    private let list: [D]
-    private var itemColor: Color = Color.clear
-    private let additionalItem: (() -> Additional)
-    private let content: (D) -> Content
-
-    init(
-        list: [D],
-        itemColor: Color? = nil,
-        @ViewBuilder additionalItem: @escaping () -> Additional,
-        @ViewBuilder content: @escaping (D) -> Content
-    ) {
-        self.list = list
-        self.itemColor = itemColor ?? self.itemColor
-        self.additionalItem = additionalItem
-        self.content = content
-    }
+    let list: [D]
+    var itemColor: Color = Color.clear
+    @ViewBuilder let additionalItem: (() -> Additional)
+    @ViewBuilder let content: (D) -> Content
 
     var body: some View {
         ScrollView(Axis.Set.vertical) {
@@ -599,11 +612,8 @@ struct ImageForCurveItem : View {
     let size: CGFloat
     var body: some View {
         VStack {
-            ImageView(
-                urlString: imageUri
-            ).frame(
-                width: size, height: size, alignment: .center
-            )
+            ImageCacheView(imageUri)
+                .frame(width: size, height: size, alignment: .center)
         }.frame(width: size, height: size, alignment: .center)
             .clipShape(
                 .rect(cornerRadius: 15)
@@ -645,9 +655,10 @@ struct TextFullPageScrollable : View {
 
     var body: some View {
         //GeometryReader { geometry in
-        ScrollView(Axis.Set.horizontal) {
-            VStack {
+        ScrollView(Axis.Set.vertical) {
+            VStack(alignment: .leading) {
                 Text(text)
+                    .multilineTextAlignment(.leading)
                     .foregroundStyle(textColor)
                     .font(.system(size: 14))
                     .padding(leading: 20, trailing: 20)

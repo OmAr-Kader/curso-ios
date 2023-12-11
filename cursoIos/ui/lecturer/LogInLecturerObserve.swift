@@ -115,7 +115,7 @@ class LogInObserveLecturer : ObservableObject {
             self.alreadyLogged()
             self.app.project.fireApp?.upload(
                 img,
-                "LecturerImage/${user.id}_" + String(currentTime) + s.imageUri!.pathExtension,
+                "LecturerImage/\(user.id)_" + String(currentTime) + s.imageUri!.pathExtension,
                 { it in
                     self.doInsertLecturer(
                         s: s,
@@ -289,11 +289,6 @@ class LogInObserveLecturer : ObservableObject {
             self.state = self.state.copy(imageUri: it, isErrorPressed: false)
             logger("imagUri", "Done")
         }
-    }
-    
-    @MainActor
-    func setNadasdame() {
-        self.state = self.state.copy(isErrorPressed: true)
     }
 
     struct State {

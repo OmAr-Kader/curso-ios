@@ -38,7 +38,7 @@ struct ChatView : View {
                     Button(action: send, label: {
                         ImageAsset(icon: "send", tint: .gray)
                             .frame(width: 50, height: 50)
-                            .padding(5)
+                            .padding(10)
                     }).frame(width: 50, height: 50).lineLimit(nil)
                 }.background(theme.background.margeWithPrimary(0.3))
             }.shadow(radius: 3)
@@ -97,7 +97,7 @@ struct MessageView :  View {
                     .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
                 Text(message.message).font(.system(size: 14))
                     .foregroundStyle(colorText)
-                    .padding(top: 10, leading: 10, bottom: 2.5, trailing: 10)
+                    .padding(top: 2.5, leading: 10, bottom: 2.5, trailing: 10)
                     .foregroundStyle(colorText)
             } else {
                 Text(message.message).font(.system(size: 14))

@@ -80,9 +80,10 @@ class ArticleObservable : ObservableObject {
                 guard let changes else {
                     return
                 }
+                let conv = ConversationForData(update: changes)
                 self.scope.launchMain {
                     self.state = self.state.copy(
-                        conversation: ConversationForData(update: changes)
+                        conversation: conv
                     )
                 }
             }

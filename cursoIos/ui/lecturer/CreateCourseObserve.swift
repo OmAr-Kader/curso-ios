@@ -26,15 +26,21 @@ class CreateCourseObserve : ObservableObject {
                         aboutList.append(AboutCourseData(font: 22, text: ""))
                     }
                     let about = aboutList
+                    let courseForData = CourseForData(update: r.value!, currentTime: currentTime)
+                    let timelines = r.value!.timelines.toTimelineData()
+                    let title = r.value!.title
+                    let price = r.value!.price
+                    let video = r.value!.briefVideo
+                    let imageUri = r.value!.imageUri
                     self.scope.launchMain { [about] in
                         self.state = self.state.copy(
-                            course: CourseForData(update: r.value!, currentTime: currentTime),
+                            course: courseForData,
                             about: about,
-                            timelines: r.value!.timelines.toTimelineData(),
-                            courseTitle: r.value!.title,
-                            price: r.value!.price,
-                            briefVideo: r.value!.briefVideo,
-                            imageUri: r.value!.imageUri
+                            timelines: timelines,
+                            courseTitle: title,
+                            price: price,
+                            briefVideo: video,
+                            imageUri: imageUri
                         )
                     }
                 }
@@ -324,37 +330,29 @@ class CreateCourseObserve : ObservableObject {
 
     @MainActor
     func setVideoTimeLine(it: String) {
-        state = state.copy(
-            timelineData: state.timelineData.copy(video: it),
-            isDialogPressed: false
-        )
+        scope.launchMain {
+            self.state = self.state.copy(
+                timelineData: self.state.timelineData.copy(video: it),
+                isDialogPressed: false
+            )
+        }
     }
 
     @MainActor
     func setDurationDialogVisible(it: Bool) {
         state = state.copy(isDialogPressed: false, isDurationDialogVisible: it)
     }
-
+    
     @MainActor
-    func displayDateTimePicker() {
-        state = state.copy(dateTimePickerMode: 1, isDialogPressed: false)
-    }
-
-    @MainActor
-    func displayTimePicker() {
-        state = state.copy(dateTimePickerMode: 2, isDialogPressed: false)
+    var dateTimeline: Date {
+        let it = state.timelineData.date
+        return it != -1 ? Date(timeIntervalSince1970: Double(it) / 1000) : Date.now
     }
     
     @MainActor
-    func closeDateTimePicker() {
-        state = state.copy(dateTimePickerMode: 0, isDialogPressed: false)
-    }
-
-    @MainActor
-    func confirmTimelineDateTimePicker(_ selectedDateMillis: Int64) {
+    func setTimelineNoteDate(_ selectedDateMillis: Int64) {
         state = state.copy(
             timelineData: state.timelineData.copy(date: selectedDateMillis),
-            dateTimePickerMode: 0,
             isDialogPressed: false
         )
     }
@@ -370,7 +368,7 @@ class CreateCourseObserve : ObservableObject {
     @MainActor
     func setIsExam(isExam: Bool) {
         state = state.copy(
-            timelineData: TimelineData("", -1, "", "", "", isExam ? 1 : 0, 0),
+            timelineData: TimelineData("", -1, "", "", "", isExam ? 1 : 0, -1),
             timelineIndex: -1,
             isDialogPressed: false
         )
@@ -384,7 +382,7 @@ class CreateCourseObserve : ObservableObject {
     @MainActor
     func makeDialogGone() {
         state = state.copy(
-            timelineData: TimelineData("", -1, "", "", "", 0, 0), timelineIndex: -1, isErrorPressed: false, dialogMode: 0,
+            timelineData: TimelineData("", -1, "", "", "", 0, -1), timelineIndex: -1, isErrorPressed: false, dialogMode: 0,
             isDialogPressed: false
         )
     }
@@ -441,7 +439,7 @@ class CreateCourseObserve : ObservableObject {
             self.scope.launchMain { [timelines] in
                 self.state = self.state.copy(
                     timelines: timelines,
-                    timelineData: TimelineData("", -1, "", "", "", 0, 0),
+                    timelineData: TimelineData("", -1, "", "", "", 0, -1),
                     timelineIndex: -1,
                     isErrorPressed: false,
                     dialogMode: 0,
@@ -449,6 +447,11 @@ class CreateCourseObserve : ObservableObject {
                 )
             }
         }
+    }
+    
+    @MainActor
+    func displayDateTimePicker() {
+        state = state.copy(dialogMode: 1, isDialogPressed: false)
     }
     
     private func editTimeline(s: State) {
@@ -461,7 +464,7 @@ class CreateCourseObserve : ObservableObject {
             self.scope.launchMain { [timelines] in
                 self.state = self.state.copy(
                     timelines: timelines,
-                    timelineData: TimelineData("", -1, "", "", "", 0, 0),
+                    timelineData: TimelineData("", -1, "", "", "", 0, -1),
                     timelineIndex: -1,
                     isErrorPressed: false,
                     dialogMode: 0,
@@ -622,7 +625,7 @@ class CreateCourseObserve : ObservableObject {
         var course: CourseForData? = nil
         var about: [AboutCourseData] = []
         var timelines: [TimelineData] = []
-        var timelineData: TimelineData = TimelineData("", -1, "", "", "", 0, 0)
+        var timelineData: TimelineData = TimelineData("", -1, "", "", "", 0, -1)
         var courseTitle: String = ""
         var price: String = ""
         var briefVideo: String = ""
@@ -632,7 +635,6 @@ class CreateCourseObserve : ObservableObject {
         var isProcessing: Bool = false
         var isDraftProcessing: Bool = false
         var dialogMode: Int = 0
-        var dateTimePickerMode: Int = 0
         var courseTimePickerMode: Int = 0
         var isDialogPressed: Bool = false
         var isDurationDialogVisible: Bool = false
@@ -658,7 +660,6 @@ class CreateCourseObserve : ObservableObject {
             isProcessing: Bool? = nil,
             isDraftProcessing: Bool? = nil,
             dialogMode: Int? = nil,
-            dateTimePickerMode: Int? = nil,
             courseTimePickerMode: Int? = nil,
             isDialogPressed: Bool? = nil,
             isDurationDialogVisible: Bool? = nil,
@@ -679,7 +680,6 @@ class CreateCourseObserve : ObservableObject {
             self.isProcessing = isProcessing ?? self.isProcessing
             self.isDraftProcessing = isDraftProcessing ?? self.isDraftProcessing
             self.dialogMode = dialogMode ?? self.dialogMode
-            self.dateTimePickerMode = dateTimePickerMode ?? self.dateTimePickerMode
             self.courseTimePickerMode = courseTimePickerMode ?? self.courseTimePickerMode
             self.isDialogPressed = isDialogPressed ?? self.isDialogPressed
             self.isDurationDialogVisible = isDurationDialogVisible ?? self.isDurationDialogVisible

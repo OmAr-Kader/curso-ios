@@ -22,6 +22,19 @@ class CourseData {
         await repository.getStudentCourses(id: id, course: course)
     }
     
+    func getAllCoursesFollowed(
+        _ lecturerIds: Array<String>,
+        course: (ResultRealm<[Course]>) -> Unit
+    ) async {
+        await repository.getAllCourses { r in
+            let it = r.value.filter { it in
+                lecturerIds.contains(it.lecturerId)
+            }
+            course(ResultRealm(value: it, result: r.result))
+        }
+    }
+
+    
     @BackgroundActor
     func getCoursesById(
         _ id: String,

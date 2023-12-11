@@ -78,12 +78,17 @@ struct CreateArticleScreen : View {
                 }
             } message: {
                 Text("Date")
-            }.toolbarButton(true) {
-                obs.changeUploadDialogGone(it: true)
             }.background(pref.theme.background.margeWithPrimary).toastView(toast: $toast)
+            ToolBarButton(icon: "delete") {
+                obs.changeUploadDialogGone(it: true)
+            }.onTop().onEnd()
             BackButton {
                 pref.backPress()
             }.onStart().onTop()
+        }.onAppear {
+            if !articleId.isEmpty {
+                obs.getArticle(id: articleId)
+            }
         }
     }
 }
@@ -167,7 +172,7 @@ struct ImageArticleView : View {
             } else {
                 ZStack {
                     FullZStack {
-                        ImageView(urlString: state.imageUri)
+                        ImageCacheView(state.imageUri)
                             .frame(height: 200)
                     }.frame(height: 200)
                     FullZStack {
@@ -211,11 +216,11 @@ struct BasicsViewArticle : View {
                     OutlinedTextField(text: state.articleTitle.ifEmpty { articleTitle }, onChange: { it in
                         obs.setArticleTitle(it: it)
                     }, hint: "Enter Article Title", isError: isArticleTitleError, errorMsg: "Shouldn't be empty", theme: theme, lineLimit: 1, keyboardType: .default
-                    )
+                    ).padding(top: 5, leading: 20, bottom: 5, trailing: 20)
                     ForEach(0..<state.articleText.count, id: \.self) { index in
                         let it = state.articleText[index]
                         let isHeadline = it.font > 20
-                        HStack(alignment: .top) {
+                        HStack(alignment: .center) {
                             OutlinedTextField(text: it.text, onChange: { text in
                                 obs.changeAbout(it: text, index: index)
                             }, hint: isHeadline ? "Enter Article Headline" : "Enter Article", isError: false, errorMsg: "", theme: theme, lineLimit: nil, keyboardType: .default
@@ -239,7 +244,7 @@ struct BasicsViewArticle : View {
                                     )
                                 }.clipShape(Circle())
                             }).frame(width: 40, height: 40)
-                        }
+                        }.padding(top: 5, leading: 20, bottom: 5, trailing: 20)
                     }
                     if state.isFontDialogVisible {
                         AboutArticleCreator(obs: obs, theme: theme)

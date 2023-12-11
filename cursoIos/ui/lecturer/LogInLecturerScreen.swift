@@ -8,7 +8,6 @@ struct LoginScreenLecturer: View {
     
     @State private var toast: Toast? = nil
     @State private var selectedItem: PhotosPickerItem?
-    @FocusState private var isFocusedEmail: Bool
     
     var body: some View {
         
@@ -65,9 +64,7 @@ struct LoginScreenLecturer: View {
                 if (!state.isLogIn) {
                     VStack {
                         if (state.imageUri != nil) {
-                            ImageView(
-                                urlString: state.imageUri!.absoluteString
-                            ).frame(
+                            ImageCacheView(state.imageUri!.absoluteString).frame(
                                 width: 120, height: 120, alignment: .center
                             )
                         } else {

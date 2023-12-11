@@ -219,7 +219,12 @@ class PrefObserve : ObservableObject {
                 }
             }
         } else {
-            value(preferences.first { it1 in it1.ketString == key }?.value)
+            scope.launchRealm {
+                let preference = self.preferences.first { it1 in it1.ketString == key }?.value
+                self.scope.launchMain {
+                    value(preference)
+                }
+            }
         }
     }
     

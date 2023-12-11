@@ -65,9 +65,27 @@ fileprivate struct SceneFinder: UIViewRepresentable {
 }
 
 extension View {
-    func prepareStatusBarConfigurator(_ darkContent: Bool) -> some View {
-        return self.background(SceneFinder { scene in
-            StatusBarConfigurator.shared.prepare(scene: scene, darkContent: darkContent)
-        })
+    @ViewBuilder func prepareStatusBarConfigurator(
+        _ color: Color,
+        _ isSplash: Bool,
+        _ darkContent: Bool
+    ) -> some View {
+        if isSplash {
+            self.overlay(alignment: .top) {
+                Color.clear
+                    .background(color)
+                    .ignoresSafeArea(edges: .top)
+                    .frame(height: 0)
+            }
+        } else {
+            self.background(SceneFinder { scene in
+                StatusBarConfigurator.shared.prepare(scene: scene, darkContent: darkContent)
+            }).overlay(alignment: .top) {
+                Color.clear
+                    .background(color)
+                    .ignoresSafeArea(edges: .top)
+                    .frame(height: 0)
+            }
+        }
     }
 }

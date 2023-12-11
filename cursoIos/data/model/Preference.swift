@@ -8,6 +8,7 @@ class Preference : Object {
     @Persisted var value: String
 
     override init() {
+        super.init()
         ketString = ""
         value = ""
     }

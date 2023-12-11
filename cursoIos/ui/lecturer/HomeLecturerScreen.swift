@@ -8,9 +8,7 @@ struct HomeLecturerScreen : View {
 
     @State var isOpen = false
     @State private var toast: Toast? = nil
-    @Environment(\.colorScheme) var colorScheme
 
-    @State private var scrollTo: ScrollViewProxy? = nil
     private let buttonsList = ["Courses", "Articles", "Timelines", "All Courses", "All Articles"]
     
     
@@ -225,8 +223,8 @@ struct HomeLecturerScreen : View {
                             ) {
                                 pref.writeArguments(
                                     route: LECTURER_SCREEN_ROUTE,
-                                    one: pref.getArgumentOne(it: HOME_LECTURER_SCREEN_ROUTE) ?? "",
-                                    two: pref.getArgumentTwo(it: HOME_LECTURER_SCREEN_ROUTE) ?? ""
+                                    one: pref.getArgumentOne(it: LECTURER_SCREEN_ROUTE) ?? "",
+                                    two: pref.getArgumentTwo(it: LECTURER_SCREEN_ROUTE) ?? ""
                                 )
                                 pref.navigateTo(.LECTURER_SCREEN_ROUTE)
                             }.frame(width: 250)

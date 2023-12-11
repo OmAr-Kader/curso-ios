@@ -41,6 +41,7 @@
 		07AA1A312B24587A007C70FF /* LogInStudentObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A302B24587A007C70FF /* LogInStudentObservable.swift */; };
 		07AA1A352B2458AD007C70FF /* HomeStudentObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A342B2458AD007C70FF /* HomeStudentObservable.swift */; };
 		07AA1A372B2458B8007C70FF /* HomeStudentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A362B2458B8007C70FF /* HomeStudentScreen.swift */; };
+		07AA1A392B25ACDD007C70FF /* CreateCourseTimelineScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AA1A382B25ACDD007C70FF /* CreateCourseTimelineScreen.swift */; };
 		07B007922B228B1A00C72C53 /* CreateArticleObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B007912B228B1A00C72C53 /* CreateArticleObservable.swift */; };
 		07B007942B228B5D00C72C53 /* CreateArticleScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B007932B228B5D00C72C53 /* CreateArticleScreen.swift */; };
 		07B007962B22AB6A00C72C53 /* FullScreenViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B007952B22AB6A00C72C53 /* FullScreenViews.swift */; };
@@ -135,6 +136,7 @@
 		07AA1A302B24587A007C70FF /* LogInStudentObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInStudentObservable.swift; sourceTree = "<group>"; };
 		07AA1A342B2458AD007C70FF /* HomeStudentObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeStudentObservable.swift; sourceTree = "<group>"; };
 		07AA1A362B2458B8007C70FF /* HomeStudentScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeStudentScreen.swift; sourceTree = "<group>"; };
+		07AA1A382B25ACDD007C70FF /* CreateCourseTimelineScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCourseTimelineScreen.swift; sourceTree = "<group>"; };
 		07B007912B228B1A00C72C53 /* CreateArticleObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateArticleObservable.swift; sourceTree = "<group>"; };
 		07B007932B228B5D00C72C53 /* CreateArticleScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateArticleScreen.swift; sourceTree = "<group>"; };
 		07B007952B22AB6A00C72C53 /* FullScreenViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenViews.swift; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 				07B007932B228B5D00C72C53 /* CreateArticleScreen.swift */,
 				077E35002B1B64F800652FEE /* CreateCourseObserve.swift */,
 				077E35022B1B655C00652FEE /* CreateCourseScreen.swift */,
+				07AA1A382B25ACDD007C70FF /* CreateCourseTimelineScreen.swift */,
 				076EF5A52B1A8D7700ACDE4A /* HomeLecturerObserve.swift */,
 				077E34FE2B1B64BD00652FEE /* HomeLecturerScreen.swift */,
 				076EF5A32B1A73E900ACDE4A /* LecturerObserve.swift */,
@@ -620,6 +623,7 @@
 				07FC88E42B10D50D00143419 /* AppModule.swift in Sources */,
 				07B2CF3B2B19191200509DE5 /* ToastView.swift in Sources */,
 				07FC88EC2B10D50D00143419 /* CourseRepoImp.swift in Sources */,
+				07AA1A392B25ACDD007C70FF /* CreateCourseTimelineScreen.swift in Sources */,
 				07FC890B2B10D50E00143419 /* Student.swift in Sources */,
 				07FC89062B10D50E00143419 /* Conversation.swift in Sources */,
 				076EF5A22B1A729A00ACDE4A /* LecturerScreen.swift in Sources */,

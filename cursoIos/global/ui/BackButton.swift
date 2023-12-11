@@ -40,15 +40,39 @@ struct BackButton: View {
                 ).resizable()
                     .imageScale(.medium)
                     .scaledToFit().frame(
-                        width: 20, height: 20, alignment: .topLeading
+                        width: 20, height: 22, alignment: .topLeading
                     )
                 Text(
                     "Back"
-                ).font(.system(size: 18))
+                ).font(.system(size: 17))
                     .foregroundStyle(
                         Color(red: 9 / 255, green: 131 / 255, blue: 1)
-                    ).padding(leading: -5)
+                    ).padding(leading: -7)
             }.frame(width: 90, height: 45)
+        }
+    }
+}
+
+
+struct ToolBarButton: View {
+    let icon: String
+    let action: () -> Void
+    
+    var body: some View {
+        VStack {
+            Spacer().frame(height: 10)
+            Button(action: {
+                action()
+            }) {
+                VStack {
+                    VStack {
+                        ImageAsset(
+                            icon: icon,
+                            tint: Color.black
+                        )
+                    }.padding(7).background(Color.red)
+                }.clipShape(Circle())
+            }.frame(width: 35, height: 35)
         }
     }
 }

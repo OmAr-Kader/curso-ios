@@ -4,7 +4,7 @@ import UserNotifications
 
 @available(iOS 10, *)
 extension AppDelegate : UNUserNotificationCenterDelegate {
-
+    
   // Receive displayed notifications for iOS 10 devices.
     @available(*, deprecated)
     func userNotificationCenter(

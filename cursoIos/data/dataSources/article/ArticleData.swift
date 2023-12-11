@@ -13,6 +13,19 @@ class ArticleData {
     ) async {
         await repository.getAllArticles(article: article)
     }
+    
+    @BackgroundActor
+    func getAllArticlesFollowed(
+        _ lecturerIds: Array<String>,
+        article: (ResultRealm<[Article]>) -> Unit
+    ) async {
+        await repository.getAllArticles { r in
+            let it = r.value.filter { it in
+                lecturerIds.contains(it.lecturerId)
+            }
+            article(ResultRealm(value: it, result: r.result))
+        }
+    }
 
     @BackgroundActor
     func getArticlesById(

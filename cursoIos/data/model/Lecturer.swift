@@ -45,6 +45,7 @@ class Lecturer : Object {
     }
     
     override init() {
+        super.init()
         self.lecturerName = ""
         self.email = ""
         self.mobile = ""
@@ -162,7 +163,7 @@ struct LecturerForData {
     var follower: [StudentLecturerData]
     var id: String
     
-    init(){
+    init() {
         self.lecturerName = ""
         self.email = ""
         self.mobile = ""

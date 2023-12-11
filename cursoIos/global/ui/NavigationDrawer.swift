@@ -79,7 +79,7 @@ struct DrawerItem : View {
                         width: 25, height: 25
                     )
                 Text(
-                    "text"
+                    text
                 ).font(.system(size: 20))
                     .foregroundStyle(
                         textColor

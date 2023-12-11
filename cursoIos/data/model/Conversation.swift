@@ -10,8 +10,8 @@ class Conversation : Object {
     @Persisted var partition: String = "public"
     @Persisted(primaryKey: true) var _id: ObjectId
     
-    init(courseId: String, courseName: String, type: Int, messages: List<Message>) {
-        super.init()
+    convenience init(courseId: String, courseName: String, type: Int, messages: List<Message>) {
+        self.init()
         self.courseId = courseId
         self.courseName = courseName
         self.type = type
@@ -19,8 +19,8 @@ class Conversation : Object {
     }
     
     
-    init(courseId: String, courseName: String, type: Int, messages: List<Message>, id: String) {
-        super.init()
+    convenience init(courseId: String, courseName: String, type: Int, messages: List<Message>, id: String) {
+        self.init()
         self.courseId = courseId
         self.courseName = courseName
         self.type = type
@@ -29,6 +29,7 @@ class Conversation : Object {
     }
     
     override init() {
+        super.init()
         courseId = ""
         courseName = ""
         type = -1

@@ -10,16 +10,10 @@ struct Main: View {
             targetScreen(
                 pref.state.homeScreen, app, pref
             ).navigationDestination(for: Screen.self) { route in
-                targetScreen(route, app, pref)
+                targetScreen(route, app, pref).toolbar(.hidden, for: .navigationBar)
             }
-        }.overlay(alignment: .top) {
-            Color.clear
-                .background(isSplash ? pref.theme.background : pref.theme.primary
-                )
-                .ignoresSafeArea(edges: .top)
-                .frame(height: 0)
         }.prepareStatusBarConfigurator(
-            isSplash ? !pref.theme.isDarkMode : pref.theme.isDarkStatusBarText
+            isSplash ? pref.theme.background : pref.theme.primary, isSplash, pref.theme.isDarkStatusBarText
         )
     }
 }

@@ -84,8 +84,10 @@ struct CreateCourseScreen : View {
                     pref.navigateTo(.IMAGE_SCREEN_ROUTE)
                 }
                 PagerTab(currentPage: currentPage, onPageChange: { it in
-                    currentPage = it
-                }, list: ["Basics", "Timelines"], theme: pref.theme) {
+                    withAnimation {
+                        currentPage = it
+                    }
+                },list: ["Basics", "Timelines"], theme: pref.theme) {
                     BasicsView(obs: obs, courseTitle: courseTitle, theme: pref.theme, scrollTo: currentPage).tag(0)
                     TimelinesView(timelines: state.timelines, isDraft: state.course?.isDraft != -1, theme: pref.theme) { i in
                         obs.deleteTimeLine(i: i)
@@ -96,7 +98,7 @@ struct CreateCourseScreen : View {
                 BottomBar(obs: obs, pref: pref) { userBase in
                     saveOrEdit(isDraft: true, userBase: userBase)
                 }
-            }.confirmationDialog("", isPresented: Binding(get: {
+            }/*.alert("", isPresented: Binding(get: {
                 state.dialogMode != 0
             }, set: { it, _ in
                 print(String(it))
@@ -115,7 +117,7 @@ struct CreateCourseScreen : View {
                 }
             } message: {
                 Text("Timeline")
-            }.confirmationDialog("", isPresented: Binding(get: {
+            }.alert("", isPresented: Binding(get: {
                 state.dateTimePickerMode != 0
             }, set: { it, _ in
                 print(String(it))
@@ -132,7 +134,7 @@ struct CreateCourseScreen : View {
                 }
             } message: {
                 Text("Date")
-            }.confirmationDialog("", isPresented: Binding(get: {
+            }*/.alert("", isPresented: Binding(get: {
                 state.isConfirmDialogVisible
             }, set: { it, _ in
                 print(String(it))
@@ -151,21 +153,21 @@ struct CreateCourseScreen : View {
                 }
             } message: {
                 Text("Confirm")
-            }.toolbarButton(state.course?.isDraft == 1) {
-                obs.deleteCourse {
-                    pref.backPress()
-                }
             }.background(pref.theme.background.margeWithPrimary).toastView(toast: $toast)
-                .navigationDestination(for: Screen.self) { route in
-                    targetScreen(pref.state.homeScreen, app, pref)
-                }.onAppear {
-                    if (!courseId.isEmpty) {
-                        obs.getCourse(id: courseId)
-                    }
-                }
             BackButton {
                 pref.backPress()
             }.onStart().onTop()
+        }.onAppear {
+            if (!courseId.isEmpty) {
+                obs.getCourse(id: courseId)
+            }
+            print("WWW " + String(state.course?.timelines.count ?? 0))
+        }.navigationDestination(isPresented: Binding(get: {
+            state.dialogMode != 0
+        }, set: { it, _ in
+            obs.makeDialogGone()
+        })) {
+            CreateCourseTimelineScreen(obs: obs, pref: pref).toolbar(.hidden, for: .navigationBar)
         }
     }
 }
@@ -196,7 +198,8 @@ struct BriefVideoView : View {
             } else {
                 ZStack {
                     FullZStack {
-                        ImageView(urlString: state.briefVideo).frame(height: 200)
+                        ImageCacheView(state.briefVideo, isVideoPreview: true)
+                            .frame(height: 200)
                     }.frame(height: 200)
                     FullZStack {
                         HStack {
@@ -327,55 +330,57 @@ struct BasicsView : View {
         let state = obs.state
         let isCourseTitleError = state.isErrorPressed && state.courseTitle.isEmpty
         let isPriceError = state.isErrorPressed && state.price.isEmpty
-        ScrollViewReader { proxy in
-            ScrollView(Axis.Set.vertical) {
-                LazyVStack {
-                    OutlinedTextField(text: state.courseTitle.ifEmpty { courseTitle }, onChange: { it in
-                        obs.setCourseTitle(it: it)
-                    }, hint: "Enter Course Title", isError: isCourseTitleError, errorMsg: "Shouldn't be empty", theme: theme, lineLimit: 1, keyboardType: .default
-                    ).padding(top: 5, leading: 20, bottom: 5, trailing: 20)
-                    OutlinedTextField(text: state.price, onChange: { it in
-                        obs.setPrice(it: it)
-                    }, hint: "Enter Price", isError: isPriceError, errorMsg: "Shouldn't be empty", theme: theme, lineLimit: 1, keyboardType: .numberPad
-                    ).padding(top: 5, leading: 20, bottom: 5, trailing: 20)
-                    ForEach(0..<state.about.count, id: \.self) { index in
-                        let it = state.about[index]
-                        let isHeadline = it.font > 20
-                        HStack(alignment: .center) {
-                            OutlinedTextField(text: it.text, onChange: { text in
-                                obs.changeAbout(it: text, index: index)
-                            }, hint: isHeadline ? "Enter About Headline" : "Enter About Details", isError: false, errorMsg: "", theme: theme, lineLimit: nil, keyboardType: .default
-                            )
-                            Button(action: {
-                                if (index == state.about.count - 1) {
-                                    obs.makeFontDialogVisible()
-                                    scrollTo = state.about.count + 4
-                                } else {
-                                    obs.removeAboutIndex(index: index)
-                                }
-                            }, label: {
-                                VStack {
+        VStack {
+            ScrollViewReader { proxy in
+                ScrollView(Axis.Set.vertical) {
+                    LazyVStack {
+                        OutlinedTextField(text: state.courseTitle.ifEmpty { courseTitle }, onChange: { it in
+                            obs.setCourseTitle(it: it)
+                        }, hint: "Enter Course Title", isError: isCourseTitleError, errorMsg: "Shouldn't be empty", theme: theme, lineLimit: 1, keyboardType: .default
+                        ).padding(top: 5, leading: 20, bottom: 5, trailing: 20)
+                        OutlinedTextField(text: state.price, onChange: { it in
+                            obs.setPrice(it: it)
+                        }, hint: "Enter Price", isError: isPriceError, errorMsg: "Shouldn't be empty", theme: theme, lineLimit: 1, keyboardType: .numberPad
+                        ).padding(top: 5, leading: 20, bottom: 5, trailing: 20)
+                        ForEach(0..<state.about.count, id: \.self) { index in
+                            let it = state.about[index]
+                            let isHeadline = it.font > 20
+                            HStack(alignment: .center) {
+                                OutlinedTextField(text: it.text, onChange: { text in
+                                    obs.changeAbout(it: text, index: index)
+                                }, hint: isHeadline ? "Enter About Headline" : "Enter About Details", isError: false, errorMsg: "", theme: theme, lineLimit: nil, keyboardType: .default
+                                )
+                                Button(action: {
+                                    if (index == state.about.count - 1) {
+                                        obs.makeFontDialogVisible()
+                                        scrollTo = state.about.count + 4
+                                    } else {
+                                        obs.removeAboutIndex(index: index)
+                                    }
+                                }, label: {
                                     VStack {
-                                        ImageAsset(
-                                            icon: index == (state.about.count - 1) ? "plus" : "delete",
-                                            tint: theme.textColor
+                                        VStack {
+                                            ImageAsset(
+                                                icon: index == (state.about.count - 1) ? "plus" : "delete",
+                                                tint: theme.textColor
+                                            )
+                                        }.padding(7).background(
+                                            theme.background.margeWithPrimary(0.3)
                                         )
-                                    }.padding(7).background(
-                                        theme.background.margeWithPrimary(0.3)
-                                    )
-                                }.clipShape(Circle())
-                            }).frame(width: 40, height: 40)
-                        }.padding(top: 5, leading: 20, bottom: 5, trailing: 20)
+                                    }.clipShape(Circle())
+                                }).frame(width: 40, height: 40)
+                            }.padding(top: 5, leading: 20, bottom: 5, trailing: 20)
+                        }
+                        if state.isFontDialogVisible {
+                            AboutCreator(obs: obs, theme: theme)
+                        }
                     }
-                    if state.isFontDialogVisible {
-                        AboutCreator(obs: obs, theme: theme)
-                    }
+                }.onChange(scrollTo) { value in
+                    proxy.scrollTo(value)
                 }
-            }.onChange(scrollTo) { value in
-                proxy.scrollTo(value)
             }
+            Spacer()
         }
-        Spacer()
     }
 }
 
@@ -398,12 +403,12 @@ struct TimelinesView : View {
                                     timeline.title
                                 ).foregroundStyle(theme.textColor)
                                     .font(.system(size: 14))
-                                    .padding(top: 7, leading: 7, trailing: 7)
+                                    .padding(top: 7, leading: 7, trailing: 7).onStart()
                                 Text(
                                     "Date: \(timeline.date.toStr)"
                                 ).foregroundStyle(theme.textHintColor)
                                     .font(.system(size: 12))
-                                    .padding(top: 5, leading: 14, trailing: 14)
+                                    .padding(top: 5, leading: 14, trailing: 14).onStart()
                                 if timeline.mode == 1 {
                                     HStack {
                                         Text(
@@ -411,14 +416,16 @@ struct TimelinesView : View {
                                         ).foregroundStyle(theme.primary)
                                             .font(.system(size: 10))
                                             .padding(leading: 14, bottom: 5)
+                                        Spacer()
                                         Text(
                                             "Degree: \(timeline.degree)"
                                         ).foregroundStyle(theme.primary)
                                             .font(.system(size: 10))
                                             .padding(leading: 14, bottom: 5)
+                                        Spacer()
                                     }
                                 }
-                                Spacer()
+                                Divider().background(theme.background.margeWithPrimary(0.3)).padding(leading: 10, trailing: 10)
                             }.onTapGesture {
                                 onClick(timeline, index)
                             }
@@ -430,7 +437,7 @@ struct TimelinesView : View {
                                         icon: "delete",
                                         tint: theme.textColor
                                     ).frame(width: 40, height: 40)
-                                }
+                                }.frame(width: 40, height: 40).padding(5)
                             }
                         }
                     }
@@ -497,8 +504,8 @@ struct DialogWithImage : View {
                             obs.setVideoTimeLine(it: url.absoluteString)
                         }))
                     } else {
-                        ImageView(
-                            urlString: state.timelineData.video
+                        ImageCacheView(
+                            state.timelineData.video
                         ).frame(height: 100).onTapGesture {
                             nav()
                         }
@@ -520,7 +527,7 @@ struct DialogWithImage : View {
                                 text: state.timelineData.duration.isEmpty ? "Enter Exam Duration" : state.timelineData.duration, onClick: {
                                     obs.setDurationDialogVisible(it: true)
                                 }, isError: isDurationError, theme: theme
-                            ).confirmationDialog("Change background", isPresented: Binding(get: {
+                            ).alert("Change background", isPresented: Binding(get: {
                                 state.isDurationDialogVisible
                             }, set: { it, _ in
                                 obs.setDurationDialogVisible(it: it)

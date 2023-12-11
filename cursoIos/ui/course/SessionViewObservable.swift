@@ -17,6 +17,11 @@ class SessionViewObservable : ObservableObject {
         self.app = app
     }
     
+    @MainActor
+    func changeChatText(it: String) -> Unit {
+        state = state.copy(chatText: it)
+    }
+    
     func getTimelineConversation(id: String, timelineIndex: Int) {
         prefsTask?.cancel()
         chatPrefs?.cancel()

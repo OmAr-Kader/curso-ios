@@ -26,12 +26,15 @@ class CreateArticleObservable : ObservableObject {
                         listText.append(ArticleTextData(font: 22, text: ""))
                     }
                     let l = listText
+                    let atr = ArticleForData(update: v)
+                    let title = v.title
+                    let image = v.imageUri
                     self.scope.launchMain {
                         self.state = self.state.copy(
-                            article: ArticleForData(update: v),
+                            article: atr,
                             articleText: l,
-                            articleTitle: v.title,
-                            imageUri: v.imageUri
+                            articleTitle: title,
+                            imageUri: image
                         )
                     }
                 }

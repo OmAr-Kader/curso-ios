@@ -33,6 +33,21 @@ struct HomeAllCoursesView : View {
     }
 }
 
+
+struct HomeAllCoursesAdditionalView<Additional: View> : View {
+    let courses: [CourseForData]
+    let theme: Theme
+    @ViewBuilder var additionalView:  () -> Additional
+    let nav: (CourseForData) -> Unit
+    var body: some View {
+        ListBodyEditAdditional(list: courses, additionalItem: self.additionalView) { c in
+            MainItem(title: c.title, imageUri: c.imageUri, textColor: theme.textColor) {
+                AllCourseItem(lecturerName: c.lecturerName, price: c.price, theme: theme)
+            }
+        }
+    }
+}
+
 struct HomeAllArticlesView : View {
     let articles: [ArticleForData]
     let theme: Theme
@@ -64,6 +79,31 @@ struct LecturerCoursesView : View {
                 LecturerCourseItem(nextTimeLine: course.nextTimeLine, students: course.studentsSize, price: course.price, theme: theme
                 )
             }
+        }
+    }
+}
+
+
+
+struct StudentTimeLineView : View {
+    let sessions: [SessionForDisplay]
+    let theme: Theme
+    let nav: (SessionForDisplay) -> Unit
+
+    var body: some View {
+        ListBody(list: sessions, bodyClick: nav) { session in
+            MainItem(
+                title: session.title,
+                imageUri: session.imageUri,
+                textColor: theme.textColor
+                ) {
+                     TimelineItem(
+                        courseName: session.courseName,
+                        date: session.dateStr, duration:
+                        session.duration,
+                        textGrayColor: theme.textGrayColor
+                     )
+                }
         }
     }
 }

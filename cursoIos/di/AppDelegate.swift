@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 import FirebaseCore
 import FirebaseMessaging
+//https://github.com/firebase/quickstart-ios/blob/master/messaging/MessagingExampleSwift/AppDelegate.swift
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     static private(set) var del: AppDelegate! = nil
@@ -28,38 +29,17 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
         return prefSet
     }
-    
-    var window: UIWindow?
-    let gcmMessageIDKey = "gcm.message_id"
-    
+        
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         AppDelegate.del = self
-        
-        
-        /*let options = FirebaseOptions.init(
-         googleAppID: FIREBASE_APP_ID,
-         gcmSenderID: FIREBASE_SENDER_ID
-         )
-         //options.apiKey = FIREBASE_API_KEY
-         options.storageBucket = FIREBASE_STORAGE_BUCKET
-         options.projectID = FIREBASE_PROJECT_ID
-         FirebaseApp.configure(options: options)*/
-        
         FirebaseApp.configure()
-        // [START set_messaging_delegate]
+
         Messaging.messaging().delegate = self
-        // [END set_messaging_delegate]
-        
-        // Register for remote notifications. This shows a permission dialog on first run, to
-        // show the dialog at a more appropriate time move this registration accordingly.
-        // [START register_for_notifications]
         if #available(iOS 10.0, *) {
-            // For iOS 10 display notification (sent via APNS)
             UNUserNotificationCenter.current().delegate = self
-            
             let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
             UNUserNotificationCenter.current().requestAuthorization(
                 options: authOptions,
@@ -71,20 +51,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
         
         application.registerForRemoteNotifications()
-        /*
-         // [END register_for_notifications]
-         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-         
-         var viewController = UIViewController()
-         
-         if (launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? NSDictionary) != nil {
-         viewController = storyBoard.instantiateViewController(withIdentifier: "storyboardIdentifier") // user tap notification
-         }else{
-         viewController = storyBoard.instantiateViewController(withIdentifier: "storyboardIdentifier") // User not tap notificaiton
-         }
-         self.window?.rootViewController = viewController
-         self.window?.makeKeyAndVisible()*/
         return true
+    }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        appSet = nil
+        prefSet = nil
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
@@ -93,13 +65,17 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         // TODO: Handle data of notification
         
         // With swizzling disabled you must let Messaging know about the message, for Analytics
-        // Messaging.messaging().appDidReceiveMessage(userInfo)
+        Messaging.messaging().appDidReceiveMessage(userInfo)
         
         // Print message ID.
         /*if let messageID = userInfo[gcmMessageIDKey] {
          print("Message ID: \(messageID)")
          }*/
-        
+        /*let n = PushNotification.init(info: userInfo)
+
+        print(userInfo)
+        print(n)
+*/
         // Print full message.
         print(userInfo)
     }
@@ -112,7 +88,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         // TODO: Handle data of notification
         
         // With swizzling disabled you must let Messaging know about the message, for Analytics
-        // Messaging.messaging().appDidReceiveMessage(userInfo)
+        Messaging.messaging().appDidReceiveMessage(userInfo)
         
         // Print message ID.
         /*if let messageID = userInfo[gcmMessageIDKey] {
@@ -128,7 +104,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Unable to register for remote notifications: \(error.localizedDescription)")
     }
-    
+    /*
     // This function is added here only for debugging purposes, and can be removed if swizzling is enabled.
     // If swizzling is disabled then this function must be implemented so that the APNs token can be paired to
     // the FCM registration token.
@@ -137,5 +113,5 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         // With swizzling disabled you must set the APNs token here.
         // Messaging.messaging().apnsToken = deviceToken
-    }
+    }*/
 }

@@ -16,8 +16,9 @@ class Article: Object {
     @Persisted var partition: String = "public"
     @Persisted(primaryKey: true) var _id: ObjectId
     
-    init(title: String, lecturerName: String, lecturerId: String, imageUri: String, text: List<ArticleText>, lastEdit: Int64, isDraft: Int,
+    convenience init(title: String, lecturerName: String, lecturerId: String, imageUri: String, text: List<ArticleText>, lastEdit: Int64, isDraft: Int,
          readerIds: List<String>? = nil, rate: Double? = nil, raters: Int? = nil) {
+        self.init()
         self.title = title
         self.lecturerName = lecturerName
         self.lecturerId = lecturerId
@@ -31,6 +32,7 @@ class Article: Object {
     }
     
     override init() {
+        super.init()
         title = ""
         lecturerName = ""
         lecturerId = ""

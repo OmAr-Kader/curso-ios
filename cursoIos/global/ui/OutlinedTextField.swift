@@ -15,13 +15,15 @@ struct OutlinedTextField : View {
 
     var body: some View {
         VStack {
+            
             TextField(
                 "",
                 text: Binding(get: {
                     text
                 }, set: { it, t in
                     onChange(it)
-                })
+                }),
+                axis: lineLimit == nil ? Axis.vertical : Axis.horizontal
             ).placeholder(when: text.isEmpty, alignment: .leading) {
                 Text(hint).foregroundColor(theme.textHintColor)
             }.foregroundStyle(theme.textColor)
