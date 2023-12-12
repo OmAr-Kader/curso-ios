@@ -1,7 +1,7 @@
-
 import Foundation
 import RealmSwift
 
+@BackgroundActor
 class Course: Object {
 
     @Persisted var title: String
@@ -132,6 +132,7 @@ class Course: Object {
 
 }
 
+@BackgroundActor
 class Timeline : EmbeddedObject {
 
     @Persisted var title: String
@@ -163,6 +164,7 @@ class Timeline : EmbeddedObject {
 
 }
 
+@BackgroundActor
 class AboutCourse: EmbeddedObject {
     
     @Persisted var font: Int = 14
@@ -180,6 +182,7 @@ class AboutCourse: EmbeddedObject {
     }
 }
 
+@BackgroundActor
 class StudentCourses: EmbeddedObject {
     
     @Persisted(indexed: true) var studentId: String = ""
@@ -358,6 +361,7 @@ struct TimelineData : ForSubData {
         self.degree = degree
     }
     
+    @BackgroundActor
     init(it: Timeline) {
         title = it.title
         date = it.date
@@ -428,6 +432,7 @@ struct CourseForData : ForData {
         id = ""
     }
 
+    @BackgroundActor
     init(update: Course, currentTime: Int64) {
         title = update.title
         lecturerName = update.lecturerName
@@ -471,7 +476,7 @@ struct StudentCoursesData : ForSubData {
         self.type = type
     }
 
-
+    @BackgroundActor
     init(it: StudentCourses){
         self.studentId = it.studentId
         self.studentName = it.studentName

@@ -51,6 +51,7 @@ extension Array where Element : Object {
 
 extension [StudentLecturerData] {
 
+    @BackgroundActor
     func toStudentLecturer() -> List<StudentLecturer> {
         return self.map { it in
             StudentLecturer(update: it)
@@ -68,6 +69,7 @@ extension [StudentLecturerData] {
 
 extension List<StudentLecturer> {
     
+    @BackgroundActor
     func toStudentLecturerData() -> [StudentLecturerData] {
         return self.toList().map { it in
             StudentLecturerData(update: it)
@@ -77,6 +79,7 @@ extension List<StudentLecturer> {
 
 extension [Article] {
     
+    @BackgroundActor
     func toArticleForData() -> [ArticleForData] {
         return self.map { it in
             ArticleForData(update: it)
@@ -86,6 +89,7 @@ extension [Article] {
 
 extension [ArticleTextData] {
 
+    @BackgroundActor
     func toArticleText() -> List<ArticleText> {
         return self.map { it in
             ArticleText(font: it.font, text: it.text)
@@ -95,6 +99,7 @@ extension [ArticleTextData] {
 
 extension List<ArticleText> {
     
+    @BackgroundActor
     func toArticleTextData() -> [ArticleTextData] {
         return self.toList().map { it in
             ArticleTextData(font: it.font, text: it.text)
@@ -104,6 +109,7 @@ extension List<ArticleText> {
 
 extension [MessageForData] {
 
+    @BackgroundActor
     func toMessage() -> List<Message> {
         return self.map { it in
             Message(update: it)
@@ -113,6 +119,7 @@ extension [MessageForData] {
 
 extension List<Message> {
     
+    @BackgroundActor
     func toMessageData() -> [MessageForData] {
         return self.toList().map { it in
             MessageForData(update: it)
@@ -153,6 +160,8 @@ extension [CourseForData] {
 }
 
 extension [Course] {
+    
+    @BackgroundActor
     func toCourseForData(_ currentTime: Int64) -> [CourseForData] {
         return self.map { it in
             CourseForData(update: it, currentTime: currentTime)
@@ -162,6 +171,7 @@ extension [Course] {
 
 extension [AboutCourseData] {
 
+    @BackgroundActor
     func toAboutCourse() -> List<AboutCourse> {
         return self.map { it in
             AboutCourse(font: it.font, text: it.text)
@@ -171,6 +181,7 @@ extension [AboutCourseData] {
 
 extension List<AboutCourse> {
     
+    @BackgroundActor
     func toAboutCourseData() -> [AboutCourseData] {
         return self.toList().map { it in
             AboutCourseData(font: it.font, text: it.text)
@@ -180,6 +191,7 @@ extension List<AboutCourse> {
 
 extension [TimelineData] {
 
+    @BackgroundActor
     func toTimeline() -> List<Timeline> {
         return self.map { it in
             Timeline(it: it)
@@ -189,6 +201,7 @@ extension [TimelineData] {
 
 extension List<Timeline> {
     
+    @BackgroundActor
     func toTimelineData() -> [TimelineData] {
         return self.toList().map { it in
             TimelineData(it: it)
@@ -198,6 +211,7 @@ extension List<Timeline> {
 
 extension [StudentCoursesData] {
 
+    @BackgroundActor
     func toStudentCourses() -> List<StudentCourses> {
         return self.map { it in
             StudentCourses(update: it)
@@ -215,6 +229,7 @@ extension [StudentCoursesData] {
 
 extension List<StudentCourses> {
     
+    @BackgroundActor
     func toStudentCoursesData() -> [StudentCoursesData] {
         return self.toList().map { it in
             StudentCoursesData(it: it)

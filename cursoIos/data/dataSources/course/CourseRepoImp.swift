@@ -40,10 +40,11 @@ class CourseRepoImp : BaseRepoImp, CourseRepo {
         id: String,
         course: (ResultRealm<[Course]>) -> Unit
     ) async {
+        print("it" + id)
         await query(
             course,
             "getStudentCourses\(id)",
-            "%K == %@ AND %K == %@ AND %K == %@",
+            "%K == %@ AND ANY %K == %@ AND %K == %@",
             "partition", "public",
             "students.studentId", NSString(string: id),
             "isDraft", NSNumber(-1)
@@ -71,9 +72,10 @@ class CourseRepoImp : BaseRepoImp, CourseRepo {
      ) async {
          await queryLess(
             course,
-            "%K == %@ AND %K == %@ AND %K < %@",
+            "%K == %@ AND %K == %@ AND ANY %K < %@",
             "partition", "public",
-            "lecturerId ",NSString(string: id),"timelines.date", NSNumber(value: currentTime)
+            "lecturerId ",NSString(string: id),
+            "timelines.date", NSNumber(value: currentTime)
         )
      }
     
@@ -85,9 +87,10 @@ class CourseRepoImp : BaseRepoImp, CourseRepo {
     ) async {
         await queryLess(
             course,
-            "%K == %@ AND %K == %@ AND %K > %@",
+            "%K == %@ AND %K == %@ AND ANY %K > %@",
             "partition", "public",
-            "lecturerId ",NSString(string: id),"timelines.date", NSNumber(value: currentTime)
+            "lecturerId ",NSString(string: id),
+            "timelines.date", NSNumber(value: currentTime)
         )
     }
     
@@ -99,9 +102,10 @@ class CourseRepoImp : BaseRepoImp, CourseRepo {
     ) async {
         await queryLess(
             course,
-            "%K == %@ AND %K == %@ AND %K == %@ AND %K < %@",
+            "%K == %@ AND ANY %K == %@ AND %K == %@ AND ANY %K < %@",
             "partition", "public",
-            "students.studentId ",NSString(string: id),"isDraft", -1,
+            "students.studentId", NSString(string: id),
+            "isDraft", -1,
             "timelines.date", NSNumber(value: currentTime)
         )
     }
@@ -114,9 +118,10 @@ class CourseRepoImp : BaseRepoImp, CourseRepo {
     ) async {
         await queryLess(
             course,
-            "%K == %@ AND %K == %@ AND %K == %@ AND %K > %@",
+            "%K == %@ AND ANY %K == %@ AND %K == %@ AND ANY %K > %@",
             "partition", "public",
-            "students.studentId ",NSString(string: id),"isDraft", -1,
+            "students.studentId", NSString(string: id),
+            "isDraft", -1,
             "timelines.date", NSNumber(value: currentTime)
         )
     }

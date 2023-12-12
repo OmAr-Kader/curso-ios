@@ -40,7 +40,9 @@ struct HomeAllCoursesAdditionalView<Additional: View> : View {
     @ViewBuilder var additionalView:  () -> Additional
     let nav: (CourseForData) -> Unit
     var body: some View {
-        ListBodyEditAdditional(list: courses, additionalItem: self.additionalView) { c in
+        ListBodyEditAdditional(
+            list: courses, nav: nav, additionalItem: self.additionalView
+        ) { c in
             MainItem(title: c.title, imageUri: c.imageUri, textColor: theme.textColor) {
                 AllCourseItem(lecturerName: c.lecturerName, price: c.price, theme: theme)
             }

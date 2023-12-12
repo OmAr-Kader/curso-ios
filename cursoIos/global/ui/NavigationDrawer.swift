@@ -19,6 +19,7 @@ struct DrawerView<MainContent: View, DrawerContent: View>: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .overlay(
                         overlayColor.opacity(overlayOpacity)
+                            .ignoresSafeArea(.all, edges: [.bottom])
                             .onTapGesture {
                                 withAnimation {
                                     isOpen.toggle()
@@ -31,6 +32,7 @@ struct DrawerView<MainContent: View, DrawerContent: View>: View {
             }
             if isOpen {
                 drawer().frame(width: 250)
+                    .ignoresSafeArea(.all, edges: [.bottom])
                     .transition(.move(edge: .leading))
             }
         }
@@ -69,23 +71,13 @@ struct DrawerItem : View {
     var body: some View {
         Button(action: action) {
             HStack {
-                Image(
-                    uiImage: UIImage(
-                        named: icon
-                    )?.withTintColor(UIColor(textColor)) ?? UIImage()
-                ).resizable()
-                    .imageScale(.medium)
-                    .scaledToFit().frame(
-                        width: 25, height: 25
-                    )
+                ImageAsset(icon: icon, tint: textColor)
+                    .frame(width: 25, height: 25)
                 Text(
                     text
                 ).font(.system(size: 20))
-                    .foregroundStyle(
-                        textColor
-                    )
-            }.padding(leading: 16, trailing: 24)
-                .onStart()
+                    .foregroundStyle(textColor)
+            }.padding(leading: 16, trailing: 24).onStart()
         }.frame(width: 250)
 
     }

@@ -1,6 +1,7 @@
 import Foundation
 import RealmSwift
 
+@BackgroundActor
 class Preference : Object {
     
     @Persisted(primaryKey: true) var _id: ObjectId

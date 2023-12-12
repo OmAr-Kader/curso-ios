@@ -21,8 +21,9 @@ class HomeStudentObservable : ObservableObject {
         scope.launchRealm {
             await self.app.project.course.getStudentCourses(id) { r in
                 if (r.result == REALM_SUCCESS) {
+                    let courses = r.value.toCourseForData(currentTime)
                     self.scope.launchMain {
-                        self.state = self.state.copy(courses: r.value.toCourseForData(currentTime), isLoading: false
+                        self.state = self.state.copy(courses: courses, isLoading: false
                         )
                     }
                 }
@@ -46,7 +47,7 @@ class HomeStudentObservable : ObservableObject {
     }
     
     func getUpcomingStudentTimeline(studentId: String, studentName: String) {
-        scope.launch {
+        scope.launchRealm {
             await self.app.project.course.getUpcomingStudentTimeline(studentId, currentTime
             ) { r in
                 let it = r.value.sorted { c1, c2 in
@@ -88,9 +89,10 @@ class HomeStudentObservable : ObservableObject {
             await self.app.project.course.getAllCoursesFollowed(list.map { it in it._id.stringValue }
             ) { r in
                 if (r.result == REALM_SUCCESS) {
+                    let courses = r.value.toCourseForData(currentTime)
                     self.scope.launchMain {
                         self.state = self.state.copy(
-                            followedCourses: r.value.toCourseForData(currentTime),
+                            followedCourses: courses,
                             isLoading: false
                         )
                     }
@@ -107,9 +109,10 @@ class HomeStudentObservable : ObservableObject {
         scope.launchRealm {
             await self.app.project.article.getAllArticles { r in
                 if (r.result == REALM_SUCCESS) {
+                    let art = r.value.toArticleForData()
                     self.scope.launchMain {
                         self.state = self.state.copy(
-                            allArticles: r.value.toArticleForData(), isLoading: false
+                            allArticles: art, isLoading: false
                         )
                     }
                 }
@@ -139,8 +142,9 @@ class HomeStudentObservable : ObservableObject {
         scope.launchRealm {
             await self.app.project.article.getAllArticlesFollowed(list.map { it in it._id.stringValue }) { r in
                 if (r.result == REALM_SUCCESS) {
+                    let art = r.value.toArticleForData()
                     self.scope.launchMain {
-                        self.state = self.state.copy(followedArticles: r.value.toArticleForData(), isLoading: false
+                        self.state = self.state.copy(followedArticles: art, isLoading: false
                         )
                     }
                 }
@@ -156,10 +160,9 @@ class HomeStudentObservable : ObservableObject {
         scope.launchRealm {
             await self.app.project.course.getAllCourses { r in
                 if r.result == REALM_SUCCESS {
+                    let courses = r.value.toCourseForData(currentTime)
                     self.scope.launchMain {
-                        self.state = self.state.copy(
-                            allCourses: r.value.toCourseForData(currentTime), isLoading: false
-                        )
+                        self.state = self.state.copy(allCourses: courses, isLoading: false)
                     }
                 }
             }

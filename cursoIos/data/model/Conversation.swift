@@ -1,6 +1,7 @@
 import Foundation
 import RealmSwift
 
+@BackgroundActor
 class Conversation : Object {
 
     @Persisted(indexed: true) var courseId: String = ""
@@ -68,6 +69,7 @@ class Conversation : Object {
 
 }
 
+@BackgroundActor
 class Message : EmbeddedObject {
     
     @Persisted var message: String
@@ -115,6 +117,7 @@ struct MessageForData {
         self.fromStudent = fromStudent
     }
     
+    @BackgroundActor
     init(update: Message) {
         message = update.message
         data = update.data
@@ -133,6 +136,7 @@ struct ConversationForData {
     var messages: [MessageForData]
     var id: String
 
+    @BackgroundActor
     init(update: Conversation) {
         courseId = update.courseId
         courseName = update.courseName

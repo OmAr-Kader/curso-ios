@@ -15,7 +15,6 @@ struct OutlinedTextField : View {
 
     var body: some View {
         VStack {
-            
             TextField(
                 "",
                 text: Binding(get: {
@@ -42,7 +41,9 @@ struct OutlinedTextField : View {
                             isError ? theme.error : (isFocused ? theme.primary : theme.secondary),
                             lineWidth: 1.5
                         )
-                )
+                ).onTapGesture {
+                    isFocused = true
+                }
             if isError {
                 HStack {
                     Text(errorMsg).padding(
@@ -64,8 +65,6 @@ struct OutlinedTextFieldButton : View {
     let isError: Bool
     let theme: Theme
 
-    @FocusState private var isFocused: Bool
-
     var body: some View {
         VStack {
             Button(action: onClick) {
@@ -78,12 +77,11 @@ struct OutlinedTextFieldButton : View {
                     )
                     .fixedSize(horizontal: false, vertical: true)
                     .lineLimit(1)
-                    .focused($isFocused)
                     .preferredColorScheme(theme.isDarkMode ? .dark : .light)
                     .background(
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(
-                                isError ? theme.error : (isFocused ? theme.primary : theme.secondary),
+                                isError ? theme.error : theme.secondary,
                                 lineWidth: 1.5
                             )
                     )
@@ -132,7 +130,9 @@ struct OutlinedSecureField : View {
                         isError ? theme.error : (isFocused ? theme.primary : theme.secondary),
                         lineWidth: 1.5
                     )
-            )
+            ).onTapGesture {
+                isFocused = true
+            }
             if isError {
                 HStack {
                     Text(errorMsg).padding(

@@ -13,7 +13,8 @@ class ChatRepoImp : BaseRepoImp, ChatRepo {
             "getMainChat\(courseId)",
             "%K == %@ AND %K == %@ AND %K == %@",
             "partition", "public",
-            "courseId", NSString(string: courseId), "type", NSNumber(value: -1)
+            "courseId", NSString(string: courseId),
+            "type", NSNumber(value: -1)
         )
     }
     
@@ -28,7 +29,8 @@ class ChatRepoImp : BaseRepoImp, ChatRepo {
             "getTimelineChat\(courseId)\(type)",
             "%K == %@ AND %K == %@ AND %K == %@",
             "partition", "public",
-            "courseId", NSString(string: courseId), "type", NSNumber(value: type)
+            "courseId", NSString(string: courseId),
+            "type", NSNumber(value: type)
         )
     }
 

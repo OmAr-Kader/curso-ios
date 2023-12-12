@@ -22,6 +22,7 @@ class CourseData {
         await repository.getStudentCourses(id: id, course: course)
     }
     
+    @BackgroundActor
     func getAllCoursesFollowed(
         _ lecturerIds: Array<String>,
         course: (ResultRealm<[Course]>) -> Unit

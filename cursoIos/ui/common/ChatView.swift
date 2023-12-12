@@ -1,13 +1,17 @@
 import SwiftUI
+import Combine
+import UIKit
 
-struct ChatView : View {
+struct ChatView : View, KeyboardReadable {
     let isEnabled: Bool
     let chatText: String
     let theme: Theme
     let onTextChanged: (String) -> Unit
+    let onKeyboardChanged: (Bool) -> Unit
     let list: [MessageForData]
     let isUserMessage: (MessageForData) -> Bool
     let send: () -> Unit
+    @FocusState private var isFoucesed: Bool
     var body: some View {
         VStack {
             ScrollViewReader { proxy in
@@ -28,23 +32,37 @@ struct ChatView : View {
                 }
             }
             Spacer()
-            HStack(alignment: .bottom) {
-                HStack(alignment: .bottom) {
+            HStack {
+                HStack {
                     TextField("", text: Binding(get: {
                         chatText
                     }, set: { it in
                         onTextChanged(it)
-                    })).foregroundColor(theme.textColor)
-                    Button(action: send, label: {
-                        ImageAsset(icon: "send", tint: .gray)
-                            .frame(width: 50, height: 50)
-                            .padding(10)
-                    }).frame(width: 50, height: 50).lineLimit(nil)
-                }.background(theme.background.margeWithPrimary(0.3))
-            }.shadow(radius: 3)
-                .clipShape(
-                    .rect(topLeadingRadius: 8, topTrailingRadius: 8)
-                )
+                    }), axis: Axis.vertical
+                    ).onReceive(keyboardPublisher) { isKeyboardVisible in
+                        print("Is keyboard visible? ", isKeyboardVisible)
+                        onKeyboardChanged(isKeyboardVisible)
+                    }.placeholder(when: chatText.isEmpty, alignment: .leading, placeholder: {
+                        Text("Question?")
+                            .foregroundColor(theme.textHintColor)
+                    }).focused($isFoucesed).multilineTextAlignment(.leading).foregroundColor(theme.textColor).frame(alignment: .leading)
+                        .onTapGesture {
+                        isFoucesed = true
+                    }
+                    Button(action: {
+                        isFoucesed = false
+                        send()
+                    }, label: {
+                        ImageAsset(icon: "send", tint: theme.textGrayColor)
+                            .frame(width: 30, height: 30)
+                    }).frame(width: 50, height: 50, alignment: .center)
+                }.padding(leading: 10, trailing: 5)
+            }.shadow(radius: 3).background(theme.background.margeWithPrimary(0.3))
+                .clipShape(.rect(topLeadingRadius: 8, topTrailingRadius: 8))
+        }.onChange(isEnabled) { it in
+            if !isEnabled {
+                isFoucesed = false
+            }
         }
     }
 }
@@ -108,5 +126,26 @@ struct MessageView :  View {
         }.frame(minWidth: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, maxHeight: 300).padding(5).background(
             RoundedRectangle(cornerRadius: 20).fill(colorCard)
         ).shadow(radius: 2)
+    }
+}
+
+
+/// Publisher to read keyboard changes.
+protocol KeyboardReadable {
+    var keyboardPublisher: AnyPublisher<Bool, Never> { get }
+}
+
+extension KeyboardReadable {
+    var keyboardPublisher: AnyPublisher<Bool, Never> {
+        Publishers.Merge(
+            NotificationCenter.default
+                .publisher(for: UIResponder.keyboardWillShowNotification)
+                .map { _ in true },
+            
+            NotificationCenter.default
+                .publisher(for: UIResponder.keyboardWillHideNotification)
+                .map { _ in false }
+        )
+        .eraseToAnyPublisher()
     }
 }

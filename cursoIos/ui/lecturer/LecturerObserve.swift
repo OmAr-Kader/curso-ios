@@ -42,6 +42,7 @@ class LecturerObserve : ObservableObject {
         setStudentId(studentId)
         scope.launchRealm {
             self.sinkLecturer = await self.app.project.lecturer.getLecturerFlow(id: lecturerId) { object in
+                print("www" + (object?.lecturerName ?? ""))
                 guard let object else {
                     return
                 }
@@ -70,10 +71,12 @@ class LecturerObserve : ObservableObject {
         scope.launchRealm {
             await self.app.project.article.getLecturerArticles(lecturerId) { r in
                 if (r.result == REALM_SUCCESS) {
-                    self.scope.launchMain {
+                    let courses = coursesList.value.toCourseForData(currentTime)
+                    let articles = r.value.toArticleForData()
+                    self.scope.launchMain { [courses, articles] in
                         self.state = self.state.copy(
-                            courses: coursesList.value.toCourseForData(currentTime),
-                            articles: r.value.toArticleForData()
+                            courses: courses,
+                            articles: articles
                         )
                     }
                 }

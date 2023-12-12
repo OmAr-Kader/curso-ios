@@ -21,112 +21,112 @@ struct LoginScreenLecturer: View {
         let isBriefError = state.isErrorPressed && state.brief.isEmpty
         let isImageError = state.isErrorPressed && state.imageUri == nil
         VStack {
-            VStack {
-                HStack {
-                    Image(
-                        uiImage: UIImage(named: "AppIcon") ?? UIImage()
-                    ).resizable()
-                        .imageScale(.large)
-                        .scaledToFit()
-                        .clipShape(Circle())
-                        .frame(
-                            width: 40,
-                            height: 40,
-                            alignment: .topLeading
-                        ).padding(20)
-                    Spacer()
-                }
-                HStack {
-                    Text(
-                        "Hello There."
-                    ).foregroundStyle(pref.theme.textColor)
-                        .font(.system(size: 35))
-                        .padding(leading: 20, trailing: 20)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .lineLimit(1)
-                    Spacer()
-                }
-                HStack {
-                    Text(
-                        "Login or sign up to continue."
-                    ).foregroundStyle(pref.theme.textColor)
-                        .font(.system(size: 14))
-                        .padding(leading: 20, trailing: 20)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .lineLimit(1)
-                    Spacer()
-                }
-            }.frame(
-                height: 170,
-                alignment: .topLeading
-            )
-            VStack {
-                if (!state.isLogIn) {
-                    VStack {
-                        if (state.imageUri != nil) {
-                            ImageCacheView(state.imageUri!.absoluteString).frame(
-                                width: 120, height: 120, alignment: .center
-                            )
-                        } else {
-                            PhotosPicker(
-                                selection: $selectedItem,
-                                matching: .images
-                            ) {
-                                Image(
-                                    uiImage: UIImage(
-                                        named: "photo.circle"
-                                    )?.withTintColor(
-                                        UIColor(pref.theme.textColor)
-                                    ) ?? UIImage()
-                                ).resizable()
-                                    .imageScale(.large)
-                                    .scaledToFit()
-                                    .clipShape(Circle())
-                                    .padding(20).frame(
-                                        width: 120, height: 120, alignment: .topLeading
-                                    )
-                            }
+            ScrollView(Axis.Set.vertical, showsIndicators: false) {
+                VStack {
+                    HStack {
+                        Image(
+                            uiImage: UIImage(named: "AppIcon") ?? UIImage()
+                        ).resizable()
+                            .imageScale(.large)
+                            .scaledToFit()
                             .clipShape(Circle())
-                            .onChange(selectedItem) { newIt in
-                                logger(
-                                    "imageUri",
-                                    String(newIt == nil)
+                            .frame(
+                                width: 40,
+                                height: 40,
+                                alignment: .topLeading
+                            ).padding(20)
+                        Spacer()
+                    }
+                    HStack {
+                        Text(
+                            "Hello There."
+                        ).foregroundStyle(pref.theme.textColor)
+                            .font(.system(size: 35))
+                            .padding(leading: 20, trailing: 20)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .lineLimit(1)
+                        Spacer()
+                    }
+                    HStack {
+                        Text(
+                            "Login or sign up to continue."
+                        ).foregroundStyle(pref.theme.textColor)
+                            .font(.system(size: 14))
+                            .padding(leading: 20, trailing: 20)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .lineLimit(1)
+                        Spacer()
+                    }
+                }.frame(
+                    height: 170,
+                    alignment: .topLeading
+                )
+                VStack {
+                    if (!state.isLogIn) {
+                        VStack {
+                            if (state.imageUri != nil) {
+                                ImageCacheView(state.imageUri!.absoluteString).frame(
+                                    width: 120, height: 120, alignment: .center
                                 )
-                                if (newIt != nil) {
-                                    getURL(item: newIt!) { result in
-                                        switch result {
-                                        case .success(let url):
-                                            loginObs.setImageUri(it: url)
-                                            logger("imageUri", url.absoluteString)
-                                        case .failure(let failure):
-                                            logger(
-                                                "imagUri",
-                                                failure.localizedDescription
-                                            )
+                            } else {
+                                PhotosPicker(
+                                    selection: $selectedItem,
+                                    matching: .images
+                                ) {
+                                    Image(
+                                        uiImage: UIImage(
+                                            named: "photo.circle"
+                                        )?.withTintColor(
+                                            UIColor(pref.theme.textColor)
+                                        ) ?? UIImage()
+                                    ).resizable()
+                                        .imageScale(.large)
+                                        .scaledToFit()
+                                        .clipShape(Circle())
+                                        .padding(20).frame(
+                                            width: 120, height: 120, alignment: .topLeading
+                                        )
+                                }
+                                .clipShape(Circle())
+                                .onChange(selectedItem) { newIt in
+                                    logger(
+                                        "imageUri",
+                                        String(newIt == nil)
+                                    )
+                                    if (newIt != nil) {
+                                        getURL(item: newIt!) { result in
+                                            switch result {
+                                            case .success(let url):
+                                                loginObs.setImageUri(it: url)
+                                                logger("imageUri", url.absoluteString)
+                                            case .failure(let failure):
+                                                logger(
+                                                    "imagUri",
+                                                    failure.localizedDescription
+                                                )
+                                            }
                                         }
                                     }
-                                }
-                            }.frame(
+                                }.frame(
+                                    width: 120, height: 120, alignment: .topLeading
+                                )
+                            }
+                        }.background(Color.gray)
+                            .clipShape(Circle())
+                            .frame(
                                 width: 120, height: 120, alignment: .topLeading
+                            ).overlay(
+                                Circle().stroke(
+                                    isImageError ? pref.theme.error : pref.theme.background.opacity(0.0),
+                                    lineWidth: isImageError ? 2 : 0
+                                )
                             )
-                        }
-                    }.background(Color.gray)
-                        .clipShape(Circle())
-                        .frame(
-                            width: 120, height: 120, alignment: .topLeading
-                        ).overlay(
-                            Circle().stroke(
-                                isImageError ? pref.theme.error : pref.theme.background.opacity(0.0),
-                                lineWidth: isImageError ? 2 : 0
-                            )
-                        )
-                }
-            }.frame(
-                height: 120,
-                alignment: .topLeading
-            )
-            VStack {
-                ScrollView(showsIndicators: false) {
+                    }
+                }.frame(
+                    height: 120,
+                    alignment: .topLeading
+                )
+                VStack {
                     VStack {
                         VStack {
                             OutlinedTextField(
@@ -216,8 +216,8 @@ struct LoginScreenLecturer: View {
                                     lineLimit: nil,
                                     keyboardType: UIKeyboardType.default
                                 ).padding(top: 16).onDisappear {
-                                        print("==> Disappear")
-                                    }
+                                    print("==> Disappear")
+                                }
                             }
                         }
                     }.padding(16)
@@ -225,8 +225,8 @@ struct LoginScreenLecturer: View {
                             RoundedRectangle(cornerRadius: 15)
                                 .fill(pref.theme.backDark)
                         )
-                }
-            }.padding(20)
+                }.padding(20)
+            }
             Spacer()
             HStack(alignment: .bottom) {
                 Spacer()
@@ -243,29 +243,14 @@ struct LoginScreenLecturer: View {
                                 self.loginObs.isLogin(it: true)
                             }
                         } else {
-                            loginObs.login { it, i in
-                                let user = PrefObserve.UserBase(
-                                    id: it._id.stringValue,
-                                    name: it.lecturerName,
-                                    email: it.email,
-                                    password: state.password,
-                                    courses: i
-                                )
-                                print("=====>" + "Done" + user.id + user.name)
-                                print("=====>" + "Done" + user.password)
+                            loginObs.login { user in
                                 pref.updateUserBase(
-                                    userBase: PrefObserve.UserBase(
-                                        id: it._id.stringValue,
-                                        name: it.lecturerName,
-                                        email: it.email,
-                                        password: state.password,
-                                        courses: i
-                                    )
+                                    userBase: user
                                 ) {
                                     pref.writeArguments(
                                         route: HOME_LECTURER_SCREEN_ROUTE,
-                                        one: it._id.stringValue,
-                                        two: it.lecturerName
+                                        one: user.id,
+                                        two: user.name
                                     )
                                     pref.navigateHome(Screen.HOME_LECTURER_SCREEN_ROUTE)
                                 }
@@ -289,20 +274,14 @@ struct LoginScreenLecturer: View {
                                 self.loginObs.isLogin(it: false)
                             }
                         } else {
-                            loginObs.signUp { value in
+                            loginObs.signUp { user in
                                 pref.updateUserBase(
-                                    userBase: PrefObserve.UserBase(
-                                        id: value._id.stringValue,
-                                        name: value.lecturerName,
-                                        email: value.email,
-                                        password: state.password,
-                                        courses: 0
-                                    )
+                                    userBase: user
                                 ) {
                                     pref.writeArguments(
                                         route: HOME_LECTURER_SCREEN_ROUTE,
-                                        one: value._id.stringValue,
-                                        two: value.lecturerName
+                                        one: user.id,
+                                        two: user.name
                                     )
                                     pref.navigateHome(Screen.HOME_LECTURER_SCREEN_ROUTE)
                                 }

@@ -1,7 +1,7 @@
 import Foundation
 import RealmSwift
 
-
+@BackgroundActor
 class Lecturer : Object {
 
     @Persisted var lecturerName: String
@@ -131,10 +131,10 @@ class Lecturer : Object {
 }
 
 
+@BackgroundActor
 class StudentLecturer: EmbeddedObject {
 
     @Persisted(indexed: true) var studentId: String = ""
-
     @Persisted(indexed: true) var studentName: String = ""
         
     override init() {
@@ -178,6 +178,7 @@ struct LecturerForData {
         self.id = ""
     }
 
+    @BackgroundActor
     init(update: Lecturer) {
         self.init()
         lecturerName = update.lecturerName
@@ -205,6 +206,7 @@ struct StudentLecturerData {
         self.studentName = ""
     }
 
+    @BackgroundActor
     init(update: StudentLecturer) {
         self.init()
         self.studentId = update.studentId

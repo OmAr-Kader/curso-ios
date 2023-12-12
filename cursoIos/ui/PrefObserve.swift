@@ -15,6 +15,7 @@ class PrefObserve : ObservableObject {
     
     @Published var state = State()
             
+    private var preff: Preference? = nil
     private var preferences: [Preference] = []
     private var prefsTask: Task<Void, Error>? = nil
     private var sinkPrefs: AnyCancellable? = nil
@@ -52,10 +53,9 @@ class PrefObserve : ObservableObject {
         }
     }
     
-    private func inti(invoke: @escaping ([Preference]) -> Unit) {
+    private func inti(invoke: @BackgroundActor @escaping ([Preference]) -> Unit) {
         scope.launchRealm {
             await self.app.project.preference.prefs { list in
-                self.preferences = list
                 invoke(list)
             }
         }
@@ -214,8 +214,10 @@ class PrefObserve : ObservableObject {
     ) {
         if (preferences.isEmpty) {
             inti { it in
+                let preference = it.first { it1 in it1.ketString == key }?.value
                 self.scope.launchMain {
-                    value(it.first { it1 in it1.ketString == key }?.value)
+                    self.preferences = it
+                    value(preference)
                 }
             }
         } else {
@@ -235,6 +237,7 @@ class PrefObserve : ObservableObject {
             inti { it in
                 let userBase = self.fetchUserBase(it)
                 self.scope.launchMain {
+                    self.preferences = it
                     value(userBase)
                 }
             }
@@ -248,6 +251,7 @@ class PrefObserve : ObservableObject {
         }
     }
 
+    @BackgroundActor
     private func fetchUserBase(_ list: [Preference]) -> UserBase? {
         let id = list.first { it in it.ketString == PREF_USER_ID }?.value
         let name = list.first { it in it.ketString == PREF_USER_NAME }?.value
@@ -281,8 +285,9 @@ class PrefObserve : ObservableObject {
             list.append(Preference(ketString: PREF_USER_EMAIL, value: userBase.email))
             list.append(Preference(ketString: PREF_USER_PASSWORD, value: userBase.password))
             await self.app.project.preference.insertPref(list) { newPref in
-                self.inti { _ in
+                self.inti { it in
                     self.scope.launchMain {
+                        self.preferences = it
                         invoke()
                     }
                 }

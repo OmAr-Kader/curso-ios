@@ -221,12 +221,17 @@ struct HomeLecturerScreen : View {
                                 text: "Profile",
                                 textColor: pref.theme.textColor
                             ) {
-                                pref.writeArguments(
-                                    route: LECTURER_SCREEN_ROUTE,
-                                    one: pref.getArgumentOne(it: LECTURER_SCREEN_ROUTE) ?? "",
-                                    two: pref.getArgumentTwo(it: LECTURER_SCREEN_ROUTE) ?? ""
-                                )
-                                pref.navigateTo(.LECTURER_SCREEN_ROUTE)
+                                pref.findUserBase { userBase in
+                                    guard let userBase else {
+                                        return
+                                    }
+                                    pref.writeArguments(
+                                        route: LECTURER_SCREEN_ROUTE,
+                                        one: userBase.id,
+                                        two: userBase.name
+                                    )
+                                    pref.navigateTo(.LECTURER_SCREEN_ROUTE)
+                                }
                             }.frame(width: 250)
                             Divider()
                             DrawerItem(

@@ -1,5 +1,6 @@
 import Foundation
 import RealmSwift
+import SwiftUI
 
 class LogInStudentObservable : ObservableObject {
     
@@ -16,12 +17,14 @@ class LogInStudentObservable : ObservableObject {
     
     @MainActor
     func login(
-        invoke: @escaping @MainActor (Student, Int) -> Unit,
+        invoke: @escaping @BackgroundActor (PrefObserve.UserBase) -> Unit,
         failed: @escaping (String) -> Unit
     ) {
         let s = state
         if (s.email.isEmpty || s.password.isEmpty) {
-            self.state = self.state.copy(isErrorPressed: true)
+            withAnimation() {
+                self.state = self.state.copy(isErrorPressed: true)
+            }
             return
         }
         if (!isNetworkAvailable()) {
@@ -29,12 +32,13 @@ class LogInStudentObservable : ObservableObject {
             return
         }
         self.state = self.state.copy(isProcessing: true)
-        doLogIn(s, invoke, failed)
+        doLogIn(s, s.password, invoke, failed)
     }
     
     private func doLogIn(
         _ s: State,
-        _ invoke: @escaping @MainActor (Student, Int) -> Unit,
+        _ password: String,
+        _ invoke: @escaping @BackgroundActor (PrefObserve.UserBase) -> Unit,
         _ failed: @escaping (String) -> Unit
     ) {
         self.loginRealm(s) { user in
@@ -48,7 +52,7 @@ class LogInStudentObservable : ObservableObject {
                 await self.app.project.student.getStudentEmail(
                     s.email
                 ) { r in
-                    self.saveUserState(r.value, invoke: invoke, failed: failed)
+                    self.saveUserState(r.value, password, invoke: invoke, failed: failed)
                 }
             }
         }
@@ -56,7 +60,8 @@ class LogInStudentObservable : ObservableObject {
     
     private func saveUserState(
         _ student: Student?,
-        invoke: @escaping @MainActor (Student, Int) -> Unit,
+        _ password: String,
+        invoke: @escaping @BackgroundActor (PrefObserve.UserBase) -> Unit,
         failed: @escaping (String) -> Unit
     ) {
         guard let student else {
@@ -70,9 +75,16 @@ class LogInStudentObservable : ObservableObject {
             await self.app.project.course.getStudentCourses(
                 student._id.stringValue
             ) { r in
+                let userBase = PrefObserve.UserBase(
+                    id: student._id.stringValue,
+                    name: student.studentName,
+                    email: student.email,
+                    password: password,
+                    courses: r.value.count
+                )
+                invoke(userBase)
                 self.scope.launchMain {
                     self.state = self.state.copy(isProcessing: false)
-                    invoke(student, r.value.count)
                 }
             }
         }
@@ -80,12 +92,14 @@ class LogInStudentObservable : ObservableObject {
     
     @MainActor
     func signUp(
-        invoke: @escaping (Student) -> Unit,
+        invoke: @escaping @BackgroundActor (PrefObserve.UserBase) -> Unit,
         failed: @escaping (String) -> Unit
     ) {
         let s = state
         if (s.email.isEmpty || s.password.isEmpty || s.imageUri == nil || s.university.isEmpty || s.specialty.isEmpty || s.studentName.isEmpty || s.mobile.isEmpty) {
-            self.state = self.state.copy(isErrorPressed: true)
+            withAnimation() {
+                self.state = self.state.copy(isErrorPressed: true)
+            }
             return
         }
         if (!isNetworkAvailable()) {
@@ -98,7 +112,7 @@ class LogInStudentObservable : ObservableObject {
     
     private func doSignUp(
         _ s: State,
-        _ invoke: @escaping (Student) -> Unit,
+        _ invoke: @escaping @BackgroundActor (PrefObserve.UserBase) -> Unit,
         _ failed: @escaping (String) -> Unit
     ) {
         self.realmSignIn(s: s,failed: failed) { user in
@@ -134,7 +148,7 @@ class LogInStudentObservable : ObservableObject {
     private func doInsertNewStudent(
         s: State,
         it: String,
-        invoke: @escaping (Student) -> Unit,
+        invoke: @escaping @BackgroundActor (PrefObserve.UserBase) -> Unit,
         failed: @escaping (String) -> Unit
     ) {
         scope.launchRealm {
@@ -149,9 +163,17 @@ class LogInStudentObservable : ObservableObject {
                 )
             )
             if (it.result == REALM_SUCCESS && it.value != nil) {
+                let student = it.value!
+                let userBase = PrefObserve.UserBase(
+                    id: student._id.stringValue,
+                    name: student.studentName,
+                    email: student.email,
+                    password: s.password,
+                    courses: 0
+                )
+                invoke(userBase)
                 self.scope.launchMain {
                     self.state = self.state.copy(isProcessing: false)
-                    invoke(it.value!)
                 }
             } else {
                 self.scope.launchMain {

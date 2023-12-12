@@ -18,11 +18,11 @@ struct HomeStudentScreen : View {
     private let buttonsList = ["Courses", "Available Timelines", "Upcoming Timelines", "Following Articles",  "Following Courses", "All Courses", "All Articles"]
     
     private var userName: String {
-        return (pref.getArgumentTwo(it: HOME_LECTURER_SCREEN_ROUTE) ?? "").firstSpace
+        return (pref.getArgumentTwo(it: HOME_STUDENT_SCREEN_ROUTE) ?? "").firstSpace
     }
     
     private func switchView(tab: Int) {
-        let userId = pref.getArgumentOne(it: HOME_LECTURER_SCREEN_ROUTE) ?? ""
+        let userId = pref.getArgumentOne(it: HOME_STUDENT_SCREEN_ROUTE) ?? ""
         switch tab {
         case 0 : obs.getCoursesForStudent(id: userId)
         case 1 : obs.getAvailableStudentTimeline(studentId: userId, studentName: userName)
@@ -211,12 +211,17 @@ struct HomeStudentScreen : View {
                                 text: "Profile",
                                 textColor: pref.theme.textColor
                             ) {
-                                pref.writeArguments(
-                                    route: STUDENT_SCREEN_ROUTE,
-                                    one: pref.getArgumentOne(it: STUDENT_SCREEN_ROUTE) ?? "",
-                                    two: pref.getArgumentTwo(it: STUDENT_SCREEN_ROUTE) ?? ""
-                                )
-                                pref.navigateTo(.STUDENT_SCREEN_ROUTE)
+                                pref.findUserBase { userBase in
+                                    guard let userBase else {
+                                        return
+                                    }
+                                    pref.writeArguments(
+                                        route: STUDENT_SCREEN_ROUTE,
+                                        one: userBase.id,
+                                        two: userBase.name
+                                    )
+                                    pref.navigateTo(.STUDENT_SCREEN_ROUTE)
+                                }
                             }.frame(width: 250)
                             Divider()
                             DrawerItem(
@@ -254,20 +259,16 @@ struct HomeStudentScreen : View {
 struct PageView : View {
     let list: [String]
     let theme: Theme
+    @State var current: Int = 0
     var body: some View {
-        VStack {
-            HStack {
-                Spacer()
-                ScrollView(Axis.Set.horizontal, showsIndicators: true) {
-                    ForEach(0..<list.count, id: \.self) { idx in
-                        ImageCacheView(list[idx])
-                    }
-                }.frame(width: 300, height: 200).background(theme.background)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                Spacer()
+        TabView(selection: $current) {
+            ForEach(0..<list.count, id: \.self) { idx in
+                ImageCacheView(list[idx], contentMode: .fill)
+                    .frame(width: 300, height: 200).tag(idx)
             }
-            Spacer().frame(height: 10)
-        }
+        }.tabViewStyle(.page(indexDisplayMode: .automatic))
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .frame(width: 300, height: 200).onCenter().background(theme.background)
     }
 }
 /*

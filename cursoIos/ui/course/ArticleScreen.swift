@@ -6,7 +6,7 @@ struct ArticleScreen : View {
     @StateObject var obs: ArticleObservable
     @State private var toast: Toast? = nil
     @State private var currentPage: Int = 0
-    
+    @State private var isKeyboard: Bool = false
     var articleId: String {
         return pref.getArgumentOne(it: ARTICLE_SCREEN_ROUTE) ?? ""
     }
@@ -31,14 +31,19 @@ struct ArticleScreen : View {
             
         ZStack {
             VStack {
-                ImageCacheView(state.article.imageUri)
-                    .frame(width: 200, height: 200).onTapGesture {
-                    pref.writeArguments(
-                        route: IMAGE_SCREEN_ROUTE,
-                        one: state.article.imageUri,
-                        two: state.article.title
-                    )
-                    pref.navigateTo(.IMAGE_SCREEN_ROUTE)
+                if !isKeyboard {
+                    Spacer().frame(height: 3)
+                    ImageCacheView(state.article.imageUri)
+                        .frame(height: 200).onTapGesture {
+                            pref.writeArguments(
+                                route: IMAGE_SCREEN_ROUTE,
+                                one: state.article.imageUri,
+                                two: state.article.title
+                            )
+                            pref.navigateTo(.IMAGE_SCREEN_ROUTE)
+                        }
+                } else {
+                    Spacer().frame(height: 50)
                 }
                 Spacer().frame(height: 5)
                 HStack {
@@ -64,9 +69,9 @@ struct ArticleScreen : View {
                 VStack {
                     Text(
                         state.article.lecturerName
-                    ).foregroundStyle(pref.theme.textColor).padding(10).frame(minWidth: 40)
+                    ).foregroundStyle(pref.theme.textColor).padding(10).frame(minWidth: 60)
                         .font(.system(size: 12))
-                }.background(RoundedRectangle(cornerRadius: 20).fill(shadowColor))
+                }.background(RoundedRectangle(cornerRadius: 20).fill(pref.theme.backDarkThr))
                     .padding(top: 3, leading: 10, bottom: 3, trailing: 10).onStart().onTapGesture {
                         pref.writeArguments(
                             route: LECTURER_SCREEN_ROUTE,
@@ -77,7 +82,7 @@ struct ArticleScreen : View {
                     }
                 HStack {
                     HStack {
-                        ImageAsset(icon: "profile", tint: Color.blue)
+                        ImageAsset(icon: "reader", tint: Color.blue)
                             .padding(3)
                             .frame(width: 25, height: 25)
                         Text(state.article.readers)
@@ -101,13 +106,19 @@ struct ArticleScreen : View {
                 }
                 Spacer().frame(height: 15)
                 PagerTab(currentPage: currentPage, onPageChange: { it in
-                    currentPage = it
+                    withAnimation {
+                        currentPage = it
+                    }
                 }, list: list, theme: pref.theme) {
                     
                     TextArticleFullPageScrollable(textList: state.article.text, textColor: pref.theme.textColor).tag(0)
                     //if mode != COURSE_MODE_NONE {
-                        ChatView(isEnabled: state.textFieldFocus, chatText: state.chatText, theme: pref.theme, onTextChanged: { it in
+                        ChatView(isEnabled: currentPage == 1, chatText: state.chatText, theme: pref.theme, onTextChanged: { it in
                             obs.changeChatText(it: it)
+                        }, onKeyboardChanged: { it in
+                            withAnimation {
+                                isKeyboard = it
+                            }
                         }, list: state.conversation?.messages ?? []) { it in
                             it.senderId == state.userId
                         } send: {

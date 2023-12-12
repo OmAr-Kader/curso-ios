@@ -14,7 +14,7 @@ class CreateArticleObservable : ObservableObject {
     }
     
     func getArticle(id: String) {
-        scope.launch {
+        scope.launchRealm {
             await self.app.project.article.getArticlesById(id) { r in
                 let v = r.value
                 guard let v else {
@@ -90,16 +90,18 @@ class CreateArticleObservable : ObservableObject {
         failed: @escaping () -> Unit
     ) {
         uploadImage(s: s, lecturerId: lecturerId, invoke: { imageUri in
-            let it = Article(
-                title: s.articleTitle,
-                lecturerName: lecturerName,
-                lecturerId: lecturerId,
-                imageUri: imageUri,
-                text: s.articleText.toArticleText(),
-                lastEdit: currentTime,
-                isDraft: isDraft ? 1: -1
-            )
-            invoke(it)
+            self.scope.launchRealm {
+                let it = Article(
+                    title: s.articleTitle,
+                    lecturerName: lecturerName,
+                    lecturerId: lecturerId,
+                    imageUri: imageUri,
+                    text: s.articleText.toArticleText(),
+                    lastEdit: currentTime,
+                    isDraft: isDraft ? 1: -1
+                )
+                invoke(it)
+            }
         }, failed: failed)
     }
     
@@ -175,19 +177,21 @@ class CreateArticleObservable : ObservableObject {
             return
         }
         uploadImage(s: s, lecturerId: lecturerId, invoke: { imageUri in
-            let it: Article = Article(
-                title: s.articleTitle,
-                lecturerName: lecturerName,
-                lecturerId: lecturerId,
-                imageUri: imageUri,
-                text: s.articleText.toArticleText(),
-                lastEdit: currentTime,
-                isDraft: isDraft ? 1: -1,
-                readerIds: c.readerIds.toRealmList(),
-                rate: c.rate,
-                raters: c.raters
-            )
-            invoke(it)
+            self.scope.launchRealm {
+                let it: Article = Article(
+                    title: s.articleTitle,
+                    lecturerName: lecturerName,
+                    lecturerId: lecturerId,
+                    imageUri: imageUri,
+                    text: s.articleText.toArticleText(),
+                    lastEdit: currentTime,
+                    isDraft: isDraft ? 1: -1,
+                    readerIds: c.readerIds.toRealmList(),
+                    rate: c.rate,
+                    raters: c.raters
+                )
+                invoke(it)
+            }
         }, failed: failed)
     }
 

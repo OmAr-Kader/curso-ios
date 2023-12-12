@@ -12,8 +12,8 @@ class LecturerRepoImp : BaseRepoImp, LecturerRepo {
         await query(
             lecturer,
             "getLecturerFollowed\(studentId)",
-            "%K == %@ AND %K == %@",
-            "partition", "public", 
+            "%K == %@ AND ANY %K == %@",
+            "partition", "public",
             "follower.studentId", NSString(string: studentId)
         )
     }
@@ -62,7 +62,9 @@ class LecturerRepoImp : BaseRepoImp, LecturerRepo {
         await querySingle(
             lecturer,
             "getLecturerEmail\(email)",
-            "%K == %@ AND %K == %@", "partition", "public", "email", NSString(string: email)
+            "%K == %@ AND %K == %@",
+            "partition", "public",
+            "email", NSString(string: email)
         )
     }
     

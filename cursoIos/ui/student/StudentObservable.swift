@@ -28,8 +28,9 @@ class StudentObservable : ObservableObject {
         scope.launchRealm {
             await self.app.project.student.getStudent(studentId) { r in
                 if r.value != nil {
-                    self.scope.launchMain {
-                        self.state = self.state.copy(student: StudentForData(update: r.value!))
+                    let student = StudentForData(update: r.value!)
+                    self.scope.launchMain { [student] in
+                        self.state = self.state.copy(student: student)
                     }
                     self.doFetchStudentCourses(studentId: studentId, studentName: r.value!.studentName)
                 }
@@ -44,8 +45,9 @@ class StudentObservable : ObservableObject {
         scope.launchRealm {
             await self.app.project.course.getStudentCourses(studentId) { r in
                 if (r.result == REALM_SUCCESS) {
+                    let courses = r.value.toCourseForData(currentTime)
                     self.scope.launchMain {
-                        self.state = self.state.copy(courses: r.value.toCourseForData(currentTime))
+                        self.state = self.state.copy(courses: courses)
                     }
                 }
                 self.doFetchStudentTimeline(studentId: studentId, studentName: studentName)

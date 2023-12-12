@@ -25,10 +25,12 @@ struct ImageAsset : View {
 struct ImageCacheView: View {
     private let urlString: String
     private let isVideoPreview: Bool
+    private let contentMode: ContentMode
     @StateObject private var obs: UrlImageModel
-    init(_ urlString: String, isVideoPreview: Bool = false) {
+    init(_ urlString: String, isVideoPreview: Bool = false, contentMode: ContentMode = .fit) {
         self.urlString = urlString
         self.isVideoPreview = isVideoPreview
+        self.contentMode = contentMode
         self._obs = StateObject(
             wrappedValue: UrlImageModel(url: URL(string: urlString), isPreview: isVideoPreview)
         )
@@ -40,7 +42,7 @@ struct ImageCacheView: View {
             .renderingMode(.original)
             .background(Color.clear)
             .imageScale(.large)
-            .aspectRatio(contentMode: .fit)
+            .aspectRatio(contentMode: contentMode)
             .onChange(urlString) { it in
                 if obs.image == nil {
                     obs.inti(url: URL(string: urlString), isPreview: isVideoPreview)

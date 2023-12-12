@@ -16,80 +16,75 @@ struct StudentScreen : View {
     
     var body: some View {
         let state = obs.state
-
         ZStack {
-            VStack(alignment: .center) {
-                VStack(alignment: .center) {
-                    VStack(alignment: .center) {
-                        ImageCacheView(state.student.imageUri)
-                    }.frame(width: 100, height: 100).clipShape(Circle())
-                    Text(state.student.studentName.ifEmpty {
-                        studentName
-                    }).foregroundStyle(pref.theme.textColor).padding(leading: 5, trailing: 5).font(.system(size: 14))
-                    Spacer().frame(height: 5)
-                    HStack(alignment: .center) {
-                        ProfileItems(
-                            icon: "video",
-                            color: Color.blue,
-                            theme: pref.theme,
-                            title: "Courses",
-                            numbers: String(state.courses.count)
-                        )
-                        ProfileItems(
-                            icon: "assignment",
-                            color: Color.green,
-                            theme: pref.theme,
-                            title: "Certificates",
-                            numbers: String(state.certificates.count)
-                        )
-                        ProfileItems(
-                            icon: "star",
-                            color: Color.yellow,
-                            theme: pref.theme,
-                            title: "Rate",
-                            numbers: String(obs.certificatesRate)
-                        )
-                        PagerTab(currentPage: currentPage, onPageChange: { it in
-                            currentPage = it
-                        }, list: ["Timeline", "Courses","Certificates"], theme: pref.theme) {
-                            StudentTimeLineView(sessions: state.sessionForDisplay, theme: pref.theme) { course in
-                                pref.writeArguments(
-                                    route: TIMELINE_SCREEN_ROUTE,
-                                    one: "",
-                                    two: "",
-                                    obj: course
-                                )
-                                pref.navigateTo(.TIMELINE_SCREEN_ROUTE)
-                            }.tag(0)
-                            HomeAllCoursesView(
-                                courses: state.courses,
-                                theme: pref.theme
-                            ) { course in
-                                pref.writeArguments(
-                                    route: COURSE_SCREEN_ROUTE,
-                                    one: course.id,
-                                    two: course.title,
-                                    three: COURSE_MODE_STUDENT,
-                                    obj: course
-                                )
-                                pref.navigateTo(.COURSE_SCREEN_ROUTE)
-                            }.tag(1)
-                            CertificatesView(certificates: state.certificates) { it in
-                                
-                            }.tag(2)
-                        }
-                    }
+            VStack {
+                ImageCacheView(state.student.imageUri, contentMode: .fill).frame(width: 100, height: 100).clipShape(Circle()).onCenter()
+                Text(state.student.studentName.ifEmpty {
+                    studentName
+                }).foregroundStyle(pref.theme.textColor).padding(leading: 5, trailing: 5).font(.system(size: 14))
+                Spacer().frame(height: 5)
+                HStack(alignment: .center) {
+                    ProfileItems(
+                        icon: "video",
+                        color: Color.blue,
+                        theme: pref.theme,
+                        title: "Courses",
+                        numbers: String(state.courses.count)
+                    )
+                    ProfileItems(
+                        icon: "assignment",
+                        color: Color.green,
+                        theme: pref.theme,
+                        title: "Certificates",
+                        numbers: String(state.certificates.count)
+                    )
+                    ProfileItems(
+                        icon: "star",
+                        color: Color.yellow,
+                        theme: pref.theme,
+                        title: "Rate",
+                        numbers: String(obs.certificatesRate)
+                    )
                 }
-            }.toastView(toast: $toast).onAppear {
-                pref.findPrefString(key: PREF_USER_ID) { id in
-                    if id != nil {
-                        obs.fetchStudent(studentId: studentId)
-                    }
-               }
-            }
+                PagerTab(currentPage: currentPage, onPageChange: { it in
+                    currentPage = it
+                }, list: ["Timeline", "Courses","Certificates"], theme: pref.theme) {
+                    StudentTimeLineView(sessions: state.sessionForDisplay, theme: pref.theme) { course in
+                        pref.writeArguments(
+                            route: TIMELINE_SCREEN_ROUTE,
+                            one: "",
+                            two: "",
+                            obj: course
+                        )
+                        pref.navigateTo(.TIMELINE_SCREEN_ROUTE)
+                    }.tag(0)
+                    HomeAllCoursesView(
+                        courses: state.courses,
+                        theme: pref.theme
+                    ) { course in
+                        pref.writeArguments(
+                            route: COURSE_SCREEN_ROUTE,
+                            one: course.id,
+                            two: course.title,
+                            three: COURSE_MODE_STUDENT,
+                            obj: course
+                        )
+                        pref.navigateTo(.COURSE_SCREEN_ROUTE)
+                    }.tag(1)
+                    CertificatesView(certificates: state.certificates) { it in
+                        
+                    }.tag(2)
+                }
+            }.toastView(toast: $toast)
             BackButton {
                 pref.backPress()
-            }
+            }.onTop().onStart()
+        }.background(pref.theme.background).onAppear {
+            pref.findPrefString(key: PREF_USER_ID) { id in
+                if id != nil {
+                    obs.fetchStudent(studentId: studentId)
+                }
+           }
         }
     }
 }

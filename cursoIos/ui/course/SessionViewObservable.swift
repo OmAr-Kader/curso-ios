@@ -33,9 +33,10 @@ class SessionViewObservable : ObservableObject {
                 guard let changes else {
                     return
                 }
+                let conv = ConversationForData(update: changes)
                 self.scope.launchMain {
                     self.state = self.state.copy(
-                        conversation: ConversationForData(update: changes)
+                        conversation: conv
                     )
                 }
             }
@@ -78,13 +79,16 @@ class SessionViewObservable : ObservableObject {
                     messages: self.messageCreator([], sessionForDisplay, self.state.chatText).toMessage()
                 )
             )
-            self.scope.launchMain {
-                if (it.result == REALM_SUCCESS && it.value != nil) {
+            if (it.result == REALM_SUCCESS && it.value != nil) {
+                let conv = ConversationForData(update: it.value!)
+                self.scope.launchMain {
                     self.state = self.state.copy(
-                        conversation: ConversationForData(update: it.value!),
+                        conversation: conv,
                         chatText: ""
                     )
-                } else {
+                }
+            } else {
+                self.scope.launchMain {
                     failed("Failed")
                 }
             }
@@ -108,9 +112,10 @@ class SessionViewObservable : ObservableObject {
                 )
             )
             if (it.result == REALM_SUCCESS && it.value != nil) {
+                let conv = ConversationForData(update: it.value!)
                 self.scope.launchMain {
                     self.state = self.state.copy(
-                        conversation: ConversationForData(update: it.value!),
+                        conversation: conv,
                         chatText: ""
                     )
                 }

@@ -1,6 +1,7 @@
 import Foundation
 import RealmSwift
 
+@BackgroundActor
 class Article: Object {
 
     @Persisted var title: String
@@ -95,6 +96,7 @@ class Article: Object {
     }
 }
 
+@BackgroundActor
 class ArticleText: EmbeddedObject {
     
     @Persisted var font: Int = 14
@@ -158,6 +160,7 @@ struct ArticleForData : ForData  {
         id = ""
     }
 
+    @BackgroundActor
     init(update: Article) {
         title = update.title
         lecturerName = update.lecturerName

@@ -101,19 +101,21 @@ class CreateCourseObserve : ObservableObject {
         self.uploadImage(s, lecturerId, { imageUri in
             self.uploadBriefVideo(s, lecturerId, { briefVideo in
                 self.uploadTimelineVideoSave(s, lecturerId, { timelines in
-                    let it = Course(
-                        title: s.courseTitle,
-                        lecturerName: lecturerName,
-                        lecturerId: lecturerId,
-                        price: s.price,
-                        imageUri: imageUri,
-                        about: s.about.toAboutCourse(),
-                        briefVideo: briefVideo,
-                        timelines: timelines.toTimeline(),
-                        lastEdit: currentTime,
-                        isDraft: isDraft ? 1 : -1
-                    )
-                    invoke(it)
+                    self.scope.launchRealm {
+                        let it = Course(
+                            title: s.courseTitle,
+                            lecturerName: lecturerName,
+                            lecturerId: lecturerId,
+                            price: s.price,
+                            imageUri: imageUri,
+                            about: s.about.toAboutCourse(),
+                            briefVideo: briefVideo,
+                            timelines: timelines.toTimeline(),
+                            lastEdit: currentTime,
+                            isDraft: isDraft ? 1 : -1
+                        )
+                        invoke(it)
+                    }
                 }, failed)
             }, failed)
         }, failed)
@@ -194,20 +196,22 @@ class CreateCourseObserve : ObservableObject {
         self.uploadImage(s, lecturerId, { imageUri in
             self.uploadBriefVideo(s, lecturerId, { briefVideo in
                 self.uploadTimelineVideoEdit(s, lecturerId, c!, { timelines in
-                    let it = Course(
-                        title: s.courseTitle,
-                        lecturerName: lecturerName,
-                        lecturerId: lecturerId,
-                        price: s.price,
-                        imageUri: imageUri,
-                        about: s.about.toAboutCourse(),
-                        briefVideo: briefVideo,
-                        timelines: timelines.toTimeline(),
-                        lastEdit: currentTime,
-                        isDraft: isDraft ? 1 : -1,
-                        id: c!.id
-                    )
-                    invoke(it)
+                    self.scope.launchRealm {
+                        let it = Course(
+                            title: s.courseTitle,
+                            lecturerName: lecturerName,
+                            lecturerId: lecturerId,
+                            price: s.price,
+                            imageUri: imageUri,
+                            about: s.about.toAboutCourse(),
+                            briefVideo: briefVideo,
+                            timelines: timelines.toTimeline(),
+                            lastEdit: currentTime,
+                            isDraft: isDraft ? 1 : -1,
+                            id: c!.id
+                        )
+                        invoke(it)
+                    }
                 }, failed)
             }, failed)
         }, failed)

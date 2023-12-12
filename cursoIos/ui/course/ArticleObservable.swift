@@ -145,8 +145,9 @@ class ArticleObservable : ObservableObject {
                     argTwo: article.title,
                     mode: mode
                 )
+                let conv = ConversationForData(update: it.value!)
                 self.scope.launchMain {
-                    self.state = self.state.copy(conversation: ConversationForData(update: it.value!), chatText: "")
+                    self.state = self.state.copy(conversation: conv, chatText: "")
                 }
             } else {
                 self.scope.launchMain {
@@ -185,8 +186,9 @@ class ArticleObservable : ObservableObject {
                     argTwo: article.title,
                     mode: mode
                 )
+                let conv = ConversationForData(update: it.value!)
                 self.scope.launchMain {
-                    self.state = self.state.copy(conversation: ConversationForData(update: it.value!), chatText: "")
+                    self.state = self.state.copy(conversation: conv, chatText: "")
                 }
             } else {
                 self.scope.launchMain {

@@ -47,11 +47,12 @@ class CourseObservable : ObservableObject {
         scope.launchRealm {
             await self.app.project.course.getCoursesById(courseId) { r in
                 if (r.value != nil) {
+                    let course = CourseForData(
+                        update: r.value!, currentTime: currentTime
+                    )
                     self.scope.launchMain {
                         self.state = self.state.copy(
-                            course: CourseForData(
-                                update: r.value!, currentTime: currentTime
-                            ),
+                            course: course,
                             isLoading: false
                         )
                     }
@@ -205,8 +206,9 @@ class CourseObservable : ObservableObject {
                     argTwo: it.value!.courseName,
                     mode: mode
                 )
+                let conv = ConversationForData(update: it.value!)
                 self.scope.launchMain {
-                    self.state = self.state.copy(conversation: ConversationForData(update: it.value!), chatText: "")
+                    self.state = self.state.copy(conversation: conv, chatText: "")
                 }
             } else {
                 self.scope.launchMain {
@@ -247,8 +249,9 @@ class CourseObservable : ObservableObject {
                     argTwo: it.value!.courseName,
                     mode: mode
                 )
+                let conv = ConversationForData(update: it.value!)
                 self.scope.launchMain {
-                    self.state = self.state.copy(conversation: ConversationForData(update: it.value!), chatText: "")
+                    self.state = self.state.copy(conversation: conv, chatText: "")
                 }
             } else {
                 self.scope.launchMain {

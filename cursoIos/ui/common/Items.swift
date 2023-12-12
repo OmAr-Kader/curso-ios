@@ -99,7 +99,7 @@ struct OwnArticleItem : View {
     
     var body: some View {
         HStack {
-            ImageAsset(icon: "profile", tint: theme.primary)
+            ImageAsset(icon: "reader", tint: theme.primary)
                 .frame(width: 15, height: 15)
             Text(readers)
                 .foregroundStyle(theme.textColor)
@@ -189,8 +189,7 @@ struct AllArticleIem : View {
                 .frame(alignment: .center)
             Spacer()
             HStack {
-                ImageAsset(icon: "money", tint: theme.primary)
-                    .padding(3)
+                ImageAsset(icon: "reader", tint: theme.primary)
                     .frame(width: 15, height: 15)
                 Text(readers)
                     .padding(leading: -3)
@@ -224,6 +223,7 @@ struct LecturerCourseItem : View {
                 Spacer()
                 HStack {
                     ImageAsset(icon: "money", tint: theme.primary)
+                        .padding(3)
                         .frame(width: 15, height: 15)
                     Text(price).foregroundStyle(theme.textColor).lineLimit(1)
                         .font(.system(size: 10))

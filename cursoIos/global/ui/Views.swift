@@ -33,6 +33,14 @@ extension View {
         }
     }
     
+    @inlinable public func onCenter() -> some View {
+        return HStack {
+            Spacer()
+            self
+            Spacer()
+        }
+    }
+    
     @inlinable public func onTop() -> some View {
         return VStack {
             self
@@ -59,13 +67,15 @@ extension View {
         }
     }
     
-    @inlinable func safeAreaSpace(_ edges: Edge.Set) -> some View {
+    /*@inlinable func safeAreaSpace(_ edges: Edge.Set) -> some View {
         if #available(iOS 17.0, *) {
             return safeAreaPadding(edges)
         } else {
-            return self
+            return safeAreaInset(edge: .bottom) {
+                self
+            }
         }
-    }
+    }*/
     
     func onChange<T: Equatable>(_ it: T,_ action: @escaping (T) -> Void) -> some View {
         if #available(iOS 17.0, *) {
@@ -188,7 +198,10 @@ struct PagerTab<Content : View> : View {
     @ViewBuilder var pageContent: () -> Content
 
     var body: some View {
-        VStack {
+        ZStack {
+            theme.background.margeWithPrimary
+                .clipShape(.rect(topLeadingRadius: 15, topTrailingRadius: 15))
+                .ignoresSafeArea(edges: .bottom)
             VStack {
                 Spacer().frame(height: 15)
                 HStack {
@@ -204,10 +217,8 @@ struct PagerTab<Content : View> : View {
                 }, set: { it in
                     onPageChange(it)
                 }), content: pageContent).tabViewStyle(.page(indexDisplayMode: .never))
-            }.background(theme.background.margeWithPrimary)
-        }.clipShape(
-            .rect(topLeadingRadius: 15, topTrailingRadius: 15)
-        )
+            }
+        }
     }
 }
 /*
@@ -585,22 +596,27 @@ struct ListBodyEdit<D : ForData, Content: View> : View {
 struct ListBodyEditAdditional<D, Content: View, Additional: View> : View {
     let list: [D]
     var itemColor: Color = Color.clear
+    let nav: (D) -> Unit
     @ViewBuilder let additionalItem: (() -> Additional)
     @ViewBuilder let content: (D) -> Content
 
     var body: some View {
-        ScrollView(Axis.Set.vertical) {
-            LazyVStack {
-                additionalItem()
-                ForEach(0..<list.count, id: \.self) { index in
-                    let it = list[index]
-                    ZStack {
-                        content(it)
-                    }.frame(height: 80)
-                        .padding(5)
-                        .background(
-                            RoundedRectangle(cornerRadius: 15).fill(itemColor)
-                        )
+        VStack {
+            ScrollView(Axis.Set.vertical) {
+                LazyVStack {
+                    additionalItem()
+                    ForEach(0..<list.count, id: \.self) { index in
+                        let it = list[index]
+                        Button {
+                            nav(it)
+                        } label: {
+                            content(it)
+                        }.frame(height: 80)
+                            .padding(5)
+                            .background(
+                                RoundedRectangle(cornerRadius: 15).fill(itemColor)
+                            )
+                    }
                 }
             }
         }
@@ -612,7 +628,7 @@ struct ImageForCurveItem : View {
     let size: CGFloat
     var body: some View {
         VStack {
-            ImageCacheView(imageUri)
+            ImageCacheView(imageUri, contentMode: .fill)
                 .frame(width: size, height: size, alignment: .center)
         }.frame(width: size, height: size, alignment: .center)
             .clipShape(
@@ -663,15 +679,6 @@ struct TextFullPageScrollable : View {
                     .font(.system(size: 14))
                     .padding(leading: 20, trailing: 20)
                     .lineLimit(nil)
-                    /*.frame(
-                        minWidth: geometry.size.width,
-                        idealWidth: geometry.size.width,
-                        maxWidth: geometry.size.width,
-                        minHeight: geometry.size.height,
-                        idealHeight: geometry.size.height,
-                        maxHeight: .infinity,
-                        alignment: .topLeading
-                    )*/
             }
         }
         //}

@@ -7,7 +7,8 @@ struct CourseScreen : View {
     @StateObject var obs: CourseObservable
     @State private var toast: Toast? = nil
     @State private var currentPage: Int = 1
-    
+    @State private var isKeyboard: Bool = false
+
     var courseId: String {
         return pref.getArgumentOne(it: COURSE_SCREEN_ROUTE) ?? ""
     }
@@ -48,24 +49,28 @@ struct CourseScreen : View {
         let state = obs.state
         ZStack {
             VStack {
-                ZStack {
-                    FullZStack {
-                        ImageCacheView(state.course.briefVideo, isVideoPreview: true)
-                            .frame(height: 200)
-                    }.frame(height: 200)
-                    FullZStack {
-                        ImageAsset(icon: "play", tint: .white)
-                            .frame(width: 45, height: 45).padding(5)
-                    }.frame(height: 200).background(
-                        UIColor(_colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.64).toC
-                    )
-                }.frame(height: 200).onTapGesture {
-                    pref.writeArguments(
-                        route: VIDEO_SCREEN_ROUTE,
-                        one: state.course.briefVideo,
-                        two: state.course.title
-                    )
-                    pref.navigateTo(.VIDEO_SCREEN_ROUTE)
+                if !isKeyboard {
+                    ZStack {
+                        FullZStack {
+                            ImageCacheView(state.course.briefVideo, isVideoPreview: true)
+                                .frame(height: 200)
+                        }.frame(height: 200)
+                        FullZStack {
+                            ImageAsset(icon: "play", tint: .white)
+                                .frame(width: 45, height: 45).padding(5)
+                        }.frame(height: 200).background(
+                            UIColor(_colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.64).toC
+                        )
+                    }.frame(height: 200).onTapGesture {
+                        pref.writeArguments(
+                            route: VIDEO_SCREEN_ROUTE,
+                            one: state.course.briefVideo,
+                            two: state.course.title
+                        )
+                        pref.navigateTo(.VIDEO_SCREEN_ROUTE)
+                    }
+                } else {
+                    Spacer().frame(height: 50)
                 }
                 Spacer().frame(height: 5)
                 HStack {
@@ -106,9 +111,9 @@ struct CourseScreen : View {
                 VStack {
                     Text(
                         state.course.lecturerName
-                    ).foregroundStyle(pref.theme.textColor).padding(10).frame(minWidth: 40)
+                    ).foregroundStyle(pref.theme.textColor).padding(10).frame(minWidth: 60)
                         .font(.system(size: 12))
-                }.background(RoundedRectangle(cornerRadius: 20).fill(shadowColor))
+                }.background(RoundedRectangle(cornerRadius: 20).fill(pref.theme.backDarkThr))
                     .padding(top: 3, leading: 10, bottom: 3, trailing: 10).onStart().onTapGesture {
                         pref.writeArguments(
                             route: LECTURER_SCREEN_ROUTE,
@@ -143,7 +148,9 @@ struct CourseScreen : View {
                 }
                 Spacer().frame(height: 15)
                 PagerTab(currentPage: currentPage, onPageChange: { it in
-                    currentPage = it
+                    withAnimation {
+                        currentPage = it
+                    }
                 }, list: list, theme: pref.theme) {
                     TimeLineView(state: state, theme: pref.theme, mode: mode) { it in
                         pref.writeArguments(
@@ -156,8 +163,12 @@ struct CourseScreen : View {
                     }.tag(0)
                     TextCourseFullPageScrollable(textList: state.course.about, textColor: pref.theme.textColor).tag(1)
                     if mode != COURSE_MODE_NONE {
-                        ChatView(isEnabled: state.textFieldFocus, chatText: state.chatText, theme: pref.theme, onTextChanged: { it in
+                        ChatView(isEnabled: currentPage == 2, chatText: state.chatText, theme: pref.theme, onTextChanged: { it in
                             obs.changeChatText(it: it)
+                        }, onKeyboardChanged: { it in
+                            withAnimation {
+                                isKeyboard = it
+                            }
                         }, list: state.conversation?.messages ?? []) { it in
                             it.senderId == state.userId
                         } send: {

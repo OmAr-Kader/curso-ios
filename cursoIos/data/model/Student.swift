@@ -2,6 +2,7 @@
 import Foundation
 import RealmSwift
 
+@BackgroundActor
 class Student : Object {
 
     @Persisted var studentName: String
@@ -85,6 +86,7 @@ struct StudentForData {
         id = ""
     }
 
+    @BackgroundActor
     init(update: Student) {
         studentName = update.studentName
         email = update.email
