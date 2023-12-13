@@ -59,18 +59,18 @@ This is iOS application that allows users to enroll in courses and lecturer arti
 ## Screenshots
 
 ### Lecturer
-<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/2ce9bf42-da35-40f4-8797-e3eca6427177"  width="300" height="667"/>
-<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/805b7c5d-bf48-489f-867f-a4551253a7f6"  width="300" height="667"/>
-<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/6651ae99-7878-499b-991e-8849ddfc2e11"  width="300" height="667"/>
-<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/ce220d0c-7601-468b-9077-c203bc553e2f"  width="300" height="667"/>
-<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/574f7295-247e-4700-a64e-c60472d811ea"  width="300" height="667"/>
-<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/9462d95f-3666-4233-80ba-80689b48a638"  width="300" height="667"/>
+<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/8abbcb61-0577-4a0b-a8cb-cb96560c6bf4"  width="300" height="667"/>
+<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/6aededcb-2dc7-4c38-af46-ca05e8e35c51"  width="300" height="667"/>
+<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/4a4cf164-f2c9-460a-a94c-d5e89ac50409"  width="300" height="667"/>
+<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/20c372aa-5332-4f02-8398-fd71b2585ccb"  width="300" height="667"/>
+<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/390c7fe3-b03d-48bf-9cec-6f1992b4ffb1"  width="300" height="667"/>
+<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/a7339307-3fec-4a07-84fd-2958bf6c4d2a"  width="300" height="667"/>
 
 ### Student
-<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/674ae10f-f013-4c8a-a0e1-9492ea80d47b"  width="300" height="667"/>
-<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/11b1ad91-a85f-41cf-bca4-62005862e125"  width="300" height="667"/>
-<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/a93f27ed-a200-4e5d-b35e-ca2e9b40964d"  width="300" height="667"/>
+<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/0b49237f-588b-4868-9566-0ef7d183abcd"  width="300" height="667"/>
+<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/2efefe92-b487-45d0-a522-68a1f471b134"  width="300" height="667"/>
+<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/839f2012-bc69-401b-b48e-d0bad69df4aa"  width="300" height="667"/>
 
 ### Common
-<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/d84dc020-b5ff-4752-9268-374bacf14d97"  width="300" height="667"/>
-<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/0f4d337b-3dfb-42ea-bca2-d7e665be0ea4"  width="300" height="667"/>
+<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/d3ae1490-ef82-4455-a4f8-a8affecbe26d"  width="300" height="667"/>
+<img src="https://github.com/OmAr-Kader/curso-ios/assets/137582672/948bb675-65ca-4f5c-aeee-5fe876e097eb"  width="300" height="667"/>
