@@ -24,6 +24,12 @@ extension ToastStyle {
             case .success: return Color.green
         }
     }
+    var textColor: Color {
+        UITraitCollection.current.userInterfaceStyle.isDarkMode ? Color.white : Color.black
+    }
+    var background: Color {
+        UITraitCollection.current.userInterfaceStyle.isDarkMode ? Color(red: 100 / 255, green: 100 / 255, blue: 100 / 255) : Color(red: 172 / 255, green: 172 / 255, blue: 172 / 255)
+    }
   
   var iconFileName: String {
         switch self {
@@ -48,7 +54,7 @@ struct ToastView: View {
         .foregroundColor(style.themeColor)
       Text(message)
         .font(Font.caption)
-        .foregroundColor(Color.black)
+        .foregroundColor(style.textColor)
       
       Spacer(minLength: 10)
       
@@ -61,12 +67,8 @@ struct ToastView: View {
     }
     .padding()
     .frame(minWidth: 0, maxWidth: width)
-    .background(Color.gray)
+    .background(RoundedRectangle(cornerRadius: 8).fill(style.background))
     .cornerRadius(8)
-    .overlay(
-      RoundedRectangle(cornerRadius: 8)
-        .opacity(0.6)
-    )
     .padding(.horizontal, 16)
   }
 }

@@ -14,16 +14,17 @@ extension FirebaseApp {
         storage.putFile(from: uri) { it, e in
             if (it == nil) {
                 failed()
-                loggerError("FirebaseApp.upload", e?.localizedDescription ?? "")
+                print("FirebaseApp.upload" + (e?.localizedDescription ?? ""))
                 return
             }
+            print("==" + "put")
             storage.downloadURL { u, ee in
                 if (u == nil) {
                     failed()
-                    loggerError("FirebaseApp.upload", ee?.localizedDescription ?? "")
+                    print("FirebaseApp.upload" + (ee?.localizedDescription ?? ""))
                     return
                 }
-                
+                print("==" + u!.absoluteString)
                 invoke(u!.absoluteString)
             }
         }

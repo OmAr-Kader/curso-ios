@@ -22,6 +22,11 @@ struct CreateCourseTimelineScreen : View {
             VStack {
                 Spacer().frame(height: 50)
                 if state.dialogMode == 1 {
+                    Text("Create a Timeline").font(.system(size: 14))
+                        .padding(
+                            20
+                        ).foregroundStyle(pref.theme.textColor).onCenter()
+                        .background(RoundedRectangle(cornerRadius: 7).fill(pref.theme.backDarkThr))
                     HStack {
                         Spacer()
                         OutlinedButton(action: { _ in
@@ -37,6 +42,12 @@ struct CreateCourseTimelineScreen : View {
                         }, text: "Exam", index: 0, animate: state.timelineData.isExam, theme: pref.theme)
                         Spacer()
                     }
+                } else {
+                    Text("Edit Timeline").font(.system(size: 14))
+                        .padding(
+                            20
+                        ).foregroundStyle(pref.theme.textColor).onCenter()
+                        .background(RoundedRectangle(cornerRadius: 7).fill(pref.theme.backDarkThr))
                 }
                 if (!state.timelineData.isExam) {
                     if (state.timelineData.video.isEmpty) {
@@ -52,6 +63,8 @@ struct CreateCourseTimelineScreen : View {
                                         UIColor(pref.theme.textColor)
                                     ) ?? UIImage()
                                 ).resizable()
+                                    .renderingMode(.template)
+                                    .foregroundColor(pref.theme.textColor)
                                     .imageScale(.large)
                                     .scaledToFit()
                                     .clipShape(Circle())
@@ -203,7 +216,7 @@ struct CreateCourseTimelineScreen : View {
                 //self.presentation.wrappedValue.dismiss()
                 //pref.backPress()
             }.onStart().onTop()
-        }.background(pref.theme.backDark)
+        }.background(pref.theme.backDarkSec)
         /*Button("Confirm", role: .destructive) {
          obs.addEditTimeline()
          }

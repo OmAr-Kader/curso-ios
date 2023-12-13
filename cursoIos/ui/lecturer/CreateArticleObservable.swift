@@ -100,6 +100,7 @@ class CreateArticleObservable : ObservableObject {
                     lastEdit: currentTime,
                     isDraft: isDraft ? 1: -1
                 )
+                print("==> " + it.title)
                 invoke(it)
             }
         }, failed: failed)
@@ -114,7 +115,9 @@ class CreateArticleObservable : ObservableObject {
         invoke: @escaping (Article?) -> Unit
     ) {
         articleForSave(isDraft: isDraft, lecturerId: lecturerId, lecturerName: lecturerName, s: s, invoke: { course in
+
             self.scope.launchRealm {
+                print("==> " + "course.")
                 let it = await self.app.project.article.insertArticle(
                     course
                 )
@@ -128,6 +131,7 @@ class CreateArticleObservable : ObservableObject {
                     )
                 }
                 self.scope.launchMain {
+                    print("==> " + String(it.result))
                     self.state = self.state.copy(isProcessing: false, isDraftProcessing: false)
                     invoke(it.value)
                 }
@@ -277,7 +281,9 @@ class CreateArticleObservable : ObservableObject {
 
     @MainActor
     func setImageUri(it: String) {
-        state = state.copy(imageUri: it, isErrorPressed: false)
+        scope.launchMain { [self] in
+            state = state.copy(imageUri: it, isErrorPressed: false)
+        }
     }
 
     @MainActor
@@ -295,19 +301,20 @@ class CreateArticleObservable : ObservableObject {
         if (s.imageUri != courseUri && !s.imageUri.isEmpty) {
             let uri = URL(string: s.imageUri)
             guard let uri else {
+                print("==> " + "nil")
                 failed()
                 return
             }
             if courseUri?.contains("https") == true {
                 self.app.project.fireApp?.deleteFile(courseUri!)
-            } else {
-                failed()
-                return
             }
+            print("==> " + "1  " + uri.absoluteString)
             self.app.project.fireApp?.upload(
                 uri, lecturerId + "/" + "IMG_" + String(currentTime) + uri.pathExtension,
                 { it in
+                    print("==> " + it)
                     self.scope.launchMain {
+                        print("==> " + "done")
                         invoke(it)
                         self.state = self.state.copy(imageUri: it, isErrorPressed: false)
                     }

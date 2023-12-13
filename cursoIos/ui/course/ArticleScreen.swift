@@ -165,7 +165,7 @@ struct TextArticleFullPageScrollable : View {
                         .foregroundStyle(textColor)
                         .font(.system(size: CGFloat(art.font)))
                         .padding(leading: 20, trailing: 20)
-                        .lineLimit(nil)
+                        .lineLimit(nil).onStart()
                 }
             }
         }

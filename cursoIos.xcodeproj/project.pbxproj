@@ -99,10 +99,28 @@
 		07FC890C2B10D50E00143419 /* ResultRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07FC88E32B10D50D00143419 /* ResultRealm.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		075588612B29C0C30089F236 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0740F9EB2B13884600ECC5E0 /* Scope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scope.swift; sourceTree = "<group>"; };
 		0740F9ED2B13CD2C00ECC5E0 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		0740F9EF2B13DDC700ECC5E0 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		075588502B29C0C20089F236 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		075588522B29C0C30089F236 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
+		075588552B29C0C30089F236 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		075588582B29C0C30089F236 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		0755885A2B29C0C30089F236 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		07592E9C2B16BFB9008E9C57 /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		07592E9E2B178752008E9C57 /* PrefObserve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefObserve.swift; sourceTree = "<group>"; };
 		076996D82B1129A1009D727F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -220,6 +238,25 @@
 			path = ui;
 			sourceTree = "<group>";
 		};
+		0755884F2B29C0C20089F236 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				075588502B29C0C20089F236 /* UserNotifications.framework */,
+				075588522B29C0C30089F236 /* UserNotificationsUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		075588542B29C0C30089F236 /* Curso */ = {
+			isa = PBXGroup;
+			children = (
+				075588552B29C0C30089F236 /* NotificationViewController.swift */,
+				075588572B29C0C30089F236 /* MainInterface.storyboard */,
+				0755885A2B29C0C30089F236 /* Info.plist */,
+			);
+			path = Curso;
+			sourceTree = "<group>";
+		};
 		076996DE2B115382009D727F /* ui */ = {
 			isa = PBXGroup;
 			children = (
@@ -291,6 +328,8 @@
 			isa = PBXGroup;
 			children = (
 				07FC88812B0D3E8500143419 /* cursoIos */,
+				075588542B29C0C30089F236 /* Curso */,
+				0755884F2B29C0C20089F236 /* Frameworks */,
 				07FC88802B0D3E8500143419 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -503,6 +542,7 @@
 				07FC887B2B0D3E8500143419 /* Sources */,
 				07FC887C2B0D3E8500143419 /* Frameworks */,
 				07FC887D2B0D3E8500143419 /* Resources */,
+				075588612B29C0C30089F236 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -526,7 +566,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1510;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					07FC887E2B0D3E8500143419 = {
@@ -662,6 +702,17 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXVariantGroup section */
+		075588572B29C0C30089F236 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				075588582B29C0C30089F236 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		07FC888B2B0D3E8700143419 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -785,12 +836,14 @@
 		07FC888E2B0D3E8700143419 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = cursoIos/cursoIos.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"cursoIos/Preview Content\"";
+				DEVELOPMENT_TEAM = PZ43Q4WJMV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = cursoIos/Info.plist;
@@ -817,12 +870,14 @@
 		07FC888F2B0D3E8700143419 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = cursoIos/cursoIos.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"cursoIos/Preview Content\"";
+				DEVELOPMENT_TEAM = PZ43Q4WJMV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = cursoIos/Info.plist;

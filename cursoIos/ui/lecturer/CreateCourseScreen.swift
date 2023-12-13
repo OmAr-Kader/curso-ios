@@ -98,43 +98,7 @@ struct CreateCourseScreen : View {
                 BottomBar(obs: obs, pref: pref) { userBase in
                     saveOrEdit(isDraft: true, userBase: userBase)
                 }
-            }/*.alert("", isPresented: Binding(get: {
-                state.dialogMode != 0
-            }, set: { it, _ in
-                print(String(it))
-                obs.makeDialogGone()
-            })) {
-                DialogWithImage(
-                    obs: obs,
-                    theme: pref.theme
-                ) {
-                    pref.writeArguments(
-                        route: VIDEO_SCREEN_ROUTE,
-                        one: state.timelineData.video,
-                        two: state.timelineData.title
-                    )
-                    pref.navigateTo(.VIDEO_SCREEN_ROUTE)
-                }
-            } message: {
-                Text("Timeline")
             }.alert("", isPresented: Binding(get: {
-                state.dateTimePickerMode != 0
-            }, set: { it, _ in
-                print(String(it))
-                obs.closeDateTimePicker()
-            })) {
-                DialogDateTimePicker(dateTime: state.timelineData.date, mode: state.dateTimePickerMode, theme: pref.theme) {
-                    obs.displayDateTimePicker()
-                } snake: { it in
-                    toast = Toast(style: .error, message: it)
-                } close: {
-                    obs.closeDateTimePicker()
-                } invoke: { timeSelected in
-                    obs.confirmTimelineDateTimePicker(timeSelected)
-                }
-            } message: {
-                Text("Date")
-            }*/.alert("", isPresented: Binding(get: {
                 state.isConfirmDialogVisible
             }, set: { it, _ in
                 print(String(it))

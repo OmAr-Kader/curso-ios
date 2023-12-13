@@ -23,7 +23,7 @@ struct SplashScreen : View {
     @StateObject var pref: PrefObserve
 
     @State private var scale: Double = 1
-    @State private var isStudent: Bool = true
+    @State private var isStudent: Bool = false
     @State private var width: CGFloat = 50
     var body: some View {
         FullZStack {

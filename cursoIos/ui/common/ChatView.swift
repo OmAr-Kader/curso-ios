@@ -111,17 +111,17 @@ struct MessageView :  View {
             if message.fromStudent {
                 Text("From: " + message.senderName).font(.system(size: 12))
                     .foregroundStyle(fromColor)
-                    .padding(top: 2.5, leading: 10, bottom: 10, trailing: 10)
-                    .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
+                    .padding(top: 2.5, leading: 10, bottom: 2.5, trailing: 10)
+                    .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/).onStart()
                 Text(message.message).font(.system(size: 14))
                     .foregroundStyle(colorText)
                     .padding(top: 2.5, leading: 10, bottom: 2.5, trailing: 10)
-                    .foregroundStyle(colorText)
+                    .foregroundStyle(colorText).onStart()
             } else {
                 Text(message.message).font(.system(size: 14))
                     .foregroundStyle(colorText)
                     .padding(10)
-                    .foregroundStyle(colorText)
+                    .foregroundStyle(colorText).onStart()
             }
         }.frame(minWidth: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, maxHeight: 300).padding(5).background(
             RoundedRectangle(cornerRadius: 20).fill(colorCard)

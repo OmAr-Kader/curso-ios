@@ -45,6 +45,7 @@ class LogInStudentObservable : ObservableObject {
             if user == nil {
                 self.scope.launchMain {
                     self.state = self.state.copy(isProcessing: false)
+                    failed("Failed")
                 }
                 return
             }
@@ -82,9 +83,21 @@ class LogInStudentObservable : ObservableObject {
                     password: password,
                     courses: r.value.count
                 )
-                invoke(userBase)
-                self.scope.launchMain {
-                    self.state = self.state.copy(isProcessing: false)
+                self.scope.launchRealm {
+                    await self.app.project.lecturer.getLecturerFollowed(userBase.id) { rr in
+                        invoke(userBase)
+                        let list = r.value.map { it in
+                            it._id.stringValue
+                        } + rr.value.map { it in
+                            it._id.stringValue
+                        }
+                        self.scope.launchMed {
+                            await subscribeToTopics(list)
+                        }
+                        self.scope.launchMain {
+                            self.state = self.state.copy(isProcessing: false)
+                        }
+                    }
                 }
             }
         }

@@ -77,7 +77,7 @@ struct CreateArticleScreen : View {
                     }
                 }
             } message: {
-                Text("Date")
+                Text("Confirm to delete").foregroundStyle(pref.theme.textColor).font(.system(size: 16))
             }.background(pref.theme.background.margeWithPrimary).toastView(toast: $toast)
             ToolBarButton(icon: "delete") {
                 obs.changeUploadDialogGone(it: true)

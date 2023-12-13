@@ -678,7 +678,7 @@ struct TextFullPageScrollable : View {
                     .foregroundStyle(textColor)
                     .font(.system(size: 14))
                     .padding(leading: 20, trailing: 20)
-                    .lineLimit(nil)
+                    .lineLimit(nil).onStart()
             }
         }
         //}

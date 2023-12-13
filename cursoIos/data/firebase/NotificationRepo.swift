@@ -11,10 +11,9 @@ func postNotification(_ not: PushNotification) {
     request.setValue("key=\(FIREBASE_SERVER_KEY)", forHTTPHeaderField: "Authorization")
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     do {
-        let requestBody = try JSONEncoder().encode(not)
         //let not = try JSONDecoder().decode([PushNotification].self, from: jsonData)
 
-        let jsonData = try JSONSerialization.data(withJSONObject: requestBody)
+        let jsonData = try JSONSerialization.data(withJSONObject: not.mapper)
         request.httpBody = jsonData
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {

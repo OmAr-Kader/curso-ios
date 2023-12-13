@@ -304,9 +304,11 @@ class CreateCourseObserve : ObservableObject {
 
     @MainActor
     func setImageUri(it: String) {
-        state = state.copy(imageUri: it, isErrorPressed: false)
+        scope.launchMain { [self] in
+            state = state.copy(imageUri: it, isErrorPressed: false)
+        }
     }
-
+    
     @MainActor
     func setTitleTimeline(it: String) {
         state = state.copy(

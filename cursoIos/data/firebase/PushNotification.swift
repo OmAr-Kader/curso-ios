@@ -5,7 +5,7 @@ struct PushNotification : Codable {
     let to: String
     let topic: String
     let data: NotificationData
-
+    
     init(to: String, topic: String, data: NotificationData) {
         self.to = to
         self.topic = topic
@@ -17,6 +17,14 @@ struct PushNotification : Codable {
         to = info["to"] as? String ?? ""
         data = NotificationData.init(info: info["data"] as? [AnyHashable : Any])
     }
+    
+    var mapper: [AnyHashable : Any] {
+        [
+            "topic": topic,
+            "to": to,
+            "data" : data.mapper
+        ]
+    }
 }
 
 struct NotificationData : Codable {
@@ -27,7 +35,7 @@ struct NotificationData : Codable {
     let argOne: String
     let argTwo: String
     let argThree: Int
-
+    
     init(title: String, message: String, routeKey: String, argOne: String, argTwo: String, argThree: Int) {
         self.title = title
         self.message = message
@@ -44,5 +52,17 @@ struct NotificationData : Codable {
         argOne = info?["argOne"] as? String ?? ""
         argTwo = info?["argTwo"] as? String ?? ""
         argThree = info?["argThree"] as? Int ?? 0
-   }
+    }
+    
+    var mapper: [AnyHashable : Any] {
+        [
+            "title" : title,
+            "message" : message,
+            "routeKey" : routeKey,
+            "argOne" : argOne,
+            "argTwo" : argTwo,
+            "argThree" : argThree
+        ]
+    }
+    
 }

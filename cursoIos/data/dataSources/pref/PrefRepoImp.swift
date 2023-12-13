@@ -111,7 +111,7 @@ class PrefRepoImp : PrefRepo {
             if (op == nil) {
                 return REALM_FAILED
             }
-            try realm.write {
+            try await realm.asyncWrite {
                 realm.delete(op!)
             }
             return REALM_SUCCESS
@@ -126,8 +126,14 @@ class PrefRepoImp : PrefRepo {
         guard let realm else {
             return REALM_FAILED
         }
-        realm.delete(realm.objects(Preference.self))
-       return REALM_SUCCESS
+        do {
+            try await realm.asyncWrite {
+                realm.delete(realm.objects(Preference.self))
+            }
+            return REALM_SUCCESS
+        } catch {
+            return REALM_FAILED
+        }
     }
 
 }

@@ -76,6 +76,15 @@ func subscribeToTopic(_ courseId: String,_ invoke: @escaping () -> Unit) {
         }
 }
 
+
+func subscribeToTopics(_ courseIds: [String]) async {
+    for courseId in courseIds {
+        try? await FirebaseMessaging.Messaging.messaging().subscribe(
+            toTopic: "/topics/" + courseId)
+    }
+}
+
+
 func unsubscribeToTopic(_ courseId: String) {
     FirebaseMessaging.Messaging.messaging().unsubscribe(fromTopic: "/topics/" + courseId, completion: { e in
         loggerError("unsubscribeToTopic", e?.localizedDescription ?? "Done")

@@ -45,6 +45,7 @@ class LogInObserveLecturer : ObservableObject {
             if user == nil {
                 self.scope.launchMain {
                     self.state = self.state.copy(isProcessing: false)
+                    failed("Failed")
                 }
                 return
             }
@@ -83,6 +84,12 @@ class LogInObserveLecturer : ObservableObject {
                     courses: r.value.count
                 )
                 invoke(userBase)
+                let list = r.value.map { it in
+                    it._id.stringValue
+                }
+                self.scope.launchMed {
+                    await subscribeToTopics(list)
+                }
                 self.scope.launchMain {
                     self.state = self.state.copy(isProcessing: false)
                 }
