@@ -38,7 +38,7 @@ This is iOS application that allows users to enroll in courses and lecturer arti
 
 ## Android App
 
-[![Xcode](https://img.shields.io/static/v1?style=for-the-badge&message=GitHub&color=181717&logo=GitHub&logoColor=FFFFFF&label=Curso)](https://github.com/OmAr-Kader/curso)
+[![Android](https://img.shields.io/static/v1?style=for-the-badge&message=GitHub&color=181717&logo=GitHub&logoColor=FFFFFF&label=Curso)](https://github.com/OmAr-Kader/curso)
 
 ## 🔗 Links
 
