@@ -1,5 +1,5 @@
 
-# Curso Ios Demo
+# Curso IOS Demo
 
 Curso is an iOS education technology application with a chat feature that provides an online learning and teaching platform. The application is developed using Xcode and uses Realm Cloud, Firebase Storage, and Firebase Messaging Cloud.
 
