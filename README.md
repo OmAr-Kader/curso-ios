@@ -3,7 +3,7 @@
 
 Curso is an iOS education technology application with a chat feature that provides an online learning and teaching platform. The application is developed using Xcode and uses Realm Cloud, Firebase Storage, and Firebase Messaging Cloud.
 
-Curso is an education technology application with Chat Feature that provides an online learning and teaching platform.
+Curso is an education technology application with Chat Feature.
 Students take courses primarily to improve job-related skills Some courses generate credit toward technical certification
 This is iOS application that allows users to enroll in courses and lecturer articles. The application uses Realm Cloud to store user data and course information. Firebase Cloud Messaging is used to send push notifications to users when new course materials are available. Firebase Storage is used to store course materials such as articles, videos and images.
 
