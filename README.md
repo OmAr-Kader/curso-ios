@@ -48,8 +48,6 @@ This is iOS application that allows users to enroll in courses and lecturer arti
 
 [![SwiftUi](https://img.shields.io/static/v1?style=for-the-badge&message=Swift-ui&color=F05138&logo=Swift&logoColor=FFFFFF&label=)](https://developer.apple.com/xcode/swiftui/)
 
-[![MongoDB](https://img.shields.io/static/v1?style=for-the-badge&message=MongoDB&color=47A248&logo=MongoDB&logoColor=FFFFFF&label=)](https://www.mongodb.com/docs/realm/sdk/kotlin/)
-
 [![Realm](https://img.shields.io/static/v1?style=for-the-badge&message=Realm&color=DD344C&logo=Realm&logoColor=FFFFFF&label=)](https://www.mongodb.com/docs/realm/sdk/kotlin/)
 
 [![Firebase Storage](https://img.shields.io/static/v1?style=for-the-badge&message=Firebase&color=FFCA28&logo=Firebase&logoColor=FFCA28&label=storage)](https://firebase.google.com/docs/storage)
