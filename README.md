@@ -3,6 +3,12 @@
 
 Curso is an iOS education technology application with a chat feature that provides an online learning and teaching platform. The application is developed using Xcode and uses Realm Cloud, Firebase Storage, and Firebase Messaging Cloud. Students take courses primarily to improve job-related skills Some courses generate credit toward technical certification that allows users to enroll in courses and lecturer articles. The application uses Realm Cloud to store user data and course information. Firebase Cloud Messaging is used to send push notifications to users when new course materials are available. Firebase Storage is used to store course materials articles, videos and images.
 
+## 🤩 Support Me
+
+<a href="https://www.buymeacoffee.com/omar_kader">
+    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-red.png" width="200" height="70" alt="Buy Me a Coffee">
+</a>
+
 ## Features
 
 - Online learning and teaching platform
